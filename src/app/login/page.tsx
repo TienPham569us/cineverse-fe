@@ -9,7 +9,25 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Suspense } from 'react'
 import CustomHeader from "@/components/header";
+import { RootState } from "@/lib/redux/store";
 
+interface LoginPageProps {
+  token: string | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  error: string | null;
+  loginInProgress: boolean;
+  login: (credentials: { username: string; password: string }) => void;
+}
+// const mapStateToProps = (state: RootState) => {
+//   return {
+//       token: state.auth.token,
+//       isAuthenticated: state.auth.isAuthenticated,
+//       loading: state.auth.loading,
+//       error: state.auth.error,
+//       loginInProgress: state.auth.loading,
+//   };
+// };
  function LoginPageContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -104,14 +122,14 @@ import CustomHeader from "@/components/header";
   <CustomHeader />
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white">
         
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center p-5 border border-black border-solid rounded">
+      <main className="min-w-[calc(100vw/3)] flex flex-col gap-8 row-start-2 items-center sm:items-center p-5 border border-black border-solid rounded">
       <div><ToastContainer /></div>
         <div className="flex flex-row text-black">
           <h1 className="text-black font-bold">Login Page</h1>
         </div>
         <form method="POST" //action={"/api/register"}
           onSubmit={(e) => handleSubmit(e)}
-          className="flex flex-col justify-center flex-wrap">
+          className="min-w-[calc(100vw/3)] flex flex-col justify-center flex-wrap">
           <label className="label-style">Email</label>
           <input type="text" id="email" name="email" 
             className="input-style"

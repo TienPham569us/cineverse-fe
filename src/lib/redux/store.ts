@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import authReducer from './features/auth-slice';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { authApi } from './features/authApi';
@@ -33,3 +33,10 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export const userAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+export type AppThunk<ReturnType = void> = ThunkAction<
+    ReturnType,
+    RootState,
+    unknown,
+    Action<string>
+>;
