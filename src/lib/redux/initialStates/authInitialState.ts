@@ -1,13 +1,19 @@
 export interface AuthState {
-    token: string | null;
+    idToken: string | null;
+    refreshToken: string | null;
     isAuthenticated: boolean;
     loading: boolean;
     error: string | null;
+    userUid: string | null,
+    email: string | null,
 }
 
 export const authInitialState: AuthState = {
-    token: null,
+    idToken: null,
+    refreshToken: null,
     isAuthenticated: false,
     loading: false,
     error: null,
+    userUid: null,
+    email: null
 };

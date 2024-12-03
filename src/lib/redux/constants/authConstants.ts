@@ -6,7 +6,7 @@ export const LOGIN_START = 'LOGIN_START';
  export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
  export type LoginStartAction = { type: typeof LOGIN_START };
- export type LoginSuccessAction = { type: typeof LOGIN_SUCCESS, payload: string }
+ export type LoginSuccessAction = { type: typeof LOGIN_SUCCESS, payload: { idToken: string, refreshToken: string, userUid: string, email: string } }
  export type LoginFailureAction = { type: typeof LOGIN_FAILURE, payload: string }
  export type LogoutStartAction = { type: typeof LOGOUT_START };
  export type LogoutSuccessAction = { type: typeof LOGOUT_SUCCESS };
