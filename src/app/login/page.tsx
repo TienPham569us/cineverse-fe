@@ -13,7 +13,7 @@ import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { signInWithEmailAndPassword, User, UserCredential } from "firebase/auth";
 import { auth } from "@/config/firebase.config";
 import { connect, useDispatch } from "react-redux";
-import { login } from "@/lib/redux/actions/authActions";
+import { login, loginGoogle } from "@/lib/redux/actions/authActions";
 import { stat } from "fs";
 
 interface LoginPageProps {
@@ -146,6 +146,21 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
    
   } 
 
+  // handle login google
+  const handleLoginGoogle = async () => {
+    try {
+      setLoading(true);
+      setMessage("");
+      await dispatch(loginGoogle());
+    } catch (error: any) {
+      console.log("-->Failed to login: ", error);
+      setMessage("");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
   return ( <>
   <CustomHeader />
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white">
@@ -185,6 +200,19 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
             disabled={loading}
             >
             Login
+          </button>
+          <button
+            type="button"
+            className={`flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-600 hover:bg-gray-100 focus:outline-none ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            onClick={handleLoginGoogle}
+            disabled={loading}
+          >
+            <img
+              src="https://png.pngtree.com/png-vector/20230817/ourmid/pngtree-google-internet-icon-vector-png-image_9183287.png" // Đường dẫn icon Google
+              alt="Google"
+              className="h-5 w-5"
+            />
+            <span>Continue with Google</span>
           </button>
           {loading ? (
             <div className="flex flex-row justify-center">
