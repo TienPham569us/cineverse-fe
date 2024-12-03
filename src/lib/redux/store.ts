@@ -1,7 +1,9 @@
-import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
-import authReducer from './features/auth-slice';
+import  { Action, configureStore, Dispatch  } from '@reduxjs/toolkit';
+//import authReducer from './features/authSlice';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
-import { authApi } from './features/authApi';
+//import { authApi } from './features/authApi';
+import authReducer from './reducers/authReducer';
+import thunk, {ThunkMiddleware, ThunkAction} from 'redux-thunk';
 
 const loadAuthState = () => {
     try {
@@ -22,17 +24,17 @@ const preloadedState = {
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        [authApi.reducerPath]: authApi.reducer,
+        //[authApi.reducerPath]: authApi.reducer,
     },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware),
+    //middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as any as ThunkMiddleware),
+        //getDefaultMiddleware().concat(authApi.middleware),
     preloadedState: preloadedState,
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export const userAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export type AppThunk<ReturnType = void> = ThunkAction<
     ReturnType,

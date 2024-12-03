@@ -9,35 +9,38 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Suspense } from 'react'
 import CustomHeader from "@/components/header";
-import { RootState } from "@/lib/redux/store";
+import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
+import { signInWithEmailAndPassword, User, UserCredential } from "firebase/auth";
+import { auth } from "@/config/firebase.config";
+import { connect, useDispatch } from "react-redux";
+import { login } from "@/lib/redux/actions/authActions";
+import { stat } from "fs";
 
 interface LoginPageProps {
-  token: string | null;
+  idToken: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
   loginInProgress: boolean;
-  login: (credentials: { username: string; password: string }) => void;
+  login: (credentials: { email: string; password: string }) => void;
 }
-// const mapStateToProps = (state: RootState) => {
-//   return {
-//       token: state.auth.token,
-//       isAuthenticated: state.auth.isAuthenticated,
-//       loading: state.auth.loading,
-//       error: state.auth.error,
-//       loginInProgress: state.auth.loading,
-//   };
-// };
- function LoginPageContent() {
+
+//const LoginPageContent = () => {
+const LoginPageContent: React.FC<LoginPageProps> = props => {
+  const { idToken, error, isAuthenticated, loginInProgress } = props;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  //const [error, //setError] = useState("");
   const [invalidEmail, setInvalidEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const [login] = useLoginMutation();
+  //const [login] = useLoginMutation();
   const searchParams = useSearchParams();
+  const dispatch = useDispatch<AppDispatch>();
+
+  //const userLogin = useAppSelector(state => state.auth);
 
   ///const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -55,7 +58,23 @@ interface LoginPageProps {
         progress: undefined
       });
     }
-  },  [searchParams]);
+    
+  }, [searchParams] );
+
+  useEffect(() => {
+    if (idToken!=null) {
+      //console.log("Login successful! Now you can navigate to your profile page.");
+      toast.success('Login successful! Now you can navigate to your profile page.', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+    }
+  },  [dispatch, idToken]);
 
   const validateEmail = (e: FocusEvent<HTMLInputElement>) => {
     const tempEmail = email;
@@ -75,42 +94,51 @@ interface LoginPageProps {
     event.preventDefault();
     setLoading(true);
     setMessage("");
-    setError("");
+    ////setError("");
 
     if (!email || !validator.isEmail(email)) {
-      //setError("Email has invalid format");
       setLoading(false);
       return;
     }
    try {
-  
-    const response = await login({ email, password }).unwrap();
 
-    const data = response.data;
+    console.log("email: ", email);
+    await dispatch(login({ email, password }));
     
-    console.log(response);
 
-    if (response && 200<= response.status && response.status <= 300 && response.data) {
-      //router.push('/profile');
-      setError("");
-      setMessage("Login successful! Now you can navigate to your profile page.");
-      setPassword("");
-    } else if (400<= response.status && response.status < 500) {
+    // if (idToken!=null) {
+    //   console.log("Login successful! Now you can navigate to your profile page.");
+    //   toast.success('Login successful! Now you can navigate to your profile page.', {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined
+    //   });
+    // }
+
+    ////setError("");
+    
+    //setMessage("Login successful! Now you can navigate to your profile page.");
+    //setPassword("");
+
+    // if (response && 200<= response.status && response.status <= 300 && response.data) {
+    //   //router.push('/profile');
+    //   //setError("");
+    //   setMessage("Login successful! Now you can navigate to your profile page.");
+    //   setPassword("");
+    // } else if (400<= response.status && response.status < 500) {
       
-      setError(response.data?.message || "An error occurred.");
-      setMessage("");
-    } else {
-      setError("Failed to login. Please check your credentials.");
-      setMessage("");
-    }
+    //   //setError(response.data?.message || "An error occurred.");
+    //   setMessage("");
+    // } else {
+    //   //setError("Failed to login. Please check your credentials.");
+    //   setMessage("");
+    // }
    } catch (error) {
-     console.log("Failed to login: ", error);
-     if (error && typeof error === 'object' && 'data' in error) {
-       const err = error as { data: { data: { message: string } } };
-       setError(err.data.data.message || "Failed to login. Please check your credentials.");
-     } else {
-       setError("Failed to login. Please check your credentials.");
-     }
+     console.log("-->Failed to login: ", error);
      setMessage("");
    } finally {
     setLoading(false);
@@ -201,11 +229,29 @@ interface LoginPageProps {
   );
 }
 
+const mapStateToProps = (state: RootState) => {
+  return {
+      idToken: state.auth.idToken,
+      isAuthenticated: state.auth.isAuthenticated,
+      loading: state.auth.loading,
+      error: state.auth.error,
+      loginInProgress: state.auth.loading,
+  };
+};
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+      login: (credentials: { email: string; password: string }) => dispatch(login(credentials)),
+  };
+};
+
+const ConnectedLoginPageContent = connect(mapStateToProps, mapDispatchToProps)(LoginPageContent)
 
 export default function LoginPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <LoginPageContent />
+     <ConnectedLoginPageContent/>
     </Suspense>
   );
 }
+

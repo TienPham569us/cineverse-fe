@@ -2,16 +2,19 @@
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/redux/store";
-import { logout } from "@/lib/redux/features/auth-slice";
+import { logout } from "@/lib/redux/actions/authActions";
+//import { logout } from "@/lib/redux/features/authSlice";
 
 const CustomHeader = () => {
   const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
-  
+
+  const profileData = useSelector((state: RootState) => state.auth);
+
   const handleLogout = () => {
     window.location.href = '/login';
     //router.push('/');
-    dispatch(logout());
+    dispatch(logout(profileData.refreshToken??""));
     
   };
 
@@ -24,9 +27,9 @@ const CustomHeader = () => {
         
         <div className="text-black">
           <div className="flex flex-row">
-            {auth.isAuth ? (
+            {auth.idToken ? (
               <div className="flex items-center">
-                <span className="mr-4">Welcome, {auth.username}!</span>
+                <span className="mr-4">Welcome, {auth.email}!</span>
                 <Link href={"/profile"} className="text-center flex flex-row justify-center mx-3">
                   <button className="button-auth">Profile</button>
                 </Link>

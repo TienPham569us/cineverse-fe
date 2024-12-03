@@ -1,32 +1,51 @@
 import { ApiManager } from '@/api_manager/ApiManager';
 import { Dispatch } from 'redux';
 import { loginFailure, loginStart, loginSuccess, logoutFailure, logoutStart, logoutSuccess } from '../actionCreators/authActionCreators';
+import { signInWithEmailAndPassword, User, UserCredential } from "firebase/auth";
+import { auth } from "@/config/firebase.config";
+import { saveAuthState } from '../features/authSlice';
+import { clearAuthState, saveAuthToken } from '../localStorageUtil/local_storage_utils';
+import { clear } from 'console';
+
 const api = new ApiManager();
-export const login = (credentials: { username: string; password: string }) => {
+
+export const login = (credentials: { email: string; password: string }) => {
     return async (dispatch: Dispatch) => {
       try {
           dispatch(loginStart());
   
           // Define the data you want to send as an object
-          const data = {
-              grant_type: '',
-              username: credentials.username,
-              password: credentials.password,
-              scope: '',
-              client_id: '',
-              client_secret: '',
-          };
+          // const data = {
+          //     grant_type: '',
+          //     username: credentials.username,
+          //     password: credentials.password,
+          //     scope: '',
+          //     client_id: '',
+          //     client_secret: '',
+          // };
           
           // Define headers
           const headers = {
               'accept': 'application/json',
-              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Type': 'application/json' //'application/x-www-form-urlencoded',
           };
   
-          const response = await api.post('/users/token', data); //, {headers});
-          dispatch(loginSuccess(response.data.access_token));
+          //const response = await api.post('/users/token', data); //, {headers});
+          const userCredential: UserCredential = await signInWithEmailAndPassword(auth, 
+            credentials.email, 
+            credentials.password);
+
+          const user: User = userCredential.user;
+          const idToken = await user.getIdToken();
+
+          const response = await api.post('/users/login', {email: user.email, uid: user.uid, refreshToken: user.refreshToken});
+          dispatch(loginSuccess(idToken, user.refreshToken, user.uid, user.email??''));
+
+          //saveAuthToken(idToken);
+          
       } catch (error: any) {
-          dispatch(loginFailure(error.response.data.detail));
+        console.log("Error: ", error);
+        dispatch(loginFailure("Login failed: " + error.message));
       }
     };
   };
@@ -40,11 +59,12 @@ export const login = (credentials: { username: string; password: string }) => {
           'accept': 'application/json',
           'token': token,
         };
+        clearAuthState();
+        dispatch(logoutSuccess());
+        //const response = await api.post('/users/logout', {}); //, {headers});
   
-        const response = await api.post('/users/logout', {}); //, {headers});
-  
-        if(response.data.status_code === 200) dispatch(logoutSuccess());
-        else dispatch(logoutFailure("Could not log out!"));
+        //if(response.data.status_code === 200) dispatch(logoutSuccess());
+       // else dispatch(logoutFailure("Could not log out!"));
       } catch (error: any) {
         dispatch(logoutFailure(error.response.data.detail));
       }

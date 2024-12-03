@@ -1,7 +1,7 @@
 'use client';
 
 import CustomHeader from "@/components/header";
-import { loadAuthState } from "@/lib/redux/features/auth-slice";
+import { loadAuthState } from "@/lib/redux/features/authSlice";
 import { RootState } from "@/lib/redux/store";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -14,10 +14,10 @@ export default function Home() {
 
   useEffect(() => {
     setIsClient(true);
-    const savedAuthState = loadAuthState();
-    if (savedAuthState) {
-      dispatch({ type: 'auth/loadState', payload: savedAuthState });
-    }
+    // const savedAuthState = loadAuthState();
+    // if (savedAuthState) {
+    //   dispatch({ type: 'auth/loadState', payload: savedAuthState });
+    // }
   }, [dispatch]);
 
   if (!isClient) {
@@ -28,9 +28,9 @@ export default function Home() {
   <CustomHeader />
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
-      {auth.access_token ? (
+      {auth.idToken ? (
           <div className="flex flex-col items-center text-black">
-            <h1>Welcome, {auth.username}!</h1>
+            <h1>Welcome, {auth.email}!</h1>
             <p>Email: {auth.email}</p>
             <Link href={"/profile"} className="text-center flex flex-row justify-center">
               <button className="button-auth">Go to Profile</button>

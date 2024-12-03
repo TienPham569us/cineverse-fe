@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { LoginResponse } from './auth-slice';
+import { LoginResponse } from './authSlice';
 import { ProfileResponse } from '@/types/profile.response';
 
 export const authApi = createApi({
