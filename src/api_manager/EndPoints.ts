@@ -1,3 +1,5 @@
 export const ENDPOINTS = {
-    REGISTER: () => 'user/register/',
+    REGISTER: 'user/register',
+    VERIFY_TOKEN: 'user/verify',
+    LOGIN: 'user/login',
 }

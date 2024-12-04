@@ -1,14 +1,13 @@
 'use client';
 
 import CustomHeader from "@/components/header";
-import { loadAuthState } from "@/lib/redux/features/authSlice";
-import { RootState } from "@/lib/redux/store";
+import { AppDispatch, RootState } from "@/lib/redux/store";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [isClient, setIsClient] = useState(false);
   const auth = useSelector((state: RootState) => state.auth);
 

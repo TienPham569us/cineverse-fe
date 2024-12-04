@@ -14,7 +14,7 @@ const CustomHeader = () => {
   const handleLogout = () => {
     window.location.href = '/login';
     //router.push('/');
-    dispatch(logout(profileData.refreshToken??""));
+    dispatch(logout());
     
   };
 

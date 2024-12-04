@@ -1,11 +1,12 @@
 import { ApiManager } from '@/api_manager/ApiManager';
 import { Dispatch } from 'redux';
-import { loginFailure, loginStart, loginSuccess, logoutFailure, logoutStart, logoutSuccess } from '../actionCreators/authActionCreators';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, User, UserCredential } from "firebase/auth";
+import { loginFailure, loginStart, loginSuccess, logoutFailure, logoutStart, logoutSuccess, refreshTokenFail, refreshTokenSuccess, signupFailure, signupStart, signupSuccess } from '../actionCreators/authActionCreators';
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from "firebase/auth";
 import { auth } from "@/config/firebase.config";
-import { saveAuthState } from '../features/authSlice';
 import { clearAuthState, saveAuthToken } from '../localStorageUtil/local_storage_utils';
-import { clear } from 'console';
+import RegisterParams from '@/types/register.params';
+import { ENDPOINTS } from '@/api_manager/EndPoints';
+
 
 const api = new ApiManager();
 
@@ -27,11 +28,7 @@ export const login = (credentials: { email: string; password: string }) => {
           //     client_secret: '',
           // };
           
-          // Define headers
-          const headers = {
-              'accept': 'application/json',
-              'Content-Type': 'application/json' //'application/x-www-form-urlencoded',
-          };
+          
   
           //const response = await api.post('/users/token', data); //, {headers});
           const userCredential: UserCredential = await signInWithEmailAndPassword(auth, 
@@ -41,7 +38,14 @@ export const login = (credentials: { email: string; password: string }) => {
           const user: User = userCredential.user;
           const idToken = await user.getIdToken();
 
-          const response = await api.post('/users/login', {email: user.email, uid: user.uid, refreshToken: user.refreshToken});
+          // Define headers
+          const headers = {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${idToken}`
+          };
+        
+          const response = await ApiManager.get(ENDPOINTS.VERIFY_TOKEN, headers);//{email: user.email, uid: user.uid, refreshToken: user.refreshToken}
           dispatch(loginSuccess(idToken, user.refreshToken, user.uid, user.email??''));
 
           //saveAuthToken(idToken);
@@ -84,17 +88,20 @@ export const loginGoogle = () => {
   };
 };
   
-  export const logout = (token: string) => {
+export const logout = () => {
     return async (dispatch: Dispatch) => {
       try {
         dispatch(logoutStart());
   
         const headers = {
           'accept': 'application/json',
-          'token': token,
+          //'token': token,
         };
+        const response = await signOut(auth);
+        
         clearAuthState();
         dispatch(logoutSuccess());
+
         //const response = await api.post('/users/logout', {}); //, {headers});
   
         //if(response.data.status_code === 200) dispatch(logoutSuccess());
@@ -103,4 +110,86 @@ export const loginGoogle = () => {
         dispatch(logoutFailure(error.response.data.detail));
       }
     };
+};
+
+export const signup = (credentials: RegisterParams) => {
+  return async (dispatch: Dispatch) => {
+    try {
+        dispatch(signupStart());
+
+        const headers = {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+        };
+
+        const response = await ApiManager.register(credentials);
+        //const response = await ApiManager.post(ENDPOINTS.REGISTER, credentials, headers);
+        //const data = await response.json();
+        //console.log(response.message);
+        //console.log(data);
+        dispatch(signupSuccess(response.message));
+
+        //saveAuthToken(idToken);
+        
+    } catch (error: any) {
+      console.log("Error: ", error.message);
+
+      let errorMessage = "Signup failed: ";
+      try {
+        const errorData = JSON.parse(error.message);
+        
+        errorMessage += errorData.message;
+
+        if (errorData.errors) {
+          const errorDetails = Object.values(errorData.errors).join(", ");
+          errorMessage += ` - ${errorDetails}`;
+        }
+      } catch (parseError) {
+        errorMessage += error.message;
+      }
+
+      dispatch(signupFailure(errorMessage));
+    }
   };
+};
+
+export const refreshToken = (refreshToken: string) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      
+      const user: User | null = auth.currentUser;
+      console.log("User: ", user);
+      if (!user) {
+        dispatch(refreshTokenFail("No user is currently signed in."));
+        //throw new Error("No user is currently signed in.");
+        return;
+      }
+
+      const idToken = await user.getIdToken();
+      dispatch(refreshTokenSuccess(idToken, refreshToken));
+      
+      //const userCredential: UserCredential = await 
+      // const response = await fetch('/api/refreshToken', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     token: refreshToken,
+      //   }),
+      // })
+      // if (response.ok) {
+      //   const data = await response.json();
+      //   //localStorage.setItem('idToken', data.idToken);
+      //   dispatch(refreshTokenSuccess(data.idToken, refreshToken));
+      // } else {
+      //   dispatch(refreshTokenFail('error when fetch api'));
+      // }
+      
+    } catch (error: any) {
+      console.log("Error: ", error.message);
+      dispatch(refreshTokenFail(error.message));
+    };
+  };
+}
+
