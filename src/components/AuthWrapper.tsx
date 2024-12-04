@@ -34,23 +34,24 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
       
         checkAuth();
-    }, [authState, router, dispatch]);// 
+    }, [authState, router, dispatch, profileData]);// 
     
     async function checkAuth() {
-      if (typeof window !== 'undefined' && (!authState || !authState.idToken)) {
-        router.push('/login?notificationCode=403');
-        
+      if (typeof window !== 'undefined' && (!authState || !authState.idToken || !authState.refreshToken)) {
+        //router.push('/login?notificationCode=403');
+        window.location.href = '/login?notificationCode=403';
         dispatch(logout());
       } 
-      // else if (typeof window  !== 'undefined' && authState 
-      //   && profileData && profileData.idToken) {
-      //     const validToken: boolean = await verifyToken();
+      else if (typeof window  !== 'undefined' && authState 
+        && profileData && profileData.refreshToken && !profileData.idToken) {
+          const validToken: boolean = await verifyToken();
 
-      //     if (validToken===false) {
-      //       router.push('/login?notificationCode=403');
-      //       dispatch(logout());
-      //     }
-      // }
+          if (validToken===false) {
+            window.location.href = '/login?notificationCode=403';
+            //router.push('/login?notificationCode=403');
+            dispatch(logout());
+          }
+      }
     }
 
     async function verifyToken(): Promise<boolean> {
@@ -66,10 +67,12 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
         console.log("Data: ", data);
         return true;
       } catch (error) {
-        await dispatch(refreshToken(authState.refreshToken));
-        if (authState.idToken) {
-          return true;
-        }
+        // await dispatch(refreshToken(authState.refreshToken));
+        // console.log("1 ");
+        // if (authState.idToken) {
+        //   console.log("2 ");
+        //   return true;
+        // }
         return false;
       }
     }
