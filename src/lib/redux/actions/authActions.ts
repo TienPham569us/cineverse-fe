@@ -157,16 +157,21 @@ export const refreshToken = (refreshToken: string) => {
   return async (dispatch: Dispatch) => {
     try {
       
-      const user: User | null = auth.currentUser;
-      console.log("User: ", user);
-      if (!user) {
-        dispatch(refreshTokenFail("No user is currently signed in."));
-        //throw new Error("No user is currently signed in.");
-        return;
-      }
+      // const user: User | null = auth.currentUser;
+      // console.log("User: ", user);
+      // if (!user) {
+      //   dispatch(refreshTokenFail("No user is currently signed in."));
+      //   //throw new Error("No user is currently signed in.");
+      //   return;
+      // }
 
-      const idToken = await user.getIdToken();
-      dispatch(refreshTokenSuccess(idToken, refreshToken));
+      // const idToken = await user.getIdToken();
+      const headers = {
+        'Content-Type': 'application/json',
+      }
+      const response = await ApiManager.post(ENDPOINTS.REFRESH_TOKEN, {refreshToken: refreshToken}, headers);
+      console.log("Response: ", response);
+      dispatch(refreshTokenSuccess(response.id_token, refreshToken));
       
       //const userCredential: UserCredential = await 
       // const response = await fetch('/api/refreshToken', {
