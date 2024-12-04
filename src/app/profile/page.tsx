@@ -1,8 +1,6 @@
 'use client';
-import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState, FocusEvent, use, useEffect } from "react";
-import validator from "validator";
 //import { login, logOut } from "@/lib/redux/features/auth-slice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/redux/store";
@@ -11,6 +9,7 @@ import { AuthWrapper } from "@/components/AuthWrapper";
 import { useRouter } from "next/navigation";
 import CustomHeader from "@/components/header";
 import { logout } from "@/lib/redux/actions/authActions";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function ProfilePage() {
   const [error, setError] = useState("");
@@ -20,13 +19,28 @@ export default function ProfilePage() {
   const dispatch = useDispatch<AppDispatch>();
 
   const profileData = useSelector((state: RootState) => state.auth);
-
+  //const { idToken } = profileData;
   const handleLogout = () => {
     window.location.href = '/login';
     //router.push('/');
-    dispatch(logout(profileData.refreshToken??""));
+    dispatch(logout());
     
   };
+
+  // useEffect(() => {
+  //   if (idToken!=null) {
+      
+  //    toast.success('Login successful! Now you can navigate to your profile page.', {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined
+  //     });
+  //   }
+  // },  [dispatch, idToken, profileData]);
 
   useEffect(() => {
     setIsClient(true);
@@ -40,6 +54,7 @@ export default function ProfilePage() {
     <CustomHeader />
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">        
+        <div><ToastContainer /></div>
         <div className="flex flex-row text-black">
           <h1 className="text-black">Profile Page</h1>
         </div>

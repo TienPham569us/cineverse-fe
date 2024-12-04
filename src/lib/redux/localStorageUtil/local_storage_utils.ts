@@ -1,15 +1,33 @@
+import { sign } from "crypto";
 import { authInitialState, AuthState } from "../initialStates/authInitialState";
+import { signUpInitialState } from "../initialStates/signupInitialState";
 
 export const saveAuthState = (state: AuthState) => {
     localStorage.setItem('authState', JSON.stringify(state));
 }
 
 export const getAuthState = () => {
-    const serializedState = localStorage.getItem('authState');
-    if (serializedState === null) {
-        return authInitialState;
+    try {
+        const serializedState = localStorage.getItem('authState');
+        if (serializedState === null) {
+            return authInitialState;
+        }
+        return JSON.parse(serializedState);
+    } catch (err) {
+        return undefined;
     }
-    return JSON.parse(serializedState);
+}
+
+export const getUserSignupState = () => {
+    try {
+        const serializedState = localStorage.getItem('userSignupState');
+        if (serializedState === null) {
+            return signUpInitialState;
+        }
+        return JSON.parse(serializedState);
+    } catch (err) {
+        return undefined;
+    }
 }
 
 export const clearAuthState = () => {

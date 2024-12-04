@@ -3,18 +3,14 @@
 import Link from "next/link";
 import { FormEvent, useState, FocusEvent, useEffect } from "react";
 import validator from "validator";
-import { useLoginMutation } from "@/lib/redux/features/authApi";
 import { useSearchParams } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Suspense } from 'react'
 import CustomHeader from "@/components/header";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
-import { signInWithEmailAndPassword, User, UserCredential } from "firebase/auth";
-import { auth } from "@/config/firebase.config";
 import { connect, useDispatch } from "react-redux";
 import { login, loginGoogle } from "@/lib/redux/actions/authActions";
-import { stat } from "fs";
 
 interface LoginPageProps {
   idToken: string | null;
@@ -33,6 +29,8 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
   const [password, setPassword] = useState("");
   //const [error, //setError] = useState("");
   const [invalidEmail, setInvalidEmail] = useState("");
+  const [passwordError, setPasswordError] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -40,9 +38,15 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
   const searchParams = useSearchParams();
   const dispatch = useDispatch<AppDispatch>();
 
-  //const userLogin = useAppSelector(state => state.auth);
+  // const [isClient, setIsClient] = useState(false);
 
-  ///const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+  // useEffect(() => {
+  //   setIsClient(true);
+  // }, [dispatch]);
+
+  // if (!isClient) {
+  //   return <></>; // Render nothing on the server
+  // }
 
   useEffect(() => {
     const notificationCode = searchParams.get('notificationCode');
@@ -63,16 +67,18 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
 
   useEffect(() => {
     if (idToken!=null) {
+      setPassword("");
+      window.location.href = "/profile";
       //console.log("Login successful! Now you can navigate to your profile page.");
-      toast.success('Login successful! Now you can navigate to your profile page.', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
+      // toast.success('Login successful! Now you can navigate to your profile page.', {
+      //   position: "top-right",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined
+      // });
     }
   },  [dispatch, idToken]);
 
@@ -90,53 +96,33 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
       setInvalidEmail("");
     }
   }
+
+  const validatePassword = (value: string): boolean => {
+    if (!value || value.length < 6) {
+      setPasswordError('Password must be at least 6 characters long.');
+      return false;
+    } else {
+      setPasswordError('');
+      return true;
+    }
+  }
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setLoading(true);
     setMessage("");
     ////setError("");
 
-    if (!email || !validator.isEmail(email)) {
+    if (!email || !validator.isEmail(email)
+      || !validatePassword(password)) {
       setLoading(false);
       return;
     }
    try {
 
-    console.log("email: ", email);
+    //console.log("email: ", email);
     await dispatch(login({ email, password }));
-    
 
-    // if (idToken!=null) {
-    //   console.log("Login successful! Now you can navigate to your profile page.");
-    //   toast.success('Login successful! Now you can navigate to your profile page.', {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined
-    //   });
-    // }
-
-    ////setError("");
-    
-    //setMessage("Login successful! Now you can navigate to your profile page.");
-    //setPassword("");
-
-    // if (response && 200<= response.status && response.status <= 300 && response.data) {
-    //   //router.push('/profile');
-    //   //setError("");
-    //   setMessage("Login successful! Now you can navigate to your profile page.");
-    //   setPassword("");
-    // } else if (400<= response.status && response.status < 500) {
-      
-    //   //setError(response.data?.message || "An error occurred.");
-    //   setMessage("");
-    // } else {
-    //   //setError("Failed to login. Please check your credentials.");
-    //   setMessage("");
-    // }
    } catch (error) {
      console.log("-->Failed to login: ", error);
      setMessage("");
@@ -193,7 +179,9 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
           <input type="password" id="password" name="password" className="input-style"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onBlur={(e) => validatePassword(e.target.value)}
             required/>
+          {passwordError && <div className="text-error">{passwordError}</div>}
 
           <button className={` ${!loading ? 'button-style' : 'button-style-disabled'}`}
             type="submit"
