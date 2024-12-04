@@ -32,23 +32,23 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     // }
 
     useEffect(() => {
-      
         checkAuth();
-    }, [authState, router, dispatch, profileData]);// 
+    }, [dispatch]);// authState, dispatch, profileData
     
     async function checkAuth() {
       if (typeof window !== 'undefined' && (!authState || !authState.idToken || !authState.refreshToken)) {
-        //router.push('/login?notificationCode=403');
-        window.location.href = '/login?notificationCode=403';
+        router.push('/login?notificationCode=403');
+        //window.location.href = '/login?notificationCode=403';
         dispatch(logout());
       } 
       else if (typeof window  !== 'undefined' && authState 
-        && profileData && profileData.refreshToken && !profileData.idToken) {
+        && profileData && profileData.idToken) { //&& profileData.refreshToken && !profileData.idToken
           const validToken: boolean = await verifyToken();
 
           if (validToken===false) {
-            window.location.href = '/login?notificationCode=403';
-            //router.push('/login?notificationCode=403');
+            //window.location.href = '/login?notificationCode=403';
+            alert("Token is invalid");
+            router.push('/login?notificationCode=403');
             dispatch(logout());
           }
       }
@@ -59,20 +59,33 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
         const headers = {
           'accept': 'application/json',
           'Content-Type': 'application/json',
-          "Authorization": `Bearer ${authState.idToken}`
+          "Authorization": `Bearer ${authState.idToken}` // null: simulating invalid token
         };
 
         const response = await ApiManager.get(ENDPOINTS.VERIFY_TOKEN, headers);
-        const data = await response.json();
-        console.log("Data: ", data);
-        return true;
+        console.log("Response: ", response);  
+        //const data = await response.json();
+        //console.log("Data: ", data);
+        if (response.authenticated===true) {
+          return true;
+        } else {
+          await dispatch(refreshToken(authState.refreshToken));
+          //console.log("1 ");
+          if (authState.idToken) {
+            //console.log("2 ");
+            return true;
+          }
+          return false;
+        }
+        return false;
       } catch (error) {
-        // await dispatch(refreshToken(authState.refreshToken));
-        // console.log("1 ");
-        // if (authState.idToken) {
-        //   console.log("2 ");
-        //   return true;
-        // }
+        await dispatch(refreshToken(authState.refreshToken));
+        console.log("1 ");
+        if (authState.idToken) {
+          console.log("2 ");
+          return true;
+        }
+        console.log("Error: ", error);
         return false;
       }
     }
