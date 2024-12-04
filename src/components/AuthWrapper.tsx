@@ -41,15 +41,16 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
         router.push('/login?notificationCode=403');
         
         dispatch(logout());
-      } else if (typeof window  !== 'undefined' && authState 
-        && profileData && profileData.idToken) {
-          const validToken: boolean = await verifyToken();
+      } 
+      // else if (typeof window  !== 'undefined' && authState 
+      //   && profileData && profileData.idToken) {
+      //     const validToken: boolean = await verifyToken();
 
-          if (validToken===false) {
-            router.push('/login?notificationCode=403');
-            dispatch(logout());
-          }
-      }
+      //     if (validToken===false) {
+      //       router.push('/login?notificationCode=403');
+      //       dispatch(logout());
+      //     }
+      // }
     }
 
     async function verifyToken(): Promise<boolean> {
