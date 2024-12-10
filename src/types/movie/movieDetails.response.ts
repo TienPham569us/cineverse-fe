@@ -16,6 +16,7 @@ export interface MovieDetails {
   releaseDate: string;
   budget: number;
   revenue: number;
+  backdropPath: string;
 }
 
 // export interface Collection {
