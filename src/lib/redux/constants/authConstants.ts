@@ -15,12 +15,12 @@ export const REFRESH_TOKEN_FAIL = 'REFRESH_TOKEN_FAIL'
 export const VERIFY_ID_TOKEN_SUCCESS = 'VERIFY_ID_TOKEN_SUCCESS'
 export const VERIFY_ID_TOKEN_FAIL = 'VERIFY_ID_TOKEN_FAIL'
 
- export type LoginStartAction = { type: typeof LOGIN_START };
- export type LoginSuccessAction = { type: typeof LOGIN_SUCCESS, payload: { idToken: string, refreshToken: string, userUid: string, email: string } }
- export type LoginFailureAction = { type: typeof LOGIN_FAILURE, payload: string }
- export type LogoutStartAction = { type: typeof LOGOUT_START };
- export type LogoutSuccessAction = { type: typeof LOGOUT_SUCCESS };
- export type LogoutFailureAction = { type: typeof LOGOUT_FAILURE, payload: string };
+export type LoginStartAction = { type: typeof LOGIN_START };
+export type LoginSuccessAction = { type: typeof LOGIN_SUCCESS, payload: { idToken: string, refreshToken: string, userUid: string, email: string } }
+export type LoginFailureAction = { type: typeof LOGIN_FAILURE, payload: string }
+export type LogoutStartAction = { type: typeof LOGOUT_START };
+export type LogoutSuccessAction = { type: typeof LOGOUT_SUCCESS };
+export type LogoutFailureAction = { type: typeof LOGOUT_FAILURE, payload: string };
  
 export type SignupStartAction = { type: typeof SIGNUP_START };
 export type SignupSuccessAction = { type: typeof SIGNUP_SUCCESS, payload: string }

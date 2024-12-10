@@ -14,6 +14,17 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "media.themoviedb.org",
+        pathname: "/**",
+        port: "",
+      }
+      
+    ],
+  },
 };
 
 export default nextConfig;

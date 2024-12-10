@@ -34,3 +34,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## HOW TO RUN
+npm install @shadcn/ui tailwindcss postcss autoprefixer --legacy-peer-deps
+npx tailwindcss init -p
+npx shadcn@latest init -d --legacy-peer-deps
+npx shadcn@latest add `Component name`  
+then choose: --legacy-peer-deps
+npx shadcn@latest add  button tabs card input label 
+then choose: --legacy-peer-deps

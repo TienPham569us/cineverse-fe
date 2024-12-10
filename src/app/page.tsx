@@ -1,33 +1,141 @@
 'use client';
 
 import CustomHeader from "@/components/header";
-import { AppDispatch, RootState } from "@/lib/redux/store";
+import { fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
+import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
+import { Movie } from "@/types/movie/movie.response";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { use, useEffect, useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { formatDate } from "@/utils/dateUtils";
+import MovieCard from "@/components/MovieCard";
 
-export default function Home() {
+const media_base_url = "https://media.themoviedb.org/t/p/w220_and_h330_face"; 
+
+interface HomePageProps {
+  loadingTrendingMovies: boolean;
+  errorTrendingMovies: string | null;
+  trendingMovies: Movie[];
+  fetchTrendingMovies: (timeWindow: string) => void;
+}
+
+const HomeContent: React.FC<HomePageProps> = props => {
   const dispatch = useDispatch<AppDispatch>();
   const [isClient, setIsClient] = useState(false);
-  const auth = useSelector((state: RootState) => state.auth);
+  const auth = useAppSelector((state: RootState) => state.auth);
+  const [timeWindow, setTimeWindow] = useState("day");
+  const { loadingTrendingMovies, errorTrendingMovies, trendingMovies, fetchTrendingMovies } = props;
 
   useEffect(() => {
     setIsClient(true);
+    fetchTrendingMovies(timeWindow);
     // const savedAuthState = loadAuthState();
     // if (savedAuthState) {
     //   dispatch({ type: 'auth/loadState', payload: savedAuthState });
     // }
-  }, [dispatch]);
+  }, [dispatch, timeWindow]);
 
   if (!isClient) {
     return null; // Render nothing on the server
   }
-  
-  return (<div>
-  <CustomHeader />
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white">
+
+  return (<div className="bg-white"> 
+    <CustomHeader />
+    <div className="p-3 m-2 bg-white">
+      <Input placeholder="Search for movies..." className="text-black border border-solid border-black" />
+    </div>
+    <div className="items-center justify-items-center p-8 ps-5 bg-white" aria-readonly>
+        <div className="flex flex-row flex-wrap">
+          <h1 className="text-3xl font-bold text-black me-2 " aria-readonly>Trending</h1>
+          <Tabs defaultValue="day" className="w-[400px]" 
+            onValueChange={(value) => setTimeWindow(value)}>
+
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="day" aria-readonly>Today</TabsTrigger>
+              <TabsTrigger value="week" aria-readonly>This Week</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      </div>
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)] bg-white">
+      
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
-      {auth.idToken ? (
+        {
+          (loadingTrendingMovies) 
+          ? (
+            <div className="flex flex-row text-black">
+              <h1>Loading...</h1>
+            </div>
+          ) : (
+            <div className="flex flex-row text-black">
+              <div className="container mx-auto p-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+                  {trendingMovies.map((movie: Movie, index: number) => (
+                    <MovieCard key={index} movie={movie} index={index} />
+                  ))}
+                  </div>
+                </div>
+            </div>
+          )
+        
+        }
+
+        {
+           (errorTrendingMovies) && (
+            <div className="flex flex-row">
+              <h1 className="text-[#dc2626]">Error: {errorTrendingMovies}</h1>
+            </div>
+           )
+        }
+      
+      </main>
+      </div>
+    </div>
+  );
+}
+
+const mapStateToProps = (state: RootState) => {
+  return {
+    loadingTrendingMovies: state.trendingMovies.loading,
+    errorTrendingMovies: state.trendingMovies.error,
+    trendingMovies: state.trendingMovies.trendingMovies
+  };
+}
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    fetchTrendingMovies: (timeWindow: string) => dispatch(fetchTrendingMovies(timeWindow))
+  };
+}
+
+const ConnectedHomePageContent = connect(mapStateToProps, mapDispatchToProps)(HomeContent);
+
+export default function Home() {
+  return (
+    <ConnectedHomePageContent />
+  );
+}
+
+/* 
+        */
+/*{auth.idToken ? (
           <div className="flex flex-col items-center text-black">
             <h1>Welcome, {auth.email}!</h1>
             <p>Email: {auth.email}</p>
@@ -39,11 +147,4 @@ export default function Home() {
           <h1>This is Home Page, please login or register to continue...</h1>
         </div>
         
-        </>)}
-      </main>
-    </div>
-    </div>
-  );
-}
-
-//"react-spinners": "^0.14.1",
+        </>)}*/

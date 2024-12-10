@@ -22,7 +22,7 @@ const CustomHeader = () => {
     <header>
       <div className="flex flex-row items-center justify-between bg-[#d4d4d8] p-6">
         <Link href={"/"} className="flex items-center text-black mr-6 p-3 rounded-lg hover:border hover:border-black">
-          <span className="font-semibold text-xl tracking-tight">Home</span>
+          <span className="font-semibold text-xl tracking-tight pointer-events-none">Home</span>
         </Link>
         
         <div className="text-black">

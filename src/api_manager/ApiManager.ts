@@ -3,9 +3,7 @@ import { ENDPOINTS } from "./EndPoints";
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const BACKEND_BASE_URL: string = process.env.BACKEND_BASE_URL || 'http://localhost:8080';
-
-//const BACKEND_BASE_URL: string = 'https://be-week04-tienpham569us-projects.vercel.app';
+const BACKEND_BASE_URL: string = 'http://localhost:8080'; //process.env.BACKEND_BASE_URL || 'https://cineverse-be-ga2.onrender.com'; //
 
 export class ApiManager {
   private static isRefreshing = false;
@@ -71,17 +69,20 @@ export class ApiManager {
     return new Headers({ ...defaultHeaders, ...customHeaders });
   }
 
-  static async get(endpoint: string, headers?: any, refreshToken?: string): Promise<any> {
+  static async get(endpoint: string, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
     try {
+      if (!base_url) {
+        base_url = BACKEND_BASE_URL;
+      }
       let response;
       if (refreshToken) {
         const options: RequestInit = {
           method: 'GET',
           headers: headers,
         };
-        response = await this.fetchWithRefresh(`${BACKEND_BASE_URL}/${endpoint}`, options, refreshToken);
+        response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, refreshToken);
       } else {
-        response = await fetch(`${BACKEND_BASE_URL}/${endpoint}`,{
+        response = await fetch(`${base_url}/${endpoint}`,{
           headers: headers,
         });
       }
@@ -97,7 +98,7 @@ export class ApiManager {
       throw error;
     } 
   }
-  static async post(endpoint: string, data: any, headers?: any, refreshToken?: string): Promise<any> {
+  static async post(endpoint: string, data: any, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
     try {
       let response;
       if (refreshToken) {
@@ -105,9 +106,9 @@ export class ApiManager {
           method: 'POST',
           headers: headers,
         };
-        response = await this.fetchWithRefresh(`${BACKEND_BASE_URL}/${endpoint}`, options, refreshToken);
+        response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, refreshToken);
       } else {
-        response = await fetch(`${BACKEND_BASE_URL}/${endpoint}`, {
+        response = await fetch(`${base_url}/${endpoint}`, {
           method: 'POST',
           // headers: {
           //   'Content-Type': 'application/json',
@@ -126,7 +127,7 @@ export class ApiManager {
       throw error;
     } 
   }
-  static async put(endpoint: string, data: any, headers?: any, refreshToken?: string): Promise<any> {
+  static async put(endpoint: string, data: any, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
     try {
       let response;
       if (refreshToken) {
@@ -134,9 +135,9 @@ export class ApiManager {
           method: 'PUT',
           headers: headers,
         };
-        response = await this.fetchWithRefresh(`${BACKEND_BASE_URL}/${endpoint}`, options, refreshToken);
+        response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, refreshToken);
       } else {
-        response = await fetch(`${BACKEND_BASE_URL}/${endpoint}`, {
+        response = await fetch(`${base_url}/${endpoint}`, {
           method: 'PUT',
           headers: headers,
           body: JSON.stringify(data),
@@ -151,7 +152,7 @@ export class ApiManager {
       throw error;
     } 
   }
-  static async delete(endpoint: string, headers?: any, refreshToken?: string): Promise<any> {
+  static async delete(endpoint: string, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
     try {
       let response;
       if (refreshToken) {
@@ -159,9 +160,9 @@ export class ApiManager {
           method: 'PUT',
           headers: headers,
         };
-        response = await this.fetchWithRefresh(`${BACKEND_BASE_URL}/${endpoint}`, options, refreshToken);
+        response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, refreshToken);
       } else {
-        response = await fetch(`${BACKEND_BASE_URL}/${endpoint}`, {
+        response = await fetch(`${base_url}/${endpoint}`, {
           method: 'DELETE',
           headers: headers,
         });
@@ -177,7 +178,7 @@ export class ApiManager {
   }
 
   static register = async (params: RegisterParams): Promise<any> => {
-      //const url = `${BACKEND_BASE_URL}/${ENDPOINTS.REGISTER}`;
+      //const url = `${base_url}/${ENDPOINTS.REGISTER}`;
       const headers = {
         'accept': 'application/json',
         'Content-Type': 'application/json',

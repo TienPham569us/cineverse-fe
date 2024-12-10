@@ -5,16 +5,24 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import authReducer, { userSignupReducer } from './reducers/authReducer';
 import thunk, {ThunkMiddleware, ThunkAction} from 'redux-thunk';
 import { getAuthState, getUserSignupState } from './localStorageUtil/local_storage_utils';
+import { trendingMovieInitialState } from './initialStates/trendingMovieInitialState';
+import { movieDetailsInitialState } from './initialStates/movieDetailsInitialState';
+import { movieDetailsReducer, trendingMoviesReducer } from './reducers/movieReducer';
 
 const preloadedState = {
     auth: getAuthState(),
     userSignup: getUserSignupState(),
+    trendingMovies: trendingMovieInitialState,
+    movieDetails: movieDetailsInitialState
 };
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         userSignup: userSignupReducer,
+        trendingMovies: trendingMoviesReducer,
+        movieDetails: movieDetailsReducer,
+
         //[authApi.reducerPath]: authApi.reducer,
     },
     //middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as any as ThunkMiddleware),
