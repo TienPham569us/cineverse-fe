@@ -1,18 +1,19 @@
 'use client'
 
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/lib/redux/store';
-import { useGetProfileDataQuery } from '@/lib/redux/features/authApi';
+import { AppDispatch, RootState } from '@/lib/redux/store';
 import { useEffect } from 'react';
-import { logout } from '@/lib/redux/features/authSlice';
 import { useRouter } from 'next/navigation';
 import UnauthorizedAccessPage from './UnauthorizedAccessPage';
 import { getAuthState, getAuthToken } from '@/lib/redux/localStorageUtil/local_storage_utils';
+import { logout, refreshToken } from '@/lib/redux/actions/authActions';
+import { ApiManager } from '@/api_manager/ApiManager';
+import { ENDPOINTS } from '@/api_manager/EndPoints';
 
 
 export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     //const token = getAuthToken('auth_token');
     const authState = typeof window !== 'undefined' ? getAuthState() : null;
     const profileData = useSelector((state: RootState) => state.auth);
@@ -31,13 +32,63 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     // }
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && (!authState || !authState.idToken)) {
-          router.push('/login?notificationCode=403');
-          
-          dispatch(logout());
-        }
-    }, [authState, router, dispatch]);// 
+        checkAuth();
+    }, [dispatch]);// authState, dispatch, profileData
     
+    async function checkAuth() {
+      if (typeof window !== 'undefined' && (!authState || !authState.idToken || !authState.refreshToken)) {
+        router.push('/login?notificationCode=403');
+        //window.location.href = '/login?notificationCode=403';
+        dispatch(logout());
+      } 
+      else if (typeof window  !== 'undefined' && authState 
+        && profileData && profileData.idToken) { //&& profileData.refreshToken && !profileData.idToken
+          const validToken: boolean = await verifyToken();
+
+          if (validToken===false) {
+            //window.location.href = '/login?notificationCode=403';
+            alert("Token is invalid");
+            router.push('/login?notificationCode=403');
+            dispatch(logout());
+          }
+      }
+    }
+
+    async function verifyToken(): Promise<boolean> {
+      try {
+        const headers = {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${authState.idToken}` // null: simulating invalid token
+        };
+
+        const response = await ApiManager.get(ENDPOINTS.VERIFY_TOKEN, headers);
+        console.log("Response: ", response);  
+        //const data = await response.json();
+        //console.log("Data: ", data);
+        if (response.authenticated===true) {
+          return true;
+        } else {
+          await dispatch(refreshToken(authState.refreshToken));
+          //console.log("1 ");
+          if (authState.idToken) {
+            //console.log("2 ");
+            return true;
+          }
+          return false;
+        }
+        return false;
+      } catch (error) {
+        await dispatch(refreshToken(authState.refreshToken));
+        console.log("1 ");
+        if (authState.idToken) {
+          console.log("2 ");
+          return true;
+        }
+        console.log("Error: ", error);
+        return false;
+      }
+    }
     // if (isLoading) {
     //     return <div>Loading...</div>;
     // }

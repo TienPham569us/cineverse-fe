@@ -2,28 +2,19 @@ import  { Action, configureStore, Dispatch  } from '@reduxjs/toolkit';
 //import authReducer from './features/authSlice';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 //import { authApi } from './features/authApi';
-import authReducer from './reducers/authReducer';
+import authReducer, { userSignupReducer } from './reducers/authReducer';
 import thunk, {ThunkMiddleware, ThunkAction} from 'redux-thunk';
-
-const loadAuthState = () => {
-    try {
-        const serializedState = localStorage.getItem('authState');
-        if (serializedState === null) {
-            return undefined;
-        }
-        return JSON.parse(serializedState);
-    } catch (err) {
-        return undefined;
-    }
-};
+import { getAuthState, getUserSignupState } from './localStorageUtil/local_storage_utils';
 
 const preloadedState = {
-    auth: loadAuthState(),
+    auth: getAuthState(),
+    userSignup: getUserSignupState(),
 };
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
+        userSignup: userSignupReducer,
         //[authApi.reducerPath]: authApi.reducer,
     },
     //middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as any as ThunkMiddleware),

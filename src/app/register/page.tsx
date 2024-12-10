@@ -1,29 +1,64 @@
 'use client';
-import { ApiManager } from "@/api_manager/ApiManager";
-//import Loading from "@/components/loading";
+
 import Link from "next/link";
-import { FormEvent, useState, FocusEvent, useActionState, CSSProperties } from "react";
+import { FormEvent, useState, FocusEvent, useActionState, CSSProperties, Suspense, useEffect } from "react";
 import validator from "validator";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CustomHeader from "@/components/header";
+import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
+import { connect, useDispatch } from "react-redux";
+import { signup } from "@/lib/redux/actions/authActions";
 
-export default function RegisterPage() {
+interface RegisterPageProps {
+  loading: boolean;
+  error: string | null;
+  message: string | null;
+  signup: (credentials: { email: string; password: string, username: string }) => void;
+}
+
+const  RegisterPageContent: React.FC<RegisterPageProps> = props => {
+  const { loading, error, message } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [invalidEmail, setInvalidEmail] = useState("");
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [invalidEmail, setInvalidEmail] = useState("");
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+
+  const idToken = useAppSelector((state: RootState) => state.auth.idToken);
+  // const [error, setError] = useState("");
+  // const [message, setMessage] = useState("");
+  // const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (idToken!=null) {
+      setPassword("");
+      window.location.href = "/profile";
+      //console.log("Login successful! Now you can navigate to your profile page.");
+      // toast.success('Login successful! Now you can navigate to your profile page.', {
+      //   position: "top-right",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined
+      // });
+    }
+  },  [dispatch, idToken]);
+  
   const validateEmail = (e: FocusEvent<HTMLInputElement>) => {
-    const tempEmail = email;
-    if (!tempEmail) {
+    if (!email) {
 
       setInvalidEmail("Email is required");
 
-    } else if (!validator.isEmail(tempEmail)) {
+    } else if (!validator.isEmail(email)) {
 
       setInvalidEmail("Email has invalid format");
       
@@ -32,54 +67,85 @@ export default function RegisterPage() {
     }
   }
 
+  const validateUsername = (value: string): boolean => {
+    const usernamePattern = /^[a-zA-Z0-9_]{3,16}$/;
+    if (!usernamePattern.test(value)) {
+      setUsernameError('Username must be 3-16 characters long and can only contain letters, numbers, and underscores.');
+      return false;
+    } else {
+      setUsernameError('');
+      return true;
+    }
+  };
+
+  const validatePassword = (value: string): boolean => {
+   
+    if (!value || value.length < 6) {
+      setPasswordError('Password must be at least 6 characters long.');
+      return false;
+    } else {
+      setPasswordError('');
+      return true;
+    }
+  }
+
+  const validateConfirmPassword = (value: string): boolean => {
+    if (value !== password) {
+      setConfirmPasswordError('Passwords do not match.');
+      return false;
+    } else {
+      setConfirmPasswordError('');
+      return true;
+    }
+  }
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    //setLoading(true);
     //event.preventDefault();
-    setMessage("");
-    setError("");
-    if (!email || !validator.isEmail(email)) {
-      setLoading(false);
+    //setMessage("");
+   // setError("");
+    if (!email || !validator.isEmail(email) 
+      || !validateUsername(username) || !validatePassword(password) 
+      || !validateConfirmPassword(confirmPassword)) {
+      //setLoading(false);
       return;
     }
     try {
-      const response = await ApiManager.register({ email, password, username });
-      const data = await response.json();
+      //const response = await ApiManager.register({ email, password, username });
+      //const data = await response.json();
       //console.log(response);
-      console.log(data);
-      console.log(response.status);
-      setLoading(false);
-      if (400 <= response.status && response.status < 500) {
-        if (data.message && Array.isArray(data.message)) {
+      //console.log(data);
+      //console.log(response.status);
 
-          const formattedMessages = data.message.map((msg: string) => {
-            if (msg.includes("username must match /^[a-zA-Z0-9_]+$/ regular expression")) {
-              return "invalid username";
-            }
-            return msg;
-          });
+      await dispatch(signup({ email, password, username }));
+      
+      //setLoading(false);
 
-          setError(formattedMessages.join(", \n "));
-          setMessage("");
-        } else if (data.message && typeof data.message === "string") {
-          setError(data.message);
-          setMessage("");
-        } else {
-          setError('An unknown error occurred.');
-        }
-      } else if (200 <= response.status && response.status < 300) {
-        setError("");
-        setMessage(data.data.success);
-        setPassword("");
-        //window.location.href = '/login';
-      }
     } catch (error) {
       console.error(error);
-      setError("An error occurred. Please try again later.");
+      // if (data.message && Array.isArray(data.message)) {
+
+      //   const formattedMessages = data.message.map((msg: string) => {
+      //     if (msg.includes("username must match /^[a-zA-Z0-9_]+$/ regular expression")) {
+      //       return "invalid username";
+      //     }
+      //     return msg;
+      //   });
+
+      //   setError(formattedMessages.join(", \n "));
+      //   setMessage("");
+      // } else if (data.message && typeof data.message === "string") {
+      //   setError(data.message);
+      //   setMessage("");
+      // } else {
+      //   setError('An unknown error occurred.');
+      // }
+      //setError("An error occurred. Please try again later.");
       //setLoading(false);
       return;
     } finally {
-      setLoading(false);
+      //setLoading(false);
     }
 
     
@@ -105,9 +171,9 @@ export default function RegisterPage() {
               required/>
             {
             (invalidEmail && invalidEmail.length!=0) 
-            ? (<text className="text-error">
+            ? (<div className="text-error">
               {invalidEmail}
-            </text>)
+            </div>)
               : null
             }
 
@@ -116,15 +182,27 @@ export default function RegisterPage() {
               className="input-style"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              onBlur={(e) => validateUsername(e.target.value)}
               required/>
           
-            
+            {usernameError && <div className="text-error">{usernameError}</div>}
+
 
             <label className="label-style">Password</label>
             <input type="password" id="password" name="password" className="input-style"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onBlur={(e) => validatePassword(e.target.value)}
               required/>
+            {passwordError && <div className="text-error">{passwordError}</div>}
+
+            <label className="label-style">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" className="input-style"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onBlur={(e) => validateConfirmPassword(e.target.value)}
+              required/>
+            {confirmPasswordError && <div className="text-error">{confirmPasswordError}</div>}
 
             <button className={` ${!loading ? 'button-style' : 'button-style-disabled'}`}
               type="submit" 
@@ -172,4 +250,29 @@ export default function RegisterPage() {
       </div>
     </div>
   );
+}
+
+const mapStateToProps = (state: RootState) => {
+  return {
+      loading: state.userSignup.loading,
+      error: state.userSignup.error,
+      message: state.userSignup.message,
+  };
+};
+
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+      signup: (credentials: { email: string; password: string, username: string }) => dispatch(signup(credentials)),
+  };
+};
+
+const ConnectedRegisterPageContent = connect(mapStateToProps, mapDispatchToProps)(RegisterPageContent)
+
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}> 
+      <ConnectedRegisterPageContent/>
+    </Suspense>
+  )
 }
