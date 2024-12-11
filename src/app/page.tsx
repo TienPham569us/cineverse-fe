@@ -39,6 +39,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
   const [isClient, setIsClient] = useState(false);
   const auth = useAppSelector((state: RootState) => state.auth);
   const [timeWindow, setTimeWindow] = useState("day");
+  const [query, setQuery] = useState("");
   const { loadingTrendingMovies, errorTrendingMovies, trendingMovies, fetchTrendingMovies } = props;
 
   useEffect(() => {
@@ -49,15 +50,42 @@ const HomeContent: React.FC<HomePageProps> = props => {
     //   dispatch({ type: 'auth/loadState', payload: savedAuthState });
     // }
   }, [dispatch, timeWindow]);
-
+  
   if (!isClient) {
     return null; // Render nothing on the server
   }
+  
+  // const handleSearch = () => {
+  //   if (query.trim()) {
+  //     router.push(`/search-movies?query=${encodeURIComponent(query)}&page=1`);
+  //   }
+  // };
 
   return (<div className="bg-white"> 
     <CustomHeader />
     <div className="p-3 m-2 bg-white">
-      <Input placeholder="Search for movies..." className="text-black border border-solid border-black" />
+      <div className="flex items-center">
+        <Input
+          placeholder="Search for movies..."
+          className="flex-1 text-black border border-solid border-black"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <Link 
+          href={{
+            pathname: "/search",
+            query: { query: query, page: 1 }, // Định dạng đúng query object
+          }}
+          className="ml-2 button-auth">
+          Search
+        </Link >
+        {/* <button
+          onClick={handleSearch}
+          className="px-4 py-2 ml-2 text-white bg-blue-500 rounded"
+        >
+          Search
+        </button> */}
+      </div>
     </div>
     <div className="items-center justify-items-center p-8 ps-5 bg-white" aria-readonly>
         <div className="flex flex-row flex-wrap">

@@ -1,6 +1,6 @@
 import { ApiManager } from "@/api_manager/ApiManager";
 import { Dispatch } from "redux";
-import { fetchTrendingMoviesStart, fetchTrendingMoviesSuccess, fetchTrendingMoviesFailure, fetchMovieDetailsSuccess, fetchMovieDetailsFailure, fetchMovieDetailsStart } from "../actionCreators/movieActionCreators";
+import { fetchTrendingMoviesStart, fetchTrendingMoviesSuccess, fetchTrendingMoviesFailure, fetchSearchMoviesStart, fetchSearchMoviesSuccess, fetchSearchMoviesFailure, fetchMovieDetailsSuccess, fetchMovieDetailsFailure, fetchMovieDetailsStart } from "../actionCreators/movieActionCreators";
 import { ENDPOINTS } from "@/api_manager/EndPoints";
 import * as dotenv from 'dotenv';
 
@@ -56,6 +56,32 @@ export const fetchMovieDetails = (movieId: number) => {
         } catch (error: any) {
             console.error("Error fetching movie details:", error);
             dispatch(fetchMovieDetailsFailure(error.message));
+        }
+    };
+}
+
+export const fetchSearchMovies = (query: string, page: number = 1) => {
+    return async (dispatch: Dispatch) => {
+        try {
+        dispatch(fetchSearchMoviesStart());
+        const response = await ApiManager.get(
+            `${ENDPOINTS.SEARCH_MOVIES}?query=${query}&page=${page}`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+
+        dispatch(fetchSearchMoviesSuccess({
+            searchResults: response.results,
+            totalPages: response.totalPages,
+            totalResults: response.totalResults,
+            page: response.page
+        }));
+
+        } catch (error: any) {
+            console.error("Error fetching trending movies:", error);
+            dispatch(fetchSearchMoviesFailure(error.message));
         }
     };
 }

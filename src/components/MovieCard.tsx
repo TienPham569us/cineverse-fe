@@ -17,7 +17,7 @@ export default function MovieCard({ movie, index }: { movie: Movie, index: numbe
             alt={`${media_base_url}/${movie.posterPath}`} 
             className="object-cover w-full rounded-lg" />
         <div className="font-bold hover:text-[#22d3ee]">{movie.title}</div>
-        <div className="text-sm font-italic text-[#64748b]">{formatDate(movie.releaseDate)}</div>
+        <div className="text-sm font-italic text-[#64748b]">{(movie.releaseDate != "" && movie.releaseDate != null) ? formatDate(movie.releaseDate) : ""}</div>
     </Link>
   );
 }

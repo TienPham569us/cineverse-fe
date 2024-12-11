@@ -5,4 +5,5 @@ export const ENDPOINTS = {
     REFRESH_TOKEN: 'user/refresh',
     TRENDING_MOVIES: 'movie/trending',
     MOVIE_DETAILS: 'movie',
+    SEARCH_MOVIES: 'movie/search',
 }
