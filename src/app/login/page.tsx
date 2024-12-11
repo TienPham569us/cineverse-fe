@@ -154,7 +154,7 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
       <main className="min-w-[calc(100vw/3)] flex flex-col gap-8 row-start-2 items-center sm:items-center p-5 border border-black border-solid rounded">
       <div><ToastContainer /></div>
         <div className="flex flex-row text-black">
-          <h1 className="text-black font-bold">Login Page</h1>
+          <h1 className="text-black text-3xl font-bold">Login</h1>
         </div>
         <form method="POST" //action={"/api/register"}
           onSubmit={(e) => handleSubmit(e)}
@@ -235,7 +235,7 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
           <span className="mx-1"></span>
           <Link href="/register"
             className="text-[#1d4ed8]">
-            Sign up now!
+            Register now!
           </Link>
         </div>
         
