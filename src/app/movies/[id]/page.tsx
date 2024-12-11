@@ -107,7 +107,7 @@ interface MovieDetailsPageProps {
                         
                       </div>
                       <div className="mt-4">
-                        <h1 className="italic text-slate-300">{movie?.tagline} </h1>
+                        <h1 className="italic text-cyan-900">{movie?.tagline} </h1>
                       </div>
                       <div>
                         <h1 className="font-bold ">Overview</h1>
