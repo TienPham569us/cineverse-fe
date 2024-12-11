@@ -24,8 +24,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { formatDate } from "@/utils/dateUtils";
-import MovieCard from "@/components/MovieCard";
 import { useSearchParams } from 'next/navigation'
+import MovieCard from "@/components/MovieCard";
 
 interface SearchPageProps {
     loadingSearchMovies: boolean;
@@ -98,7 +98,7 @@ return (
           />
           <button
             onClick={handleSearch}
-            className="px-4 py-2 ml-2 text-white bg-blue-500 rounded"
+            className="m-2 button-auth"
           >
             Search
           </button>
@@ -133,6 +133,20 @@ return (
 
             {/* Pagination */}
             <div className="flex gap-2 mt-4">
+            <button
+              disabled={page === 1 || loadingSearchMovies}
+              onClick={() => setPage(1)}
+              className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
+            >
+              {"<<"}
+            </button>
+            <button
+              disabled={page === 1 || loadingSearchMovies}
+              onClick={() => setPage(page - 1)}
+              className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
+            >
+              {"<"}
+            </button>
             {arrCurNumOfPages.map((item, index) => (
               <button
                 key={index}
@@ -143,12 +157,26 @@ return (
                   }
                 }}
                 className={`px-4 py-2 rounded ${
-                  page === item ? "bg-blue-500 text-white" : "bg-gray-300"
+                  page === item ? "bg-[#000] text-white" : "bg-gray-300"
                 }`}
               >
                 {item}
               </button>
-            ))}  
+            ))}
+            <button
+              disabled={page === totalPages || loadingSearchMovies}
+              onClick={() => setPage(page + 1)}
+              className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
+            >
+              {">"}
+            </button>
+            <button
+              disabled={page === totalPages || loadingSearchMovies}
+              onClick={() => setPage(totalPages)}
+              className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
+            >
+              {">>"}
+            </button>  
             </div>
             {/* <div className="flex gap-2 mt-4">
                 <button

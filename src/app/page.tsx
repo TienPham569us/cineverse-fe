@@ -76,7 +76,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
             pathname: "/search",
             query: { query: query, page: 1 }, // Định dạng đúng query object
           }}
-          className="ml-2 px-4 py-2 bg-blue-500 text-white rounded">
+          className="ml-2 button-auth">
           Search
         </Link >
         {/* <button
