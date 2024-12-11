@@ -4,7 +4,7 @@ import CustomHeader from "@/components/header";
 import { fetchSearchMovies, fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { Movie } from "@/types/movie/movie.response";
-import React, {useEffect, useState } from "react";
+import React, {Suspense, useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
   Tabs,
@@ -220,7 +220,9 @@ const ConnectedSeachPageContent = connect(mapStateToProps, mapDispatchToProps)(S
 
 export default function SearchPage() {
   return (
-    <ConnectedSeachPageContent />
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConnectedSeachPageContent />
+    </Suspense>
   );
 }
 

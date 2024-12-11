@@ -139,4 +139,8 @@ interface MovieDetailsPageProps {
   
  const ConnectedMovieDetailsPageContent = connect(mapStateToProps, mapDispatchToProps)(MovieDetailsPageContent);
 
-export default ConnectedMovieDetailsPageContent;
+  export default function MovieDetailsPage() {
+    return (
+      <ConnectedMovieDetailsPageContent />
+    );
+  }
