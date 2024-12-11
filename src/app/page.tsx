@@ -27,8 +27,6 @@ import { Label } from "@/components/ui/label"
 import { formatDate } from "@/utils/dateUtils";
 import MovieCard from "@/components/MovieCard";
 
-const media_base_url = "https://media.themoviedb.org/t/p/w220_and_h330_face"; 
-
 interface HomePageProps {
   loadingTrendingMovies: boolean;
   errorTrendingMovies: string | null;

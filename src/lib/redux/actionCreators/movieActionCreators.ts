@@ -24,10 +24,10 @@ export const fetchTrendingMoviesFailure = (error: string) => {
     }
 }
 
-export const fetchMovieDetailsStart = (id: number) => {
+export const fetchMovieDetailsStart = () => {
     return {
         type: FETCH_MOVIE_DETAILS_START,
-        payload: id
+      
     }
 }
 

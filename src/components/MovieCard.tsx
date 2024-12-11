@@ -2,8 +2,8 @@ import { Movie } from "@/types/movie/movie.response";
 import { formatDate } from "@/utils/dateUtils";
 import Link from "next/link";
 import CircularProgressBar from "./CircularProgressBar";
+import { media_base_url } from "@/constants/app_api";
 
-const media_base_url = "https://media.themoviedb.org/t/p/w220_and_h330_face"; 
 
 export default function MovieCard({ movie, index }: { movie: Movie, index: number }) {
   return (

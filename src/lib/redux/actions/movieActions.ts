@@ -1,6 +1,6 @@
 import { ApiManager } from "@/api_manager/ApiManager";
 import { Dispatch } from "redux";
-import { fetchTrendingMoviesStart, fetchTrendingMoviesSuccess, fetchTrendingMoviesFailure, fetchSearchMoviesStart, fetchSearchMoviesSuccess, fetchSearchMoviesFailure } from "../actionCreators/movieActionCreators";
+import { fetchTrendingMoviesStart, fetchTrendingMoviesSuccess, fetchTrendingMoviesFailure, fetchSearchMoviesStart, fetchSearchMoviesSuccess, fetchSearchMoviesFailure, fetchMovieDetailsSuccess, fetchMovieDetailsFailure, fetchMovieDetailsStart } from "../actionCreators/movieActionCreators";
 import { ENDPOINTS } from "@/api_manager/EndPoints";
 import * as dotenv from 'dotenv';
 
@@ -42,7 +42,7 @@ export const fetchTrendingMovies = (timeWindow: string) => {
 export const fetchMovieDetails = (movieId: number) => {
     return async (dispatch: Dispatch) => {
         try {
-        dispatch(fetchTrendingMoviesStart());
+        dispatch(fetchMovieDetailsStart());
     
         const response = await ApiManager.get(
             `${ENDPOINTS.MOVIE_DETAILS}/${movieId}`,
@@ -52,10 +52,10 @@ export const fetchMovieDetails = (movieId: number) => {
         );
         console.log("response", response);
 
-        dispatch(fetchTrendingMoviesSuccess(response));
+        dispatch(fetchMovieDetailsSuccess(response));
         } catch (error: any) {
             console.error("Error fetching movie details:", error);
-            dispatch(fetchTrendingMoviesFailure(error.message));
+            dispatch(fetchMovieDetailsFailure(error.message));
         }
     };
 }
