@@ -48,8 +48,8 @@ interface MovieDetailsPageProps {
                   />*/
     return (<>
       <CustomHeader />
-      <div className="items-center justify-items-center min-h-screen  bg-white">
-        <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">        
+      <div className="items-center justify-items-center min-h-screen bg-white">
+        <main className="flex flex-col gap-3 items-center sm:items-center">        
           <div><ToastContainer /></div>
           {
             (loading) 
@@ -57,16 +57,16 @@ interface MovieDetailsPageProps {
                 <h1>Loading...</h1>
               </div>
               ) : (
-              <div className="flex flex-row text-white">
-                <div className="container relative p-1">
+              <div className="flex flex-row text-black rounded-md m-1 w-max">
+                <div className="container relative p-1 w-max">
                   <div
                     id="backdrop"
-                    className="absolute inset-0 bg-cover bg-center opacity-60"
+                    className="absolute inset-0 bg-cover bg-center opacity-60 rounded-md"
                     style={{ backgroundImage: `url(${backdrop_base_url}/${movie?.backdropPath})` }}
                   ></div>
 
                   <div className="relative z-10 flex flex-row sm:grid-cols-4 lg:grid-cols-6" id='content'>
-                    <div className="flex flex-row text-white max-w-56 max-h-xs ms-1 me-5">
+                    <div className="flex flex-row max-w-56 max-h-xs ms-1 me-5">
                       <img 
                         src={`${media_base_url}/${movie?.posterPath}`} 
                         alt={`${media_base_url}/${movie?.posterPath}`} 
@@ -74,8 +74,8 @@ interface MovieDetailsPageProps {
                          
                     </div>
                     
-                    <div className="flex flex-col text-white">
-                      <h1 className="text-3xl font-bold text-white me-2 " aria-readonly>
+                    <div className="flex flex-col">
+                      <h1 className="text-3xl font-bold me-2 " aria-readonly>
                         {movie?.title}
                       </h1>
                       <div className="flex flex-row">

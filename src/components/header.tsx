@@ -33,8 +33,7 @@ const CustomHeader = () => {
                 <Link href={"/profile"} className="text-center flex flex-row justify-center mx-3">
                   <button className="button-auth">Profile</button>
                 </Link>
-                <button className="font-bold py-2 px-4 rounded bg-[#dc2626] text-white rounded-lg my-2 hover:bg-white 
-                        hover:text-[#dc2626] hover:border border-[#dc2626]" 
+                <button className="button-auth" 
                         onClick={() => handleLogout()}>
                           Logout
                   </button>

@@ -9,7 +9,7 @@ export default function MovieCard({ movie, index }: { movie: Movie, index: numbe
   return (
     <Link 
         key={index} 
-        className="relative w-full h-full p-4 hover:shadow-lg rounded-md" 
+        className="relative w-full h-full p-4 shadow-lg rounded-md" 
         href={`/movies/${movie.id}`}>
         
         <img 

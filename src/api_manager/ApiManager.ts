@@ -3,7 +3,7 @@ import { ENDPOINTS } from "./EndPoints";
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const BACKEND_BASE_URL: string = 'http://localhost:8080'; //process.env.BACKEND_BASE_URL || 'https://cineverse-be-ga2.onrender.com'; //
+const BACKEND_BASE_URL: string = process.env.BACKEND_BASE_URL || 'https://cineverse-be-ga2.onrender.com'; //'http://localhost:8080'; //
 
 export class ApiManager {
   private static isRefreshing = false;

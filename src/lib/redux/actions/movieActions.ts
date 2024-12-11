@@ -11,7 +11,7 @@ const headers = {
     //'Authorization': `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
 };
 
-const API_BASE_URL: string ='http://localhost:8080'; // process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.themoviedb.org/3';
+const API_BASE_URL: string = process.env.BACKEND_BASE_URL || 'https://cineverse-be-ga2.onrender.com'; //'http://localhost:8080'; // process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.themoviedb.org/3';
 export const fetchTrendingMovies = (timeWindow: string) => {
     return async (dispatch: Dispatch) => {
         try {
