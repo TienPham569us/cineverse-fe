@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  //trailingSlash: true,
   /* config options here */
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
@@ -13,6 +14,17 @@ const nextConfig: NextConfig = {
       });
     }
     return config;
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "media.themoviedb.org",
+        pathname: "/**",
+        port: "",
+      }
+      
+    ],
   },
 };
 

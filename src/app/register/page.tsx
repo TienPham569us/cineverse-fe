@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { FormEvent, useState, FocusEvent, useActionState, CSSProperties, Suspense, useEffect } from "react";
+import { FormEvent, useState, FocusEvent, useActionState, CSSProperties, Suspense, useEffect, use } from "react";
 import validator from "validator";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -36,6 +36,14 @@ const  RegisterPageContent: React.FC<RegisterPageProps> = props => {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    if (error===null && !loading && message?.length!=0) {
+      console.log('success');
+      //setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    }
+  }, []);
   useEffect(() => {
     if (idToken!=null) {
       setPassword("");

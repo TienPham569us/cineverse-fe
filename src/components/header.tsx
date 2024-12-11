@@ -22,7 +22,7 @@ const CustomHeader = () => {
     <header>
       <div className="flex flex-row items-center justify-between bg-[#d4d4d8] p-6">
         <Link href={"/"} className="flex items-center text-black mr-6 p-3 rounded-lg hover:border hover:border-black">
-          <span className="font-semibold text-xl tracking-tight">Home</span>
+          <span className="font-semibold text-xl tracking-tight pointer-events-none">Home</span>
         </Link>
         
         <div className="text-black">
@@ -33,8 +33,7 @@ const CustomHeader = () => {
                 <Link href={"/profile"} className="text-center flex flex-row justify-center mx-3">
                   <button className="button-auth">Profile</button>
                 </Link>
-                <button className="font-bold py-2 px-4 rounded bg-[#dc2626] text-white rounded-lg my-2 hover:bg-white 
-                        hover:text-[#dc2626] hover:border border-[#dc2626]" 
+                <button className="button-auth" 
                         onClick={() => handleLogout()}>
                           Logout
                   </button>
