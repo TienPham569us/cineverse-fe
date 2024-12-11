@@ -65,7 +65,7 @@ export const fetchSearchMovies = (query: string, page: number = 1) => {
         try {
         dispatch(fetchSearchMoviesStart());
         const response = await ApiManager.get(
-            `${ENDPOINTS.SEARCH_MOVIES}?query=${query}&page=${page}`,
+            `${ENDPOINTS.SEARCH_MOVIES}?query=${query}&page=${page}&limit=24`,
             headers,
             undefined,
             API_BASE_URL
