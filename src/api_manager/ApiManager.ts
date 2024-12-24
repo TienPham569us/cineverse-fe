@@ -3,7 +3,7 @@ import { ENDPOINTS } from "./EndPoints";
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const BACKEND_BASE_URL: string = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || 'https://cineverse-be-ga2.onrender.com'; //'http://localhost:8080'; //
+const BACKEND_BASE_URL: string = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || 'https://exclusive-neile-tthuytruc-6a5d7e3f.koyeb.app'; //'http://localhost:8080'; //
 
 export class ApiManager {
   private static isRefreshing = false;
@@ -100,6 +100,9 @@ export class ApiManager {
   }
   static async post(endpoint: string, data: any, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
     try {
+      if (!base_url) {
+        base_url = BACKEND_BASE_URL;
+      }
       let response;
       if (refreshToken) {
         const options: RequestInit = {
@@ -108,6 +111,7 @@ export class ApiManager {
         };
         response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, refreshToken);
       } else {
+        console.log("Endpoint: ", `${base_url}/${endpoint}`);
         response = await fetch(`${base_url}/${endpoint}`, {
           method: 'POST',
           // headers: {
@@ -129,6 +133,9 @@ export class ApiManager {
   }
   static async put(endpoint: string, data: any, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
     try {
+      if (!base_url) {
+        base_url = BACKEND_BASE_URL;
+      }
       let response;
       if (refreshToken) {
         const options: RequestInit = {
@@ -154,6 +161,9 @@ export class ApiManager {
   }
   static async delete(endpoint: string, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
     try {
+      if (!base_url) {
+        base_url = BACKEND_BASE_URL;
+      }
       let response;
       if (refreshToken) {
         const options: RequestInit = {

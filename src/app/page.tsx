@@ -1,6 +1,7 @@
 'use client';
 
 import CustomHeader from "@/components/header";
+import CustomFooter from "@/components/footer";
 import { fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { Movie } from "@/types/movie/movie.response";
@@ -26,6 +27,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { formatDate } from "@/utils/dateUtils";
 import MovieCard from "@/components/MovieCard";
+import { backdrop_base_url } from "@/constants/app_api";
+import Image from "next/image";
 
 interface HomePageProps {
   loadingTrendingMovies: boolean;
@@ -54,6 +57,10 @@ const HomeContent: React.FC<HomePageProps> = props => {
   if (!isClient) {
     return null; // Render nothing on the server
   }
+
+  const randomBackdropPath = trendingMovies?.length > 0
+      ? trendingMovies[Math.floor(Math.random() * trendingMovies.length)].posterPath
+      : null;
   
   // const handleSearch = () => {
   //   if (query.trim()) {
@@ -61,46 +68,66 @@ const HomeContent: React.FC<HomePageProps> = props => {
   //   }
   // };
 
-  return (<div className="bg-white"> 
+  return (
+  <div className="bg-darkBlue"> 
     <CustomHeader />
-    <div className="p-3 m-2 bg-white">
-      <div className="flex items-center">
-        <Input
-          placeholder="Search for movies..."
-          className="flex-1 text-black border border-solid border-black"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <Link 
-          href={{
-            pathname: "/search",
-            query: { query: query, page: 1 }, // Định dạng đúng query object
-          }}
-          className="ml-2 button-auth">
-          Search
-        </Link >
-        {/* <button
-          onClick={handleSearch}
-          className="px-4 py-2 ml-2 text-white bg-blue-500 rounded"
-        >
-          Search
-        </button> */}
-      </div>
-    </div>
-    <div className="items-center justify-items-center p-8 ps-5 bg-white" aria-readonly>
-        <div className="flex flex-row flex-wrap">
-          <h1 className="text-3xl font-bold text-black me-2 " aria-readonly>Trending</h1>
-          <Tabs defaultValue="day" className="w-[400px]" 
-            onValueChange={(value) => setTimeWindow(value)}>
-
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="day" aria-readonly>Today</TabsTrigger>
-              <TabsTrigger value="week" aria-readonly>This Week</TabsTrigger>
-            </TabsList>
-          </Tabs>
+    <div className="relative flex items-center justify-center w-full h-[450px] md:h-[700px]">
+      {
+        (!loadingTrendingMovies && randomBackdropPath)
+        ? (
+          <div className="absolute top-0 left-0 w-full h-full opacity-50">
+            <img
+              src="https://image.tmdb.org/t/p/original/9iw4a6AQkxUO3EuRn59Vgrqf0zO.jpg"
+              alt="Backdrop"
+              className="w-full h-full object-cover object-center"
+              loading="lazy"
+            />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center text-white">
+            Loading...
+          </div>
+        )
+      }
+      <div className="absolute bottom-0 left-0 w-full h-[250px] bg-gradient-to-b from-transparent to-darkBlue"></div>
+      <div className="relative text-center text-white max-w-[800px] mx-auto">
+        <h1 className="text-4xl md:text-7xl font-bold mb-4">Welcome</h1>
+        <p className="text-sm md:text-lg font-medium tracking-wide mb-10">
+          Millions of movies, TV shows, and people to discover. Explore now.
+        </p>
+        <div className="flex items-center justify-center">
+          <input
+            type="search"
+            className="w-[calc(100%-100px)] md:w-[calc(100%-150px)] h-[50px] md:h-[60px] rounded-l-full px-4 text-black text-sm md:text-lg outline-none"
+            placeholder="Search for a movie or TV show..."
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyUp={() => {}}
+          />
+          <Link 
+            href={{
+              pathname: "/search",
+              query: { query: query, page: 1 },
+            }}
+            className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center">
+            Search
+          </Link >
         </div>
       </div>
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)] bg-white">
+    </div>
+    <div className="w-full max-w-[1200px] mx-auto py-8 px-4" aria-readonly>
+      <div className="flex flex-row flex-wrap justify-between">
+        <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Trending</h1>
+        <Tabs defaultValue="day" className="w-[400px]" 
+          onValueChange={(value) => setTimeWindow(value)}>
+
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="day" aria-readonly>Today</TabsTrigger>
+            <TabsTrigger value="week" aria-readonly>This Week</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+    </div>
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
       
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
         {
@@ -132,8 +159,9 @@ const HomeContent: React.FC<HomePageProps> = props => {
         }
       
       </main>
-      </div>
     </div>
+    <CustomFooter />
+  </div>
   );
 }
 
