@@ -123,6 +123,7 @@ export const signup = (credentials: RegisterParams) => {
         };
 
         const response = await ApiManager.register(credentials);
+        console.log("Response: ", response);
         //const response = await ApiManager.post(ENDPOINTS.REGISTER, credentials, headers);
         //const data = await response.json();
         //console.log(response.message);
