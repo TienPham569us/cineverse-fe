@@ -29,6 +29,7 @@ import { formatDate } from "@/utils/dateUtils";
 import MovieCard from "@/components/MovieCard";
 import { backdrop_base_url } from "@/constants/app_api";
 import Image from "next/image";
+import Spinner from "@/components/Spinner";
 
 interface HomePageProps {
   loadingTrendingMovies: boolean;
@@ -114,7 +115,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
         </div>
       </div>
     </div>
-    <div className="w-full max-w-[1200px] mx-auto py-8 px-4" aria-readonly>
+    <div className="w-full container mx-auto py-4 px-8" aria-readonly>
       <div className="flex flex-row flex-wrap justify-between">
         <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Trending</h1>
         <Tabs defaultValue="day" className="w-[400px]" 
@@ -133,9 +134,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
         {
           (loadingTrendingMovies) 
           ? (
-            <div className="flex flex-row text-black">
-              <h1>Loading...</h1>
-            </div>
+            <Spinner />
           ) : (
             <div className="flex flex-row text-black">
               <div className="container mx-auto p-4">

@@ -26,6 +26,8 @@ import { Label } from "@/components/ui/label"
 import { formatDate } from "@/utils/dateUtils";
 import { useSearchParams } from 'next/navigation'
 import MovieCard from "@/components/MovieCard";
+import CustomFooter from "@/components/footer";
+import Spinner from "@/components/Spinner";
 
 interface SearchPageProps {
     loadingSearchMovies: boolean;
@@ -86,13 +88,13 @@ const SearchContent: React.FC<SearchPageProps> = props => {
   }
 
 return (
-    <div className="bg-white">
+    <div className="bg-darkBlue">
       <CustomHeader />
-      <div className="p-3 m-2 bg-white">
+      <div className="w-full container mx-auto h-[100px] pt-16 px-12">
         <div className="flex items-center">
           <Input
             placeholder="Search for movies..."
-            className="flex-1 text-black border border-solid border-black"
+            className="flex-1 text-white border border-solid border-white"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -105,12 +107,10 @@ return (
         </div>
       </div>
 
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)] bg-white">
+      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
             {loadingSearchMovies ? (
-                <div className="flex flex-row text-black">
-                <h1>Loading...</h1>
-                </div>
+                <Spinner />
             ) : searchResults.length > 0 ? (
                 <div className="container mx-auto p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
@@ -121,7 +121,7 @@ return (
                 </div>
             ) : (
                 <div className="flex flex-row">
-                <h1 className="text-black">No results found.</h1>
+                <h1 className="text-white">No results found.</h1>
                 </div>
             )}
 
@@ -196,6 +196,7 @@ return (
             </div> */}
         </main>
       </div>
+      <CustomFooter />
     </div>
   );
 };
