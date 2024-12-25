@@ -62,7 +62,26 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		keyframes: {
+			dash: {
+				"0%": {
+				strokeDasharray: "1, 150",
+				strokeDashoffset: "0",
+				},
+				"50%": {
+				strokeDasharray: "90, 150",
+				strokeDashoffset: "-35",
+				},
+				"100%": {
+				strokeDasharray: "90, 150",
+				strokeDashoffset: "-124",
+				},
+			},
+		},
+		animation: {
+			dash: "dash 1.5s ease-in-out infinite",
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
