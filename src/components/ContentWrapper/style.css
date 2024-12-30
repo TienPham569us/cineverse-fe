@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.contentWrapper {
+    @apply w-full mx-auto px-2;
+  }
+  
