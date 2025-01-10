@@ -13,6 +13,7 @@ import { VideoResponse } from "@/types/movie/video.response";
 import Casts from "@/components/Casts/Casts";
 import CustomFooter from "@/components/footer";
 import VideosSections from "@/components/VideosSections.tsx/VideosSections";
+import Reviews from "@/components/Reviews/Reviews";
 
 interface MovieDetailsPageProps {
     loading: boolean;
@@ -67,7 +68,7 @@ interface MovieDetailsPageProps {
             video={videoResponse}/>
           <Casts data={movie.cast} loading={loading} />
           <VideosSections data={videoResponse} loading={loading} />
-          
+          <Reviews reviews={movie.reviews} title="Reviews" />
         </>)
       }
       <CustomFooter />

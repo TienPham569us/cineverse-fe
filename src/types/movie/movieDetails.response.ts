@@ -1,5 +1,6 @@
 import { Cast } from "../person/cast.response";
 import { Crew } from "../person/crew.response";
+import { Review } from "../review/review.response";
 
 export interface Genre {
   id: number;
@@ -22,6 +23,7 @@ export interface MovieDetails {
   budget: number;
   revenue: number;
   backdropPath: string;
+  reviews: Review[];
 }
 
 // export interface Collection {

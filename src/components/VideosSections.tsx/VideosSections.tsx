@@ -24,7 +24,7 @@ const VideosSections = ({ data, loading } : { data: VideoResponse | null, loadin
         }
     };
     return (
-      <div className="videosSection relative mb-12 mb-12 bg-[#04152d] ">
+      <div className="videosSection relative bg-[#04152d] ">
         <ContentWrapper className2="max-w-screen-2xl">
           <div className="sectionHeading text-2xl text-white mb-6 ms-6 ps-6">
             <span className="ms-4">

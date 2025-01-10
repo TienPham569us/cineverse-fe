@@ -17,19 +17,22 @@ const VideoPopup = ({ show, setShow, videoId, setVideoId }
     return ( <>
         <div className={`videoPopup duration-400 
             ${show ? "visible opacity-1 " : "opacity-0 hidden"}`}>
+
             <div className="opacityLayer duration-400" onClick={hidePopup}></div>
+            
             <div className={`videoPlayer duration-250 
                 ${show ? 'scale-100' : 'scale-20'}
             `}>
                 <span className="closeBtn" onClick={hidePopup}>
-                Close
+                    Close
                 </span>
+
                 <ReactPlayer
-                url={`https://www.youtube.com/watch?v=${videoId}`}
-                controls
-                width="100%"
-                height="100%"
-                playing={true}
+                    url={`https://www.youtube.com/watch?v=${videoId}`}
+                    controls
+                    width="100%"
+                    height="100%"
+                    playing={true}
                 />
             </div>
         </div>
