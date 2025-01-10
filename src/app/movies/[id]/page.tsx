@@ -5,10 +5,14 @@ import { AppDispatch, RootState } from "@/lib/redux/store";
 import CustomHeader from "@/components/header";
 import { ToastContainer, toast } from 'react-toastify';
 import { MovieDetails } from "@/types/movie/movieDetails.response";
-import { fetchMovieDetails } from "@/lib/redux/actions/movieActions";
+import { fetchMovieDetails, fetchVideo } from "@/lib/redux/actions/movieActions";
 import { usePathname } from "next/navigation";
 import { backdrop_base_url, media_base_url } from "@/constants/app_api";
-
+import DetailsBanner from "@/components/DetailsBanner/detailsBanner";
+import { VideoResponse } from "@/types/movie/video.response";
+import Casts from "@/components/Casts/Casts";
+import CustomFooter from "@/components/footer";
+import VideosSections from "@/components/VideosSections.tsx/VideosSections";
 
 interface MovieDetailsPageProps {
     loading: boolean;
@@ -24,7 +28,17 @@ interface MovieDetailsPageProps {
     const [isClient, setIsClient] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error, movie, fetchMovieDetails } = props;
+    const [videoResponse, setVideoResponse] = useState<VideoResponse | null>(null);
 
+    const _fetchVideo = async (id: number) => {
+      try {
+        const result: VideoResponse | null = await fetchVideo(Number(id));
+        setVideoResponse(result);
+      } catch (error)
+      {
+        console.error("Error fetching video:", error);
+      }
+    }
   
     useEffect(() => {
       setIsClient(true);
@@ -33,6 +47,8 @@ interface MovieDetailsPageProps {
 
       if (id && !isNaN(Number(id))) {
         fetchMovieDetails(Number(id));
+
+        _fetchVideo(Number(id));
       }
 
     }, [dispatch, pathname]);
@@ -41,14 +57,45 @@ interface MovieDetailsPageProps {
       return null; // Render nothing on the server
     }
   
-    /*<img id='backdrop'
-                        src={`${backdrop_base_url}/${movie?.backdropPath}`} 
-                        alt={`${backdrop_base_url}/${movie?.backdropPath}`} 
-                        className="object-cover w-full rounded-lg backdrop-image absolute inset-0 bg-cover bg-center opacity-50" 
-                  />*/
+
     return (<>
       <CustomHeader />
-      <div className="items-center justify-items-center min-h-screen bg-white">
+      {
+        loading ? <h1>Loading...</h1> : 
+        movie && (<>
+          <DetailsBanner detailsMovie={movie} 
+            video={videoResponse}/>
+          <Casts data={movie.cast} loading={loading} />
+          <VideosSections data={videoResponse} loading={loading} />
+          
+        </>)
+      }
+      <CustomFooter />
+      </>
+    );
+  }
+  
+  const mapStateToProps = (state: RootState) => ({
+    loading: state.movieDetails.loading,
+    error: state.movieDetails.error,
+    movie: state.movieDetails.movieDetails,
+  });
+  
+  const mapDispatchToProps = (dispatch: AppDispatch) => ({
+    fetchMovieDetails: (id: number) => dispatch(fetchMovieDetails(id)),
+  });
+  
+ const ConnectedMovieDetailsPageContent = connect(mapStateToProps, mapDispatchToProps)(MovieDetailsPageContent);
+
+  export default function MovieDetailsPage() {
+    return (
+      <ConnectedMovieDetailsPageContent />
+    );
+  }
+
+
+
+  /*<div className="items-center justify-items-center min-h-screen bg-white">
         <main className="flex flex-col gap-3 items-center sm:items-center">        
           <div><ToastContainer /></div>
           {
@@ -122,25 +169,10 @@ interface MovieDetailsPageProps {
           <div className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
           </div>
         </main>
-      </div>
-      </>
-    );
-  }
-  
-  const mapStateToProps = (state: RootState) => ({
-    loading: state.movieDetails.loading,
-    error: state.movieDetails.error,
-    movie: state.movieDetails.movieDetails,
-  });
-  
-  const mapDispatchToProps = (dispatch: AppDispatch) => ({
-    fetchMovieDetails: (id: number) => dispatch(fetchMovieDetails(id)),
-  });
-  
- const ConnectedMovieDetailsPageContent = connect(mapStateToProps, mapDispatchToProps)(MovieDetailsPageContent);
+      </div>*/
 
-  export default function MovieDetailsPage() {
-    return (
-      <ConnectedMovieDetailsPageContent />
-    );
-  }
+          /*<img id='backdrop'
+                        src={`${backdrop_base_url}/${movie?.backdropPath}`} 
+                        alt={`${backdrop_base_url}/${movie?.backdropPath}`} 
+                        className="object-cover w-full rounded-lg backdrop-image absolute inset-0 bg-cover bg-center opacity-50" 
+                  />*/

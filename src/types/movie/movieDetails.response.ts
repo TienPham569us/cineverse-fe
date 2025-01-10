@@ -1,3 +1,6 @@
+import { Cast } from "../person/cast.response";
+import { Crew } from "../person/crew.response";
+
 export interface Genre {
   id: number;
   name: string;
@@ -12,6 +15,8 @@ export interface MovieDetails {
   voteAverage: number;
   voteCount: number;
   genres: Genre[];
+  cast: Cast[];
+  crew: Crew[];
   status: string;
   releaseDate: string;
   budget: number;
