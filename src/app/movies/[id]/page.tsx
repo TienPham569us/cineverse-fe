@@ -67,6 +67,7 @@ interface MovieDetailsPageProps {
             video={videoResponse}/>
           <Casts data={movie.cast} loading={loading} />
           <VideosSections data={videoResponse} loading={loading} />
+          
         </>)
       }
       <CustomFooter />

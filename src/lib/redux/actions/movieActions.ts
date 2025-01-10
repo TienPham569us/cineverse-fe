@@ -4,6 +4,7 @@ import { fetchTrendingMoviesStart, fetchTrendingMoviesSuccess, fetchTrendingMovi
 import { ENDPOINTS } from "@/api_manager/EndPoints";
 import * as dotenv from 'dotenv';
 import { VideoResponse } from "@/types/movie/video.response";
+import { Movie } from "@/types/movie/movie.response";
 
 dotenv.config();
 const headers = {
@@ -102,6 +103,37 @@ export const fetchVideo = async (movieId: number): Promise<VideoResponse | null>
         console.log("response", response);
         const VideoResponse: VideoResponse = response;
         return VideoResponse;
+    } catch (error: any) {
+        console.error("Error fetching movie videos:", error);
+        return null;
+    }
+
+}
+
+export const fetchSimilarMovie = async (movieId: number): Promise<Movie[] | null> => {
+    try {
+        // const newHeader = {
+        //     ...headers,
+        //     'Authorization': `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
+        // }
+        // const response = await ApiManager.get(
+        //     `movie/${movieId}/similar`,
+        //     //newHeader,
+        //     headers,
+        //     undefined,
+        //     API_BASE_URL
+        //     //'https://api.themoviedb.org/3'
+        // );
+
+        const response = await ApiManager.get(
+            `${ENDPOINTS.TRENDING_MOVIES}?period=day`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+
+        return response.results;
     } catch (error: any) {
         console.error("Error fetching movie videos:", error);
         return null;
