@@ -84,19 +84,22 @@ const DetailsBanner = ({ detailsMovie, video } : { detailsMovie: MovieDetails, v
               {/* type="name" */}
 
               <div className=" flex flex-col items-start gap-6 mb-6">
-                <CircleRating rating={detailsMovie.voteAverage} />
-                <div
-                    className="playbtn flex items-center gap-5 cursor-pointer"
-                    onClick={() => {
-                      //TODO: Add video key
-                      console.log('show video');
-                      setShow(true);
-                      setVideoId(video && video.results.length > 0 ? video.results[0].key : null);
-                    }}
-                  >
-                    <PlayIcon />
-                    <span className="text text-xl transition-all duration-700 ease-in-out">Watch Trailer</span>
+                <div className="flex flex-row align-start items-center gap-6">
+                  <CircleRating rating={detailsMovie.voteAverage} />
+                  <div
+                      className="playbtn flex items-center gap-5 cursor-pointer"
+                      onClick={() => {
+                        //TODO: Add video key
+                        console.log('show video');
+                        setShow(true);
+                        setVideoId(video && video.results.length > 0 ? video.results[0].key : null);
+                      }}
+                    >
+                      <PlayIcon />
+                      <span className="text text-xl transition-all duration-700 ease-in-out">Watch Trailer</span>
                   </div>
+                </div>
+                
                 <div className="flex flex-row align-start items-center gap-6">
                   <button 
                     className="w-10 h-10 bg-gray-600 text-white rounded-full flex items-center justify-center"

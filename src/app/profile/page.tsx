@@ -10,6 +10,27 @@ import { useRouter } from "next/navigation";
 import CustomHeader from "@/components/header";
 import { logout } from "@/lib/redux/actions/authActions";
 import { ToastContainer, toast } from 'react-toastify';
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
+import { Profile } from "@/types/profile/profile.response";
+import Img from "@/components/Img";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import dayjs from "dayjs";
+import { Button } from "@/components/ui/button";
+import CustomFooter from "@/components/footer";
+import { fetchFavouriteMovies } from "@/lib/redux/actions/movieActions";
+import { Movie } from "@/types/movie/movie.response";
+import { User } from "lucide-react";
+import UserMovieList from "@/components/UserMovieList/UserMovieList";
+import ProfileCard from "@/components/ProfileCard/ProfileCard";
+
+const userData: Profile = {
+  id: "",
+  name: "pham tien",
+  email: "maiantiem@gmail.com",
+  createdAt: "2024-12-26T11:37:24.722+00:00",
+  updatedAt: "2024-12-27T13:10:12.165+00:00",
+  profilePath: null
+}
 
 export default function ProfilePage() {
   const [error, setError] = useState("");
@@ -18,32 +39,21 @@ export default function ProfilePage() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
+  const [favouriteMovies, setFavouriteMovies] = useState<Movie[] | null>([]);
   const profileData = useSelector((state: RootState) => state.auth);
-  //const { idToken } = profileData;
-  const handleLogout = () => {
-    window.location.href = '/login';
-    //router.push('/');
-    dispatch(logout());
-    
-  };
 
-  // useEffect(() => {
-  //   if (idToken!=null) {
-      
-  //    toast.success('Login successful! Now you can navigate to your profile page.', {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined
-  //     });
-  //   }
-  // },  [dispatch, idToken, profileData]);
+  const _fetchFavouriteMovies = async () => {
+    try {
+      const response = await fetchFavouriteMovies();
+      setFavouriteMovies(response);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  }
 
   useEffect(() => {
     setIsClient(true);
+    _fetchFavouriteMovies();
   }, [dispatch]);
 
   if (!isClient) {
@@ -52,26 +62,40 @@ export default function ProfilePage() {
 
   return (<>
     <CustomHeader />
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">        
-        <div><ToastContainer /></div>
-        <div className="flex flex-row text-black">
-          <h1 className="text-black">Profile Page</h1>
-        </div>
-        <div className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
-        
-          {profileData && (
-            <div className="input-style">
-              <p>User ID: {profileData.userUid}</p>
-              <p>Email: {profileData.email}</p>
-              {/* Add more profile fields as needed */}
+    <div className="wrapper ">
+      <main className=""> 
+        <div className="profilePage w-full bg-whiet pt-15 mb-12 md:mb-0 md:pt-20 md:min-h-[700px] relative">
+        <ContentWrapper className2="max-w-screen-3xl mx-5">
+          <div className="content flex flex-col relative gap-6 md:gap-12 md:flex-row">
+            <div className="left flex-shrink-2 text-lg">
+              <ProfileCard profile={userData} />
+              
             </div>
-          )}
-          
-          {/* <button className="return-btn" onClick={handleLogout}>Logout</button> */}
-        </div>
+            <div className="right text-white bg-darkBlue">
+              <Card className="bg-darkBlue">
+                <CardContent>
+                  <div className="watchList">
+                    <UserMovieList movies={favouriteMovies} title={"Watch List"} seeMoreHref={"watchList"} />
+                  </div>
+
+                  <div className="favouriteList">
+                    <UserMovieList movies={favouriteMovies} title={"Favourite List"} seeMoreHref={"userFavouriteList"} />
+                  </div>
+
+                  <div className="ratingList">
+                    <UserMovieList movies={favouriteMovies} title={"Rating List"} seeMoreHref={"userRatingList"} />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </ContentWrapper>
+        </div>       
+        <div><ToastContainer /></div>
+    
       </main>
     </div>
+    <CustomFooter />
     </>
   );
 }

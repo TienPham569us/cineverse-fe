@@ -27,7 +27,8 @@ const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
                 </span>
               </div>
             )}
-            </ContentWrapper>
+          </ContentWrapper>
+
           <ContentWrapper className2="max-w-screen-2xl reviewsPanel mx-6">           
             {!loading ? (
                 reviews?.map((item) => {
@@ -47,6 +48,7 @@ const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
               </div>
             )}
           </ContentWrapper>
+
           <ReviewPopup 
             show={showReviewPopup}
             setShow={setShowReviewPopup}

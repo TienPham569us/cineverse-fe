@@ -38,7 +38,7 @@
   }
   
   .modalContent {
-    @apply relative w-[800px] aspect-[16/9] bg-white transform transition-transform;
+    @apply relative w-[800px] aspect-[16/9] bg-white transform transition-transform rounded-lg;
   }
   
   .modalContent.hidden {

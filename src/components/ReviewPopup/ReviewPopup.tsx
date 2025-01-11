@@ -36,7 +36,7 @@ const ReviewPopup = ({ show, setShow, review, setReview } :
             `}>
                 {
                     review && (
-                        <Card className="border-none shadow-none rounded-none ">
+                        <Card className="border-none shadow-none rounded-lg ">
                             <CardHeader>
                                 
                                     <div className="flex flex-row justify-start items-center gap-5 content-center">

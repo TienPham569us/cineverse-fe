@@ -140,3 +140,21 @@ export const fetchSimilarMovie = async (movieId: number): Promise<Movie[] | null
     }
 
 }
+
+export const fetchFavouriteMovies = async (): Promise<Movie[] | null> => {
+    try {
+        const response = await ApiManager.get(
+           `${ENDPOINTS.TRENDING_MOVIES}?period=day&page=1`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+
+        return response.results.slice(0, 5);
+    } catch (error: any) {
+        console.error("Error fetching favourite movies:", error);
+        return null;
+    }
+
+}
