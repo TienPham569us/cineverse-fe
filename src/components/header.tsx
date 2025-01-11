@@ -62,6 +62,12 @@ const CustomHeader = () => {
                 >
                   <button className="cursor-pointer hover:text-pink-500">Register</button>
                 </Link>
+                <Link
+                  href={"/casts"}
+                  className="text-center flex flex-row justify-center"
+                >
+                  <button className="cursor-pointer hover:text-pink-500">Cast</button>
+                </Link>
                 <button className="cursor-pointer hover:text-pink-500" onClick={() => setSearchMenu(true)}>
                   <HiOutlineSearch className="text-xl" />
                 </button>
@@ -99,6 +105,12 @@ const CustomHeader = () => {
             className="text-center flex flex-row justify-center"
           >
             <button className="cursor-pointer hover:text-pink-500">Register</button>
+          </Link>
+          <Link
+            href={"/casts"}
+            className="text-center flex flex-row justify-center"
+          >
+            <button className="cursor-pointer hover:text-pink-500">Cast</button>
           </Link>
         </ul>
       )}

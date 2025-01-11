@@ -1,63 +1,41 @@
 'use client';
 
 import CustomHeader from "@/components/header";
-import { fetchSearchMovies, fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
-import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
-import { Movie } from "@/types/movie/movie.response";
-import React, {Suspense, useEffect, useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { formatDate } from "@/utils/dateUtils";
-import { useSearchParams } from 'next/navigation'
-import MovieCard from "@/components/MovieCard";
 import CustomFooter from "@/components/footer";
+import { AppDispatch, RootState} from "@/lib/redux/store";
+import { useSearchParams } from 'next/navigation'
+import Link from "next/link";
+import React, { Suspense, use, useEffect, useState } from "react";
+import { connect, useDispatch} from "react-redux";
 import Spinner from "@/components/Spinner";
+import { Cast } from "@/types/person/cast.response";
+import { fetchPopularCasts } from "@/lib/redux/actions/castActions";
+import CastCard from "@/components/CastCard";
+import { Input } from "@/components/ui/input";
 
-interface SearchPageProps {
-    loadingSearchMovies: boolean;
-    errorSearchMovies: string | null;
-    searchResults: Movie[];
-    totalPages: number;
-    fetchSearchMovies: (query: string, page: number) => void;
+interface PopularCastsPageProps {
+  loadingPopularCasts: boolean;
+  errorPopularCasts: string | null;
+  popularCasts: Cast[];
+  totalPages: number;
+  fetchPopularCasts: (query: string, page: number) => void;
 }
 
-const SearchContent: React.FC<SearchPageProps> = props => {
+const PopularCastsContent: React.FC<PopularCastsPageProps> = props => {
   const dispatch = useDispatch<AppDispatch>();
   const [isClient, setIsClient] = useState(false);
-  const auth = useAppSelector((state: RootState) => state.auth);
   const searchParams = useSearchParams();
   const [query, setQuery] = useState<string>(searchParams.get("query") || "");
   const [page, setPage] = useState<number>(parseInt(searchParams.get("page") || "1"));
   const [arrCurNumOfPages, setArrCurNumOfPages] = useState<(number | string)[]>([]);
-  const { loadingSearchMovies, errorSearchMovies, searchResults, totalPages, fetchSearchMovies } = props;
+  const { loadingPopularCasts, errorPopularCasts, popularCasts, totalPages, fetchPopularCasts } = props;
 
   useEffect(() => {
     setIsClient(true);
-    if (query.trim()) {
-      console.log("call")
-      fetchSearchMovies(query, page);
-      console.log(totalPages)
-    }
+    fetchPopularCasts(query, page);
   }, [dispatch, page]);
 
   useEffect(() => {
-    console.log("ok")
     if (totalPages > 0) {
       const dots = "...";
       let tempArray = [];
@@ -79,23 +57,21 @@ const SearchContent: React.FC<SearchPageProps> = props => {
   }, [dispatch, page, totalPages]);
 
   const handleSearch = () => {
-    if (query.trim()) {
-      fetchSearchMovies(query, 1); // Reset to first page when performing a new search
-      setPage(1);
-    }
+    fetchPopularCasts(query, 1); // Reset to first page when performing a new search
+    setPage(1);
   };
 
   if (!isClient) {
     return null; // Render nothing on the server
   }
 
-return (
+  return (
     <div className="bg-darkBlue">
       <CustomHeader />
       <div className="w-full container mx-auto h-[100px] pt-16 px-12">
         <div className="flex items-center">
           <Input
-            placeholder="Search for movies..."
+            placeholder="Search for casts..."
             className="flex-1 text-white border border-solid border-white"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -108,16 +84,20 @@ return (
           </button>
         </div>
       </div>
-
+      <div className="container mx-auto flex justify-between items-center pt-8 px-16">
+        <div className="flex items-center text-xl font-bold">
+          Popular Cast
+        </div>
+      </div>
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
-            {loadingSearchMovies ? (
+            {loadingPopularCasts ? (
                 <Spinner />
-            ) : searchResults.length > 0 ? (
+            ) : popularCasts.length > 0 ? (
                 <div className="container mx-auto p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
-                    {searchResults.map((movie: Movie, index: number) => (
-                    <MovieCard key={index} movie={movie} index={index} />
+                    {popularCasts.map((cast, index: number) => (
+                      <CastCard key={index} cast={cast} index={index} />
                     ))}
                 </div>
                 </div>
@@ -127,23 +107,23 @@ return (
                 </div>
             )}
 
-            {errorSearchMovies && (
+            {errorPopularCasts && (
                 <div className="flex flex-row">
-                <h1 className="text-[#dc2626]">Error: {errorSearchMovies}</h1>
+                <h1 className="text-[#dc2626]">Error: {errorPopularCasts}</h1>
                 </div>
             )}
 
             {/* Pagination */}
             <div className="flex gap-2 mt-4">
             <button
-              disabled={page === 1 || loadingSearchMovies}
+              disabled={page === 1 || loadingPopularCasts}
               onClick={() => setPage(1)}
               className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
             >
               {"<<"}
             </button>
             <button
-              disabled={page === 1 || loadingSearchMovies}
+              disabled={page === 1 || loadingPopularCasts}
               onClick={() => setPage(page - 1)}
               className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
             >
@@ -152,7 +132,7 @@ return (
             {arrCurNumOfPages.map((item, index) => (
               <button
                 key={index}
-                disabled={item === "..." || loadingSearchMovies}
+                disabled={item === "..." || loadingPopularCasts}
                 onClick={() => {
                   if (typeof item === "number") {
                     setPage(item);
@@ -166,36 +146,20 @@ return (
               </button>
             ))}
             <button
-              disabled={page === totalPages || loadingSearchMovies || totalPages === 0}
+              disabled={page === totalPages || loadingPopularCasts || totalPages === 0}
               onClick={() => setPage(page + 1)}
               className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
             >
               {">"}
             </button>
             <button
-              disabled={page === totalPages || loadingSearchMovies || totalPages === 0}
+              disabled={page === totalPages || loadingPopularCasts || totalPages == 0}
               onClick={() => setPage(totalPages)}
               className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
             >
               {">>"}
             </button>  
             </div>
-            {/* <div className="flex gap-2 mt-4">
-                <button
-                disabled={page <= 1 || loadingSearchMovies}
-                onClick={() => setPage(page - 1)}
-                className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-                >
-                Previous
-                </button>
-                <button
-                disabled={loadingSearchMovies}
-                onClick={() => setPage(page + 1)}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                Next
-                </button>
-            </div> */}
         </main>
       </div>
       <CustomFooter />
@@ -205,42 +169,26 @@ return (
 
 const mapStateToProps = (state: RootState) => {
     return {
-      loadingSearchMovies: state.searchMovies.loading,
-      errorSearchMovies: state.searchMovies.error,
-      searchResults: state.searchMovies.searchResults,
-      totalPages: state.searchMovies.totalPages
+      loadingPopularCasts: state.popularCasts.loading,
+      errorPopularCasts: state.popularCasts.error,
+      popularCasts: state.popularCasts.popularCasts,
+      totalPages: state.popularCasts.totalPages
     };
 };
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-      fetchSearchMovies: (query: string, page: number) =>
-        dispatch(fetchSearchMovies(query, page)),
+      fetchPopularCasts: (query: string, page: number) =>
+        dispatch(fetchPopularCasts(query, page)),
     };
 };
 
-const ConnectedSeachPageContent = connect(mapStateToProps, mapDispatchToProps)(SearchContent);
+const ConnectedPopularCastPageContent = connect(mapStateToProps, mapDispatchToProps)(PopularCastsContent);
 
-export default function SearchPage() {
+export default function PopularCastsPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ConnectedSeachPageContent />
+      <ConnectedPopularCastPageContent />
     </Suspense>
   );
 }
-
-/* 
-        */
-/*{auth.idToken ? (
-          <div className="flex flex-col items-center text-black">
-            <h1>Welcome, {auth.email}!</h1>
-            <p>Email: {auth.email}</p>
-            <Link href={"/profile"} className="text-center flex flex-row justify-center">
-              <button className="button-auth">Go to Profile</button>
-            </Link>
-          </div>
-        ) : (<><div className="flex flex-row text-black">
-          <h1>This is Home Page, please login or register to continue...</h1>
-        </div>
-        
-        </>)}*/
