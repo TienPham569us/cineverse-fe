@@ -43,10 +43,20 @@ const CustomHeader = () => {
                 <span className="mr-4">Welcome!, {auth.email}</span>
                 
                 <NavbarProfile username={auth.email || ''} handleLogout={handleLogout} />
+
+                <Link
+                  href={"/casts"}
+                  className="text-center flex flex-row justify-center"
+                >
+                  <button className="cursor-pointer hover:text-pink-500">Cast</button>
+                </Link>
+                
                 <button className="cursor-pointer hover:text-pink-500" onClick={() => setSearchMenu(true)}>
                   <HiOutlineSearch className="text-xl" />
                 </button>
                 
+                
+
               </div>
             ) : (
               <>
