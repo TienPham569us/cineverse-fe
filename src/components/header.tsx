@@ -5,6 +5,9 @@ import { AppDispatch, RootState } from "@/lib/redux/store";
 import { logout } from "@/lib/redux/actions/authActions";
 import { useState } from "react";
 import { HiOutlineSearch, HiOutlineX, HiOutlineViewList } from "react-icons/hi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import NavbarProfile from "./NavbarProfile/NavbarProfile";
 //import { logout } from "@/lib/redux/features/authSlice";
 
 const CustomHeader = () => {
@@ -37,19 +40,13 @@ const CustomHeader = () => {
           <div className="hidden md:flex items-center space-x-6 text-white">
             {auth.idToken ? (
               <div className="flex items-center">
-                <span className="mr-4">Welcome, {auth.email}!</span>
-                <Link
-                  href={"/profile"}
-                  className="text-center flex flex-row justify-center mx-3"
-                >
-                  <button className="cursor-pointer hover:text-pink-500">Profile</button>
-                </Link>
-                <button className="cursor-pointer hover:text-pink-500 px-2" onClick={() => handleLogout()}>
-                  Logout
-                </button>
+                <span className="mr-4">Welcome!, {auth.email}</span>
+                
+                <NavbarProfile username={auth.email || ''} handleLogout={handleLogout} />
                 <button className="cursor-pointer hover:text-pink-500" onClick={() => setSearchMenu(true)}>
                   <HiOutlineSearch className="text-xl" />
                 </button>
+                
               </div>
             ) : (
               <>
