@@ -6,4 +6,6 @@ export const ENDPOINTS = {
     TRENDING_MOVIES: 'movie/trending',
     MOVIE_DETAILS: 'movie',
     SEARCH_MOVIES: 'movie/search',
+    POPULAR_CASTS: 'cast/popular',
+    CAST_DETAILS: 'cast',
 }

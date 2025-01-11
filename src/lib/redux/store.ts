@@ -8,6 +8,7 @@ import { getAuthState, getUserSignupState } from './localStorageUtil/local_stora
 import { trendingMovieInitialState } from './initialStates/trendingMovieInitialState';
 import { movieDetailsInitialState } from './initialStates/movieDetailsInitialState';
 import { movieDetailsReducer, searchMoviesReducer, trendingMoviesReducer } from './reducers/movieReducer';
+import { castDetailsReducer, popularCastsReducer } from './reducers/castReducer';
 
 const preloadedState = {
     auth: getAuthState(),
@@ -22,8 +23,9 @@ export const store = configureStore({
         userSignup: userSignupReducer,
         trendingMovies: trendingMoviesReducer,
         movieDetails: movieDetailsReducer,
-        searchMovies: searchMoviesReducer
-
+        searchMovies: searchMoviesReducer,
+        popularCasts: popularCastsReducer,
+        castDetails: castDetailsReducer,
         //[authApi.reducerPath]: authApi.reducer,
     },
     //middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as any as ThunkMiddleware),
