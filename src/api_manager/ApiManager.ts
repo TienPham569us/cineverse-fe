@@ -87,11 +87,11 @@ export class ApiManager {
         });
       }
       
-      if (!response.ok) {
-        console.log("Response: ", response);
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData));
-      }
+      // if (!response.ok) {
+      //   console.log("Response: ", response);
+      //   const errorData = await response.json();
+      //   throw new Error(JSON.stringify(errorData));
+      // }
       return response.json();
     } catch (error) {
       console.log("Error: ", error);
@@ -121,10 +121,10 @@ export class ApiManager {
           body: JSON.stringify(data),
         });
       }
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData));
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(JSON.stringify(errorData));
+      // }
       
       return response.json();
     } catch (error) {
@@ -150,10 +150,10 @@ export class ApiManager {
           body: JSON.stringify(data),
         });
       }
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData));
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(JSON.stringify(errorData));
+      // }
       return response.json();
     } catch (error) {
       throw error;
@@ -177,10 +177,10 @@ export class ApiManager {
           headers: headers,
         });
       }
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData));
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(JSON.stringify(errorData));
+      // }
       return response.json();
     } catch (error) {
       throw error;

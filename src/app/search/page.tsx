@@ -1,32 +1,17 @@
 'use client';
 
 import CustomHeader from "@/components/header";
-import { fetchSearchMovies, fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
+import { fetchLlmSearchMovies, fetchSearchMovies, fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { Movie } from "@/types/movie/movie.response";
 import React, {Suspense, useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { formatDate } from "@/utils/dateUtils";
 import { useSearchParams } from 'next/navigation'
 import MovieCard from "@/components/MovieCard";
 import CustomFooter from "@/components/footer";
+import "./styles.css";
 import Spinner from "@/components/Spinner";
 
 interface SearchPageProps {
@@ -35,6 +20,7 @@ interface SearchPageProps {
     searchResults: Movie[];
     totalPages: number;
     fetchSearchMovies: (query: string, page: number) => void;
+    fetchLlmSearchMovies: (query: string, collectionName: string, amount: number, threshold: number, page: number) => void;
 }
 
 const SearchContent: React.FC<SearchPageProps> = props => {
@@ -45,7 +31,9 @@ const SearchContent: React.FC<SearchPageProps> = props => {
   const [query, setQuery] = useState<string>(searchParams.get("query") || "");
   const [page, setPage] = useState<number>(parseInt(searchParams.get("page") || "1"));
   const [arrCurNumOfPages, setArrCurNumOfPages] = useState<(number | string)[]>([]);
-  const { loadingSearchMovies, errorSearchMovies, searchResults, totalPages, fetchSearchMovies } = props;
+  const { loadingSearchMovies, errorSearchMovies, searchResults, totalPages, fetchSearchMovies, fetchLlmSearchMovies } = props;
+  const [searchType, setSearchType] = useState<string>("normal");
+  const llmCollectionSearch = "movies";
 
   useEffect(() => {
     setIsClient(true);
@@ -80,8 +68,15 @@ const SearchContent: React.FC<SearchPageProps> = props => {
 
   const handleSearch = () => {
     if (query.trim()) {
-      fetchSearchMovies(query, 1); // Reset to first page when performing a new search
-      setPage(1);
+      if (searchType === "llm-search") {
+        
+        fetchLlmSearchMovies(query, llmCollectionSearch, 24, 0.5, 1); // Reset to first page when performing a new search
+        setPage(1);
+      } else {
+
+        fetchSearchMovies(query, 1); // Reset to first page when performing a new search
+        setPage(1);
+      }
     }
   };
 
@@ -92,7 +87,8 @@ const SearchContent: React.FC<SearchPageProps> = props => {
 return (
     <div className="bg-darkBlue">
       <CustomHeader />
-      <div className="w-full container mx-auto h-[100px] pt-16 px-12">
+      <div className="w-full container mx-auto h-[150px] pt-16 px-12">
+        <div className="flex flex-col"> 
         <div className="flex items-center">
           <Input
             placeholder="Search for movies..."
@@ -107,6 +103,20 @@ return (
             Search
           </button>
         </div>
+          <div>
+            <label className="text-white me-3" htmlFor="searchType">Search type:</label>
+            <select className="selectWrapper"
+              id='searchType'
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+            >
+              <option value="normal">Normal search</option>
+              <option value="llm-search">LLM Search</option>
+            </select>
+          </div>
+          
+        </div>
+       
       </div>
 
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
@@ -216,6 +226,12 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
       fetchSearchMovies: (query: string, page: number) =>
         dispatch(fetchSearchMovies(query, page)),
+
+      fetchLlmSearchMovies: (query: string, collectionName: string, 
+        amount: number, threshold: number, page: number) =>
+          
+          dispatch(fetchLlmSearchMovies(query, collectionName, amount, 
+            threshold, page))
     };
 };
 

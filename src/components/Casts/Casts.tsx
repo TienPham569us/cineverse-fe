@@ -32,7 +32,7 @@ const Casts = ({ data, loading } : { data: Cast[], loading: boolean}) => {
             </div>
         </ContentWrapper>
         <ContentWrapper className2="max-w-screen-2xl">
-          {!loading ? (
+          {!loading && data && data?.length > 0 ?  (
             <div className="">
              {/* <button
                     className="absolute left-20 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
@@ -40,8 +40,8 @@ const Casts = ({ data, loading } : { data: Cast[], loading: boolean}) => {
                 >
                     &lt;
                 </button>  */}
-            <div className="relative flex flex-row me-5 md:me-0">
-                <div className="flex flex-col items-center justify-center">
+            <div className="relative flex flex-row me-5 md:me-0 w-full">
+                <div className="flex flex-col items-start justify-around">
                     <button
                         className="transform  text-white p-2 rounded-full max-h-[50px] md:max-h-[50px] text-center"
                         onClick={scrollLeft}
