@@ -158,3 +158,32 @@ export const fetchFavouriteMovies = async (): Promise<Movie[] | null> => {
     }
 
 }
+
+export const fetchLlmSearchMovies = (
+    query: string, collectionName: string, amount: number, 
+    threshold: number, page: number = 1) => {
+
+    return async (dispatch: Dispatch) => {
+        try {
+        dispatch(fetchSearchMoviesStart());
+        const response = await ApiManager.get(
+            `${ENDPOINTS.LLM_SEARCH_MOVIES}?collectionName=${collectionName}&query=${query}&amount=${amount}&threshold=${threshold}`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+
+        dispatch(fetchSearchMoviesSuccess({
+            searchResults: response.results,
+            totalPages: response.totalPages,
+            totalResults: response.totalResults,
+            page: response.page
+        }));
+
+        } catch (error: any) {
+            console.error("Error fetching llm search movies:", error);
+            dispatch(fetchSearchMoviesFailure(error.message));
+        }
+    };
+}

@@ -8,4 +8,6 @@ export const ENDPOINTS = {
     SEARCH_MOVIES: 'movie/search',
     POPULAR_CASTS: 'cast/popular',
     CAST_DETAILS: 'cast',
+    LLM_SEARCH_MOVIES: 'movie/llm-movie-search',
+    AI_NAVIGATION: 'movie/ai-navigation',
 }
