@@ -7,7 +7,7 @@ import thunk, {ThunkMiddleware, ThunkAction} from 'redux-thunk';
 import { getAuthState, getUserSignupState } from './localStorageUtil/local_storage_utils';
 import { trendingMovieInitialState } from './initialStates/trendingMovieInitialState';
 import { movieDetailsInitialState } from './initialStates/movieDetailsInitialState';
-import { movieDetailsReducer, searchMoviesReducer, trendingMoviesReducer } from './reducers/movieReducer';
+import { genresReducer, movieDetailsReducer, searchMoviesReducer, trendingMoviesReducer } from './reducers/movieReducer';
 import { castDetailsReducer, popularCastsReducer } from './reducers/castReducer';
 
 const preloadedState = {
@@ -26,6 +26,7 @@ export const store = configureStore({
         searchMovies: searchMoviesReducer,
         popularCasts: popularCastsReducer,
         castDetails: castDetailsReducer,
+        genres: genresReducer,
         //[authApi.reducerPath]: authApi.reducer,
     },
     //middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as any as ThunkMiddleware),
