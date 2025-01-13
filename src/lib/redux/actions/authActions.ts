@@ -1,7 +1,7 @@
 import { ApiManager } from '@/api_manager/ApiManager';
 import { Dispatch } from 'redux';
 import { loginFailure, loginStart, loginSuccess, logoutFailure, logoutStart, logoutSuccess, refreshTokenFail, refreshTokenSuccess, signupFailure, signupStart, signupSuccess } from '../actionCreators/authActionCreators';
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from "firebase/auth";
+import { GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from "firebase/auth";
 import { auth } from "@/config/firebase.config";
 import { clearAuthState, saveAuthToken } from '../localStorageUtil/local_storage_utils';
 import RegisterParams from '@/types/register.params';
@@ -36,6 +36,13 @@ export const login = (credentials: { email: string; password: string }) => {
             credentials.password);
 
           const user: User = userCredential.user;
+
+          const isEmailVerified: boolean = await user.emailVerified; 
+          if (!isEmailVerified) {
+            //await sendEmailVerification(user);
+            dispatch(loginFailure("Login failed: " + "Please verify your email address to activate your account."));
+            return;
+          }
           const idToken = await user.getIdToken();
 
           // Define headers
@@ -124,6 +131,9 @@ export const signup = (credentials: RegisterParams) => {
 
         const response = await ApiManager.register(credentials);
         console.log("Response: ", response);
+        
+        //await sendEmailVerification(user);
+        
         //const response = await ApiManager.post(ENDPOINTS.REGISTER, credentials, headers);
         //const data = await response.json();
         //console.log(response.message);
@@ -199,3 +209,10 @@ export const refreshToken = (refreshToken: string) => {
   };
 }
 
+export const sendResetPasswordLink = async (email: string) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    throw error;
+  }
+}

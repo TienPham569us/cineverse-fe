@@ -183,6 +183,12 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
             required/>
           {passwordError && <div className="text-error">{passwordError}</div>}
 
+          <div className="flex flex-row justify-end">
+            <Link href="/forgot-password"
+              className="text-[#1d4ed8]">
+              Forgot password?
+            </Link>
+          </div>
           <button className={` ${!loading ? 'button-style' : 'button-style-disabled'}`}
             type="submit"
             disabled={loading}
