@@ -13,28 +13,31 @@ export default function MovieCard({ movie, index }: { movie: Movie, index: numbe
         className="relative w-full h-full p-4 shadow-2xl rounded-md" 
         href={`/movies/${movie.id}`}>
         
-        <img 
-            src={`${media_base_url}/${movie.posterPath}`} 
-            alt={`${media_base_url}/${movie.posterPath}`} 
-            className="object-cover w-full rounded-lg" />
-        <div className="circleRating absolute top-[8px] left-3 w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg">
-          <CircularProgressbar
-            value={movie.voteAverage}
-            maxValue={10}
-            text={`${movie.voteAverage.toFixed(1)}`}
-            styles={buildStyles({
-              pathColor:
-                movie.voteAverage < 5
-                  ? "red"
-                  : movie.voteAverage < 7.0
-                  ? "orange"
-                  : "green",
-              textSize: "34px",
-              textColor: "#04152d",
-              trailColor: "transparent",
-            })}
-            className="font-bold"
-          />
+        <div className="relative">
+          <img 
+              src={`${media_base_url}/${movie.posterPath}`} 
+              alt={`${media_base_url}/${movie.posterPath}`} 
+              className="object-cover w-full rounded-lg" />
+
+          <div className="circleRating absolute top-[4px] left-2 w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg">
+            <CircularProgressbar
+              value={movie.voteAverage}
+              maxValue={10}
+              text={`${movie.voteAverage.toFixed(1)}`}
+              styles={buildStyles({
+                pathColor:
+                  movie.voteAverage < 5
+                    ? "red"
+                    : movie.voteAverage < 7.0
+                    ? "orange"
+                    : "green",
+                textSize: "34px",
+                textColor: "#04152d",
+                trailColor: "transparent",
+              })}
+              className="font-bold"
+            />
+          </div>
         </div>
         <div className="text-block flex flex-col text-white py-4 hover:text-[#22d3ee]">
           <div className="title text-[16px] md:text-[20px] mb-2 leading-[24px] whitespace-nowrap overflow-hidden text-ellipsis">

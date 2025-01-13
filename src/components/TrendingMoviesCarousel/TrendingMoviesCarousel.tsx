@@ -21,13 +21,13 @@ const TrendingMoviesCarousel = ({ trendingMovies }: { trendingMovies: Movie[] })
 
   return (
     <div className="relative bg-[#04152d]">
-      <div className="relative flex flex-row items-center">
+      <div className="relative flex flex-row items-center justify-center">
         {/* Nút cuộn trái */}
         <button
           className="transform text-white p-2 rounded-full max-h-[50px] text-center"
           onClick={scrollLeft}
         >
-          <FontAwesomeIcon icon={faAngleLeft} className="text-bold text-6xl"/>
+          <FontAwesomeIcon icon={faAngleLeft} className="text-bold text-6xl max-h-[50px]"/>
         </button>
 
         {/* Carousel */}
@@ -35,7 +35,7 @@ const TrendingMoviesCarousel = ({ trendingMovies }: { trendingMovies: Movie[] })
           className="flex gap-5 overflow-y-hidden overflow-x-hidden scrollbar-hide -mx-5 px-5 md:mx-0 md:px-0"
           ref={listRef}
         >
-          {trendingMovies.map((movie: Movie, index: number) => (
+          {trendingMovies !== null && trendingMovies.map((movie: Movie, index: number) => (
             <div key={index} className="min-w-[240px]">
               <MovieCard movie={movie} index={index} />
             </div>
@@ -47,7 +47,7 @@ const TrendingMoviesCarousel = ({ trendingMovies }: { trendingMovies: Movie[] })
           className="transform text-white p-2 rounded-full max-h-[50px] text-center"
           onClick={scrollRight}
         >
-          <FontAwesomeIcon icon={faAngleRight}  className="text-bold text-6xl"/>
+          <FontAwesomeIcon icon={faAngleRight}  className="text-bold text-6xl max-h-[50px]"/>
         </button>
       </div>
     </div>

@@ -15,3 +15,9 @@ export interface VideoResponse {
     id: number;
     results: VideoItem[];
 }
+
+export interface LatestTrailerResponse {
+  id: number;
+  title: string;
+  trailers: VideoItem[];
+}
