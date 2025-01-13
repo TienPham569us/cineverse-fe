@@ -30,6 +30,7 @@ import MovieCard from "@/components/MovieCard";
 import { backdrop_base_url } from "@/constants/app_api";
 import Image from "next/image";
 import Spinner from "@/components/Spinner";
+import TrendingMoviesCarousel from "@/components/TrendingMoviesCarousel/TrendingMoviesCarousel";
 
 interface HomePageProps {
   loadingTrendingMovies: boolean;
@@ -128,7 +129,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
         </Tabs>
       </div>
     </div>
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
+    <div className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
       
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
         {
@@ -138,11 +139,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
           ) : (
             <div className="flex flex-row text-black">
               <div className="container mx-auto p-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
-                  {trendingMovies.map((movie: Movie, index: number) => (
-                    <MovieCard key={index} movie={movie} index={index} />
-                  ))}
-                  </div>
+                  <TrendingMoviesCarousel trendingMovies={trendingMovies}/>
                 </div>
             </div>
           )

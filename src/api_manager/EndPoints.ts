@@ -10,4 +10,5 @@ export const ENDPOINTS = {
     CAST_DETAILS: 'cast',
     LLM_SEARCH_MOVIES: 'movie/llm-movie-search',
     AI_NAVIGATION: 'movie/ai-navigation',
+    ALL_GENRES: 'movie/genres',
 }

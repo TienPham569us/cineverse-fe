@@ -17,7 +17,7 @@ export default function MovieCard({ movie, index }: { movie: Movie, index: numbe
             src={`${media_base_url}/${movie.posterPath}`} 
             alt={`${media_base_url}/${movie.posterPath}`} 
             className="object-cover w-full rounded-lg" />
-        <div className="circleRating absolute top-[0px] left-3 w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg">
+        <div className="circleRating absolute top-[8px] left-3 w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg">
           <CircularProgressbar
             value={movie.voteAverage}
             maxValue={10}
