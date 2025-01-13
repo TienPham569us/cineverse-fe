@@ -3,7 +3,7 @@ import { Dispatch } from "redux";
 import { fetchTrendingMoviesStart, fetchTrendingMoviesSuccess, fetchTrendingMoviesFailure, fetchSearchMoviesStart, fetchSearchMoviesSuccess, fetchSearchMoviesFailure, fetchMovieDetailsSuccess, fetchMovieDetailsFailure, fetchMovieDetailsStart, fetchGenresStart, fetchGenresSuccess, fetchGenresFailure } from "../actionCreators/movieActionCreators";
 import { ENDPOINTS } from "@/api_manager/EndPoints";
 import * as dotenv from 'dotenv';
-import { VideoResponse } from "@/types/movie/video.response";
+import { LatestTrailerResponse, VideoResponse } from "@/types/movie/video.response";
 import { Movie } from "@/types/movie/movie.response";
 
 dotenv.config();
@@ -214,4 +214,40 @@ export const fetchGenres = () => {
             dispatch(fetchGenresFailure(error.message));
         }
     };
+}
+
+export const fetchLatestTrailer = async (): Promise<LatestTrailerResponse[] | null> => {
+    try {
+        const response = await ApiManager.get(
+            `${ENDPOINTS.LATEST_TRAILER}`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+        const listLatestTrailerResponse: LatestTrailerResponse[] = response;
+        return listLatestTrailerResponse;
+    } catch (error: any) {
+        console.error("Error fetching movie videos:", error);
+        return null;
+    }
+
+}
+
+export const fetchPoplarMovies = async (): Promise<Movie[] | null> => {
+    try {
+        const response = await ApiManager.get(
+            `${ENDPOINTS.POPULAR_MOVIES}`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+        const listPopularMovies: Movie[] = response;
+        return listPopularMovies;
+    } catch (error: any) {
+        console.error("Error fetching movie videos:", error);
+        return null;
+    }
+
 }

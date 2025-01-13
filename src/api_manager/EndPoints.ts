@@ -11,4 +11,6 @@ export const ENDPOINTS = {
     LLM_SEARCH_MOVIES: 'movie/llm-movie-search',
     AI_NAVIGATION: 'movie/ai-navigation',
     ALL_GENRES: 'movie/genres',
+    LATEST_TRAILER: 'movie/latest-trailer',
+    POPULAR_MOVIES: 'movie/popular',
 }
