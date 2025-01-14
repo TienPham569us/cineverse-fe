@@ -85,7 +85,7 @@ const PopularCastsContent: React.FC<PopularCastsPageProps> = props => {
         </div>
       </div>
       <div className="container mx-auto flex justify-between items-center pt-8 px-16">
-        <div className="flex items-center text-xl font-bold">
+        <div className="flex items-center text-white text-xl font-bold">
           Popular Cast
         </div>
       </div>

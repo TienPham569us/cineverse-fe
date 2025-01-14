@@ -72,9 +72,10 @@ const SearchContent: React.FC<SearchPageProps> = props => {
 
   const handleSearch = () => {
     if (searchType === "llm-search") {
-        
-      fetchLlmSearchMovies(query, llmCollectionSearch, 24, 0.5, 1); // Reset to first page when performing a new search
-      setPage(1);
+      if (query.trim()){
+        fetchLlmSearchMovies(query, llmCollectionSearch, 24, 0.5, 1); // Reset to first page when performing a new search
+        setPage(1);
+      }
     } else {
       if (!validateDates()) {
         return;
@@ -191,6 +192,13 @@ return (
                           className="p-2 bg-gray-800 text-white rounded border border-white focus:outline-none"
                           placeholder="From"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setFromDate("")}
+                          className="text-white bg-gray-700 px-2 py-1 rounded hover:bg-gray-600"
+                        >
+                          x
+                        </button>
                         To<input
                           type="date"
                           value={toDate}
@@ -198,6 +206,13 @@ return (
                           className="p-2 bg-gray-800 text-white rounded border border-white focus:outline-none"
                           placeholder="To"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setToDate("")}
+                          className="text-white bg-gray-700 px-2 py-1 rounded hover:bg-gray-600"
+                        >
+                          x
+                        </button>
                         {errorDate && <p className="text-red-500">{errorDate}</p>}
                       </div>
                     </div>
