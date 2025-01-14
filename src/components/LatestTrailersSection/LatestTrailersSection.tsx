@@ -28,7 +28,15 @@ const LatestTrailersSection = ({ data, loading } : { data: LatestTrailerResponse
       <div className="videosSection relative bg-[#04152d] ">
         <ContentWrapper className2="max-w-screen-2xl">
           {!loading && data && data.length > 0 ? (
-            <div className="relative flex flex-row me-5 md:me-0 w-full">
+            <div className="relative flex flex-row me-5 md:me-0 w-full py-8" >
+                <div
+                  className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+                  style={{
+                    opacity: 0.3,
+                    backgroundImage: `url('https://image.tmdb.org/t/p/original//3V4kLQg0kSqPLctI5ziYWabAZYF.jpg')`,
+                    zIndex: 0,
+                  }}
+                ></div>
                 <div className="flex flex-col items-start justify-around">
                     <button
                         className="transform  text-white p-2 rounded-full max-h-[50px] md:max-h-[50px] text-center"
@@ -37,7 +45,7 @@ const LatestTrailersSection = ({ data, loading } : { data: LatestTrailerResponse
                         <FontAwesomeIcon icon={faAngleLeft} className="text-bold text-6xl max-h-[50px]"/>
                     </button>
                 </div>
-                <div className="videos flex gap-2.5 overflow-y-hidden overflow-x-hidden -mx-5 px-5 md:gap-5 md:mx-0 md:px-0 w-full"
+                <div className="videos flex gap-2.5 overflow-y-hidden overflow-x-auto -mx-5 px-5 md:gap-5 md:mx-0 md:px-0 w-full"
                     ref={listRef}>
 
                     {data?.map((item) => (
@@ -60,6 +68,7 @@ const LatestTrailersSection = ({ data, loading } : { data: LatestTrailerResponse
                               {/* <PlayIcon /> */}
                           </div>
                           <div className="videoTitle text-white text-sm leading-5 md:text-base md:leading-6">{item?.trailers[0].name}</div>
+                          <div className="videoTitle text-white text-sm leading-5 md:text-base md:leading-6">{item?.title}</div>
                         </div>
                     ))}
                 </div>
@@ -72,6 +81,7 @@ const LatestTrailersSection = ({ data, loading } : { data: LatestTrailerResponse
                             <FontAwesomeIcon icon={faAngleRight}  className="text-bold text-6xl max-h-[50px]"/>
                     </button>
                 </div>
+                
             </div>
           ) : (
             <div className="videoSkeleton flex gap-2.5 overflow-x-auto -mx-5 px-5 md:gap-5 md:mx-0 md:px-0  overflow-y-hidden overflow-x-hidden">
