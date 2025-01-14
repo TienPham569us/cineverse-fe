@@ -52,10 +52,10 @@ const Similar = ({ movieId } : { movieId: string}) => {
     return (<>
          <div className="carousel">
       <ContentWrapper>
-        {title && movies!.length > 0 && (
+        {title && movies && movies!.length > 0 && (
           <div className="carouselTitle">{title}</div>
         )}
-        {movies!.length > 0 && (
+        {movies && movies!.length > 0 && (
           <>
             <BsFillArrowLeftCircleFill
               className="carouselLeftNav arrow"

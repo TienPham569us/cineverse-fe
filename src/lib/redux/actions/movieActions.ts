@@ -130,14 +130,14 @@ export const fetchSimilarMovie = async (movieId: number): Promise<Movie[] | null
         // );
 
         const response = await ApiManager.get(
-            `${ENDPOINTS.TRENDING_MOVIES}?period=day`,
+            `movie/${movieId}/similar`,
             headers,
             undefined,
             API_BASE_URL
         );
         console.log("response", response);
-
-        return response.results;
+        const similarMovies: Movie[] = response.results;
+        return similarMovies;
     } catch (error: any) {
         console.error("Error fetching movie videos:", error);
         return null;

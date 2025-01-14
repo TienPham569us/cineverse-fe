@@ -14,6 +14,7 @@ import Casts from "@/components/Casts/Casts";
 import CustomFooter from "@/components/footer";
 import VideosSections from "@/components/VideosSections.tsx/VideosSections";
 import Reviews from "@/components/Reviews/Reviews";
+import Similar from "@/components/Similar/Similar";
 
 interface MovieDetailsPageProps {
     loading: boolean;
@@ -78,6 +79,10 @@ interface MovieDetailsPageProps {
           
           <div id="video">
             <VideosSections data={videoResponse} loading={loading} />
+          </div>
+
+          <div id="similar-movies">
+            <Similar movieId={movie.id.toString()} />
           </div>
 
           <div id="review">
