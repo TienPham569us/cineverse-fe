@@ -8,7 +8,7 @@ import { AppDispatch, RootState } from "@/lib/redux/store";
 import { AuthWrapper } from "@/components/AuthWrapper";
 import { useRouter } from "next/navigation";
 import CustomHeader from "@/components/header";
-import { logout } from "@/lib/redux/actions/authActions";
+import { getUserInfo, logout } from "@/lib/redux/actions/authActions";
 import { ToastContainer, toast } from 'react-toastify';
 import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 import { Profile } from "@/types/profile/profile.response";
@@ -22,9 +22,10 @@ import { Movie } from "@/types/movie/movie.response";
 import { User } from "lucide-react";
 import UserMovieList from "@/components/UserMovieList/UserMovieList";
 import ProfileCard from "@/components/ProfileCard/ProfileCard";
+import { AuthState } from "@/lib/redux/initialStates/authInitialState";
 
-const userData: Profile = {
-  id: "",
+const userDataTemp: Profile = {
+  uid: "",
   name: "pham tien",
   email: "maiantiem@gmail.com",
   createdAt: "2024-12-26T11:37:24.722+00:00",
@@ -33,6 +34,7 @@ const userData: Profile = {
 }
 
 export default function ProfilePage() {
+  const [userData, setUserData] = useState<Profile>(userDataTemp);
   const [error, setError] = useState("");
   
   const [isClient, setIsClient] = useState(false);
@@ -40,7 +42,7 @@ export default function ProfilePage() {
   const dispatch = useDispatch<AppDispatch>();
 
   const [favouriteMovies, setFavouriteMovies] = useState<Movie[] | null>([]);
-  const profileData = useSelector((state: RootState) => state.auth);
+  const profileData: AuthState = useSelector((state: RootState) => state.auth);
 
   const _fetchFavouriteMovies = async () => {
     try {
@@ -51,9 +53,22 @@ export default function ProfilePage() {
     }
   }
 
+  const _getProfileData = async () => { 
+    try {
+      const response = await getUserInfo(profileData.idToken ?? '');
+
+      if (response) {
+        setUserData(response);
+      }
+    } catch (error: any) {
+      setError(error.message);
+    }
+  }
+
   useEffect(() => {
     setIsClient(true);
     _fetchFavouriteMovies();
+    _getProfileData();
   }, [dispatch]);
 
   if (!isClient) {

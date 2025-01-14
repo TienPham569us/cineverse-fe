@@ -18,7 +18,9 @@ const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
     }
 
     return (<>
-        <div className="carousel relative bg-[#04152d]">
+      {
+        reviews && reviews.length > 0 && (
+          <div className="carousel relative bg-[#04152d]">
           <ContentWrapper className2="max-w-screen-2xl">
             {title && reviews!.length > 0 && (
               <div className="sectionHeading text-2xl text-white pt-6 mb-6 ms-6 ps-6">
@@ -55,7 +57,10 @@ const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
             review={review}
             setReview={setReview}
           />
-      </div>
+          </div>
+        )
+      }
+       
    </>);
 }
 
