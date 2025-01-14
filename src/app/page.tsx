@@ -2,7 +2,7 @@
 
 import CustomHeader from "@/components/header";
 import CustomFooter from "@/components/footer";
-import { fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
+import { fetchLatestTrailer, fetchTrendingMovies, fetchPoplarMovies } from "@/lib/redux/actions/movieActions";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { Movie } from "@/types/movie/movie.response";
 import Link from "next/link";
@@ -30,6 +30,9 @@ import MovieCard from "@/components/MovieCard";
 import { backdrop_base_url } from "@/constants/app_api";
 import Image from "next/image";
 import Spinner from "@/components/Spinner";
+import TrendingMoviesCarousel from "@/components/TrendingMoviesCarousel/TrendingMoviesCarousel";
+import { LatestTrailerResponse } from "@/types/movie/video.response";
+import LatestTrailersSection from "@/components/LatestTrailersSection/LatestTrailersSection";
 
 interface HomePageProps {
   loadingTrendingMovies: boolean;
@@ -45,6 +48,29 @@ const HomeContent: React.FC<HomePageProps> = props => {
   const [timeWindow, setTimeWindow] = useState("day");
   const [query, setQuery] = useState("");
   const { loadingTrendingMovies, errorTrendingMovies, trendingMovies, fetchTrendingMovies } = props;
+  const [listLastestTrailer, setListLastestTrailer] = useState<LatestTrailerResponse[] | null>(null);
+  const [listPopularMovies, setListPopularMovies] = useState<Movie[] | null>(null);
+
+  const _fetchLatestTrailer = async () => {
+    try {
+      const result: LatestTrailerResponse[] | null = await fetchLatestTrailer();
+      setListLastestTrailer(result);
+    } catch (error)
+    {
+      console.error("Error fetching video:", error);
+    }
+  }
+
+  const _fetchPopularMovies = async () => {
+    try {
+      const result: Movie[] | null = await fetchPoplarMovies();
+      console.log(result);
+      setListPopularMovies(result);
+    } catch (error)
+    {
+      console.error("Error fetching video:", error);
+    }
+  }
 
   useEffect(() => {
     setIsClient(true);
@@ -54,6 +80,11 @@ const HomeContent: React.FC<HomePageProps> = props => {
     //   dispatch({ type: 'auth/loadState', payload: savedAuthState });
     // }
   }, [dispatch, timeWindow]);
+
+  useEffect(() => {
+    _fetchLatestTrailer();
+    _fetchPopularMovies();
+  }, []);
   
   if (!isClient) {
     return null; // Render nothing on the server
@@ -115,22 +146,22 @@ const HomeContent: React.FC<HomePageProps> = props => {
         </div>
       </div>
     </div>
-    <div className="w-full container mx-auto py-4 px-8" aria-readonly>
-      <div className="flex flex-row flex-wrap justify-between">
-        <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Trending</h1>
-        <Tabs defaultValue="day" className="w-[400px]" 
-          onValueChange={(value) => setTimeWindow(value)}>
+    <div className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
+      <div className="w-full container mx-auto py-4 px-8" aria-readonly>
+        <div className="flex flex-row flex-wrap justify-between">
+          <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Trending</h1>
+          <Tabs defaultValue="day" className="w-[400px]" 
+            onValueChange={(value) => setTimeWindow(value)}>
 
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="day" aria-readonly>Today</TabsTrigger>
-            <TabsTrigger value="week" aria-readonly>This Week</TabsTrigger>
-          </TabsList>
-        </Tabs>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="day" aria-readonly>Today</TabsTrigger>
+              <TabsTrigger value="week" aria-readonly>This Week</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </div>
-    </div>
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
       
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
+      <main className="container mx-auto p-4">
         {
           (loadingTrendingMovies) 
           ? (
@@ -138,11 +169,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
           ) : (
             <div className="flex flex-row text-black">
               <div className="container mx-auto p-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
-                  {trendingMovies.map((movie: Movie, index: number) => (
-                    <MovieCard key={index} movie={movie} index={index} />
-                  ))}
-                  </div>
+                  <TrendingMoviesCarousel trendingMovies={trendingMovies}/>
                 </div>
             </div>
           )
@@ -157,6 +184,35 @@ const HomeContent: React.FC<HomePageProps> = props => {
            )
         }
       
+      </main>
+
+      <div className="w-full container mx-auto py-4 px-8" aria-readonly>
+        <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Latest Trailers</h1>
+      </div>
+
+      { 
+      <div className="container mx-auto p-4">
+        <div id="video">
+          <LatestTrailersSection data={listLastestTrailer} loading={loadingTrendingMovies} />
+        </div>
+      </div>
+      }
+
+      <div className="w-full container mx-auto py-4 px-8" aria-readonly>
+        <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Popular Movies</h1>
+      </div>
+
+      <main className="container mx-auto p-4">
+        {
+          (listPopularMovies !== null) && (
+            <div className="flex flex-row text-black">
+              <div className="container mx-auto p-4">
+                  <TrendingMoviesCarousel trendingMovies={listPopularMovies!}/>
+                </div>
+            </div>
+          )
+        
+        }
       </main>
     </div>
     <CustomFooter />

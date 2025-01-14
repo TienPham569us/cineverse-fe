@@ -1,9 +1,9 @@
 import { ApiManager } from "@/api_manager/ApiManager";
 import { Dispatch } from "redux";
-import { fetchTrendingMoviesStart, fetchTrendingMoviesSuccess, fetchTrendingMoviesFailure, fetchSearchMoviesStart, fetchSearchMoviesSuccess, fetchSearchMoviesFailure, fetchMovieDetailsSuccess, fetchMovieDetailsFailure, fetchMovieDetailsStart } from "../actionCreators/movieActionCreators";
+import { fetchTrendingMoviesStart, fetchTrendingMoviesSuccess, fetchTrendingMoviesFailure, fetchSearchMoviesStart, fetchSearchMoviesSuccess, fetchSearchMoviesFailure, fetchMovieDetailsSuccess, fetchMovieDetailsFailure, fetchMovieDetailsStart, fetchGenresStart, fetchGenresSuccess, fetchGenresFailure } from "../actionCreators/movieActionCreators";
 import { ENDPOINTS } from "@/api_manager/EndPoints";
 import * as dotenv from 'dotenv';
-import { VideoResponse } from "@/types/movie/video.response";
+import { LatestTrailerResponse, VideoResponse } from "@/types/movie/video.response";
 import { Movie } from "@/types/movie/movie.response";
 
 dotenv.config();
@@ -62,12 +62,16 @@ export const fetchMovieDetails = (movieId: number) => {
     };
 }
 
-export const fetchSearchMovies = (query: string, page: number = 1) => {
+export const fetchSearchMovies = (query: string, page: number = 1, genresId: number[] = [], fromDate?: string, toDate?: string) => {
     return async (dispatch: Dispatch) => {
         try {
         dispatch(fetchSearchMoviesStart());
+
+        const genresParam = genresId.length > 0 ? `&withGenres=${genresId.join(",")}` : "";
+        const fromDateParam = fromDate ? `&fromDate=${fromDate}` : "";
+        const toDateParam = toDate ? `&toDate=${toDate}` : "";
         const response = await ApiManager.get(
-            `${ENDPOINTS.SEARCH_MOVIES}?query=${query}&page=${page}&limit=24`,
+            `${ENDPOINTS.SEARCH_MOVIES}?query=${query}&page=${page}&limit=24${genresParam}${fromDateParam}${toDateParam}`,
             headers,
             undefined,
             API_BASE_URL
@@ -126,14 +130,14 @@ export const fetchSimilarMovie = async (movieId: number): Promise<Movie[] | null
         // );
 
         const response = await ApiManager.get(
-            `${ENDPOINTS.TRENDING_MOVIES}?period=day`,
+            `movie/${movieId}/similar`,
             headers,
             undefined,
             API_BASE_URL
         );
         console.log("response", response);
-
-        return response.results;
+        const similarMovies: Movie[] = response.results;
+        return similarMovies;
     } catch (error: any) {
         console.error("Error fetching movie videos:", error);
         return null;
@@ -216,6 +220,66 @@ export const fetchRecommendationMoviesByReasonedMatch = async (movie: Movie): Pr
         // return response.results;
     } catch (error: any) {
         console.error("Error fetching recommendation movies:", error);
+        return null;
+    }
+
+}
+
+export const fetchGenres = () => {
+    return async (dispatch: Dispatch) => {
+        try {
+        dispatch(fetchGenresStart());
+    
+        const response = await ApiManager.get(
+            `${ENDPOINTS.ALL_GENRES}`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+
+        dispatch(fetchGenresSuccess({
+            genres: response,
+        }));
+
+        } catch (error: any) {
+            console.error("Error fetching genres:", error);
+            dispatch(fetchGenresFailure(error.message));
+        }
+    };
+}
+
+export const fetchLatestTrailer = async (): Promise<LatestTrailerResponse[] | null> => {
+    try {
+        const response = await ApiManager.get(
+            `${ENDPOINTS.LATEST_TRAILER}`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+        const listLatestTrailerResponse: LatestTrailerResponse[] = response;
+        return listLatestTrailerResponse;
+    } catch (error: any) {
+        console.error("Error fetching movie videos:", error);
+        return null;
+    }
+
+}
+
+export const fetchPoplarMovies = async (): Promise<Movie[] | null> => {
+    try {
+        const response = await ApiManager.get(
+            `${ENDPOINTS.POPULAR_MOVIES}`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+        const listPopularMovies: Movie[] = response;
+        return listPopularMovies;
+    } catch (error: any) {
+        console.error("Error fetching movie videos:", error);
         return null;
     }
 

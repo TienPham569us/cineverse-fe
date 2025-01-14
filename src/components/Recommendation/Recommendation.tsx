@@ -89,7 +89,7 @@ const Recommendation = ({ movie, title } : { movie: Movie, title: string}) => {
                       return (
                        
                         <div key={item.id} className="relative flex-shrink-0 cursor-pointer w-[250px] h-[500px]"> 
-                           <MovieCard movie={item} index={item.id} key={item.id} detailSize={true}/>
+                           <MovieCard movie={item} index={item.id} detailSize={true}/>
                         </div>
                         
                       );

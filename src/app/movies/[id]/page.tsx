@@ -86,6 +86,10 @@ interface MovieDetailsPageProps {
             <VideosSections data={videoResponse} loading={loading} />
           </div>
 
+          <div id="similar-movies">
+            <Similar movieId={movie.id} title={"Similar Movies"} />
+          </div>
+
           <div id="recommendation">
             <Recommendation movie={movie} title="Recommendations"/>
           </div>
