@@ -1,5 +1,6 @@
 import { Movie } from "@/types/movie/movie.response";
 import { useRef } from "react";
+import './style.css'
 import MovieCard from "../MovieCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
@@ -32,7 +33,7 @@ const TrendingMoviesCarousel = ({ trendingMovies }: { trendingMovies: Movie[] })
 
         {/* Carousel */}
         <div
-          className="flex gap-5 overflow-y-hidden overflow-x-hidden scrollbar-hide -mx-5 px-5 md:mx-0 md:px-0"
+          className="flex gap-5 overflow-y-hidden overflow-x-auto scrollbar -mx-5 px-5 md:mx-0 md:px-0"
           ref={listRef}
         >
           {trendingMovies !== null && trendingMovies.map((movie: Movie, index: number) => (
