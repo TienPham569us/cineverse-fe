@@ -18,4 +18,5 @@ export const ENDPOINTS = {
     FAVOURITE_LIST: 'profile/favorite',
     REVIEW: 'movie/review',
     RATING: 'movie/rating-point',
+    MY_MOVIE_DETAILS: 'profile/movie-details/me',
 }

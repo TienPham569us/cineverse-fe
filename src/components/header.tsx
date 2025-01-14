@@ -28,8 +28,9 @@ const CustomHeader = () => {
   const [loadingNavigate, setLoadingNavigate] = useState(false);
 
   const handleLogout = () => {
-    window.location.href = "/login";
+    
     dispatch(logout());
+    window.location.href = "/login";
   };
 
   const handleNavigate = async (promptNavigate: string) => {

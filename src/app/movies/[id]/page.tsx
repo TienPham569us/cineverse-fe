@@ -1,6 +1,6 @@
 'use client';
 import { useState, use, useEffect } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/redux/store";
 import CustomHeader from "@/components/header";
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,6 +17,10 @@ import Reviews from "@/components/Reviews/Reviews";
 import Similar from "@/components/Similar/Similar";
 import Recommendation from "@/components/Recommendation/Recommendation";
 import Spinner from "@/components/Spinner";
+import { fetchMyMovieDetails } from "@/lib/redux/actions/profileAction";
+import { UserMovie } from "@/types/profile/UserMovie.response";
+import { AuthState } from "@/lib/redux/initialStates/authInitialState";
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 
 interface MovieDetailsPageProps {
     loading: boolean;
@@ -33,7 +37,9 @@ interface MovieDetailsPageProps {
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error, movie, fetchMovieDetails } = props;
     const [videoResponse, setVideoResponse] = useState<VideoResponse | null>(null);
-
+    
+    const profileData: AuthState = useSelector((state: RootState) => state.auth);
+    
     const _fetchVideo = async (id: number) => {
       try {
         const result: VideoResponse | null = await fetchVideo(Number(id));
@@ -55,7 +61,7 @@ interface MovieDetailsPageProps {
         _fetchVideo(Number(id));
       }
 
-    }, [dispatch, pathname]);
+    }, [dispatch, pathname, profileData]);
   
     if (!isClient) {
       return null; // Render nothing on the server
@@ -73,10 +79,18 @@ interface MovieDetailsPageProps {
       {
         loading ? (
           <Spinner />
-        ) : 
-        movie && (<>
-          <DetailsBanner detailsMovie={movie} 
-            video={videoResponse}/>
+        ) : error ? (
+          <div className="bg-darkBlue text-white min-h-screen pt-16 px-12 flex flex-col justify-center items-center">
+            <div className="flex items-center text-white mb-4">
+              <span className="text-2xl">404 -</span>
+              <span className="text-1xl ml-2">Movie Not Found</span>
+            </div>
+          </div>
+        ) :
+          movie && (<>
+          <DetailsBanner detailsMovie={movie}
+            video={videoResponse} 
+            />
           
           <div id="cast">
             <Casts data={movie.cast} loading={loading} />
@@ -101,6 +115,8 @@ interface MovieDetailsPageProps {
           
         </>)
       }
+      
+      
       <CustomFooter />
       </>
     );

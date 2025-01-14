@@ -167,7 +167,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
           ? (
             <Spinner />
           ) : (
-            <div className="flex flex-row text-black">
+            trendingMovies && <div className="flex flex-row text-black">
               <div className="container mx-auto p-4">
                   <TrendingMoviesCarousel trendingMovies={trendingMovies}/>
                 </div>
