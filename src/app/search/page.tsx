@@ -319,7 +319,7 @@ const mapStateToProps = (state: RootState) => {
       errorSearchMovies: state.searchMovies.error,
       searchResults: state.searchMovies.searchResults,
       totalPages: state.searchMovies.totalPages,
-      genresResult: state.genres.genres
+      genresResult: state.genres.genres || []
     };
 };
 

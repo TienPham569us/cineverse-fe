@@ -15,6 +15,8 @@ import CustomFooter from "@/components/footer";
 import VideosSections from "@/components/VideosSections.tsx/VideosSections";
 import Reviews from "@/components/Reviews/Reviews";
 import Similar from "@/components/Similar/Similar";
+import Recommendation from "@/components/Recommendation/Recommendation";
+import Spinner from "@/components/Spinner";
 
 interface MovieDetailsPageProps {
     loading: boolean;
@@ -65,10 +67,13 @@ interface MovieDetailsPageProps {
       <nav className="flex justify-center space-x-4 my-4">
         <a href="#cast" className="text-blue-500 hover:underline">Cast</a>
         <a href="#video" className="text-blue-500 hover:underline">Videos</a>
+        <a href="#recommendation" className="text-blue-500 hover:underline">Recommendation</a>
         <a href="#review" className="text-blue-500 hover:underline">Reviews</a>
       </nav>
       {
-        loading ? <h1>Loading...</h1> : 
+        loading ? (
+          <Spinner />
+        ) : 
         movie && (<>
           <DetailsBanner detailsMovie={movie} 
             video={videoResponse}/>
@@ -82,12 +87,18 @@ interface MovieDetailsPageProps {
           </div>
 
           <div id="similar-movies">
-            <Similar movieId={movie.id.toString()} />
+            <Similar movieId={movie.id} title={"Similar Movies"} />
+          </div>
+
+          <div id="recommendation">
+            <Recommendation movie={movie} title="Recommendations"/>
           </div>
 
           <div id="review">
             <Reviews reviews={movie.reviews} title="Reviews" />
           </div>
+
+          
         </>)
       }
       <CustomFooter />

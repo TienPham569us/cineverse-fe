@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.carousel {
+    @apply  relative bg-[#04152d];
+}
+

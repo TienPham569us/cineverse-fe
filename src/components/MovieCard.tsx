@@ -6,11 +6,11 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 
-export default function MovieCard({ movie, index }: { movie: Movie, index: number }) {
+export default function MovieCard({ movie, index, detailSize }: { movie: Movie, index: number, detailSize?: boolean }) {
   return (
     <Link 
         key={index} 
-        className="relative w-full h-full p-4 shadow-2xl rounded-md" 
+        className="relative w-full h-full p-4 shadow-2xl rounded-md " 
         href={`/movies/${movie.id}`}>
         
         <div className="relative">
@@ -19,7 +19,7 @@ export default function MovieCard({ movie, index }: { movie: Movie, index: numbe
               alt={`${media_base_url}/${movie.posterPath}`} 
               className="object-cover w-full rounded-lg" />
 
-          <div className="circleRating absolute top-[4px] left-2 w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg">
+          <div className={`circleRating absolute ${detailSize && detailSize===true ? 'top-4 left-0' : 'top-[4px] left-2 '} w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg`}>
             <CircularProgressbar
               value={movie.voteAverage}
               maxValue={10}
