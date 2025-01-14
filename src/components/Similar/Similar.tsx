@@ -16,14 +16,14 @@ import { media_base_url } from "@/constants/app_api";
 import PosterFallback from "@/assets/no-poster.png";
 import Link from "next/link";
 
-const Similar = ({ movieId } : { movieId: string}) => {    
+const Similar = ({ movieId } : { movieId: number}) => {    
     const carouselContainer = useRef<HTMLDivElement>(null);
     const [movies, setMovies] = useState<Movie[] | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const _fetchSimilarMovie = async (movieId: string) =>  {
+    const _fetchSimilarMovie = async (movieId: number) =>  {
         try {
             setLoading(true);
-            const data =  await fetchSimilarMovie(Number(movieId))
+            const data =  await fetchSimilarMovie((movieId))
             setMovies(data);
             setLoading(false);
         } catch (error) {

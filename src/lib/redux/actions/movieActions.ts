@@ -18,7 +18,7 @@ export const fetchTrendingMovies = (timeWindow: string) => {
     return async (dispatch: Dispatch) => {
         try {
         dispatch(fetchTrendingMoviesStart());
-    
+
         const response = await ApiManager.get(
             `${ENDPOINTS.TRENDING_MOVIES}?period=${timeWindow}`,
             headers,
@@ -45,7 +45,7 @@ export const fetchMovieDetails = (movieId: number) => {
     return async (dispatch: Dispatch) => {
         try {
         dispatch(fetchMovieDetailsStart());
-    
+
         const response = await ApiManager.get(
             `${ENDPOINTS.MOVIE_DETAILS}/${movieId}`,
             headers,
@@ -160,7 +160,7 @@ export const fetchFavouriteMovies = async (): Promise<Movie[] | null> => {
 }
 
 export const fetchLlmSearchMovies = (
-    query: string, collectionName: string, amount: number, 
+    query: string, collectionName: string, amount: number,
     threshold: number, page: number = 1) => {
 
     return async (dispatch: Dispatch) => {
@@ -186,4 +186,37 @@ export const fetchLlmSearchMovies = (
             dispatch(fetchSearchMoviesFailure(error.message));
         }
     };
+}
+
+export const fetchRecommendationMoviesByReasonedMatch = async (movie: Movie): Promise<Movie[] | null> => {
+    try {
+        const threshold = 0.5;
+        const amount = 24;
+        const collectionName = "movies";
+        const prompt = `find movies similar to movie has title ${movie.title} and tmdb_id is ${movie.id}, which are simimar in theme, or genre, or cast, or other features, except the movie i provided`;
+
+        const response = await ApiManager.get(
+            `${ENDPOINTS.LLM_SEARCH_MOVIES}?collectionName=${collectionName}&query=${prompt}&amount=${amount}&threshold=${threshold}`,
+            headers,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+
+        return response.results;
+
+        // const response = await ApiManager.get(
+        //     `${ENDPOINTS.TRENDING_MOVIES}?period=day`,
+        //     headers,
+        //     undefined,
+        //     API_BASE_URL
+        // );
+        // console.log("response", response);
+
+        // return response.results;
+    } catch (error: any) {
+        console.error("Error fetching recommendation movies:", error);
+        return null;
+    }
+
 }
