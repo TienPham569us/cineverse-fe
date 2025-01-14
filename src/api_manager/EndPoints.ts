@@ -13,4 +13,9 @@ export const ENDPOINTS = {
     ALL_GENRES: 'movie/genres',
     LATEST_TRAILER: 'movie/latest-trailer',
     POPULAR_MOVIES: 'movie/popular',
+    USER_INFO: 'user/user-info',
+    WATCHLIST: 'profile/watchlist',
+    FAVOURITE_LIST: 'profile/favorite',
+    REVIEW: 'movie/review',
+    RATING: 'movie/rating-point',
 }

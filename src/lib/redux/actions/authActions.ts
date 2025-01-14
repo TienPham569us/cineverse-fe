@@ -6,6 +6,7 @@ import { auth } from "@/config/firebase.config";
 import { clearAuthState, saveAuthToken } from '../localStorageUtil/local_storage_utils';
 import RegisterParams from '@/types/register.params';
 import { ENDPOINTS } from '@/api_manager/EndPoints';
+import { Profile } from '@/types/profile/profile.response';
 
 
 const api = new ApiManager();
@@ -212,6 +213,23 @@ export const refreshToken = (refreshToken: string) => {
 export const sendResetPasswordLink = async (email: string) => {
   try {
     await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getUserInfo = async (idToken: string): Promise<Profile | null> => {
+  try {
+    const newHeaders = {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${idToken}`
+    };
+    const response = await ApiManager.get(`${ENDPOINTS.USER_INFO}?idToken=${idToken}`, 
+      newHeaders, 
+      undefined);
+    
+    return response.result;
   } catch (error) {
     throw error;
   }
