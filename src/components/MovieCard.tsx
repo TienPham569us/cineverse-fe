@@ -3,6 +3,7 @@ import { formatDate } from "@/utils/dateUtils";
 import Link from "next/link";
 import { media_base_url } from "@/constants/app_api";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import PosterFallback from "@/assets/no-poster.png";
 import "react-circular-progressbar/dist/styles.css";
 
 
@@ -15,7 +16,7 @@ export default function MovieCard({ movie, index, detailSize }: { movie: Movie, 
         
         <div className="relative">
           <img 
-              src={`${media_base_url}/${movie.posterPath}`} 
+              src={movie.posterPath ? `${media_base_url}/${movie.posterPath}` : PosterFallback.src} 
               alt={`${media_base_url}/${movie.posterPath}`} 
               className="object-cover w-full rounded-lg" />
 

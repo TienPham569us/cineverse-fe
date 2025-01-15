@@ -169,7 +169,7 @@ export const fetchMyMovieDetails = async (movieId: number, idToken: string): Pro
 }
 
 
-export const fetchWatchList = async (idToken: string, page: number, limit: number = 5): Promise<UserMoviePagination | null> => {
+export const fetchWatchList = async (idToken: string, page: number): Promise<UserMoviePagination | null> => {
     try {
         
         const newHeaders = {
@@ -178,7 +178,7 @@ export const fetchWatchList = async (idToken: string, page: number, limit: numbe
         }
 
         const response = await ApiManager.get(
-            `${ENDPOINTS.WATCHLIST}?limit=${limit}&page=${page}`,
+            `${ENDPOINTS.WATCHLIST}?page=${page}`,
             newHeaders,
             undefined,
             API_BASE_URL,
@@ -194,7 +194,7 @@ export const fetchWatchList = async (idToken: string, page: number, limit: numbe
     }
 }
 
-export const fetchFavouriteList = async (idToken: string, page: number, limit: number = 5): Promise<UserMoviePagination | null> => {
+export const fetchFavouriteList = async (idToken: string, page: number): Promise<UserMoviePagination | null> => {
     try {
         
         const newHeaders = {
@@ -203,7 +203,7 @@ export const fetchFavouriteList = async (idToken: string, page: number, limit: n
         }
 
         const response = await ApiManager.get(
-            `${ENDPOINTS.FAVOURITE_LIST}?limit=${limit}&page=${page}`,
+            `${ENDPOINTS.FAVOURITE_LIST}?page=${page}`,
             newHeaders,
             undefined,
             API_BASE_URL,
@@ -220,7 +220,7 @@ export const fetchFavouriteList = async (idToken: string, page: number, limit: n
 }
 
 
-export const fetchRatingList = async (idToken: string, page: number, limit: number = 5): Promise<UserMoviePagination | null> => {
+export const fetchRatingList = async (idToken: string, page: number): Promise<UserMoviePagination | null> => {
     try {
         
         const newHeaders = {
@@ -229,7 +229,7 @@ export const fetchRatingList = async (idToken: string, page: number, limit: numb
         }
 
         const response = await ApiManager.get(
-            `${ENDPOINTS.RATING_LIST}?limit=${limit}&page=${page}`,
+            `${ENDPOINTS.RATING_LIST}?page=${page}`,
             newHeaders,
             undefined,
             API_BASE_URL,
