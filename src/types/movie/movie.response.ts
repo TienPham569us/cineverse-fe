@@ -5,6 +5,7 @@ export interface Movie {
   releaseDate: string;
   voteAverage: number;
   voteCount: number;
+  overview: string;
 }
 // export interface Movie {
 //     backdrop_path: string;

@@ -19,17 +19,8 @@ import SmallSpinner from "@/components/SmallSpinner";
 import { FAVOURITE_LIST } from "@/lib/redux/constants/listMovieConstants";
 import { getUserInfo } from "@/lib/redux/actions/authActions";
 
-const userDataTemp: Profile = {
-  uid: "",
-  name: "pham tien",
-  email: "maiantiem@gmail.com",
-  createdAt: "2024-12-26T11:37:24.722+00:00",
-  updatedAt: "2024-12-27T13:10:12.165+00:00",
-  profilePath: null
-}
-
 const FavouriteListPageContent = () => {
-    const [userData, setUserData] = useState<Profile>(userDataTemp);
+    const [userData, setUserData] = useState<Profile | null>(null);
     const [error, setError] = useState("");
     const [isClient, setIsClient] = useState(false);
     const [movies, setMovies] = useState<UserMovie[] | null>([]);
@@ -39,23 +30,22 @@ const FavouriteListPageContent = () => {
         
     const [page, setPage] = useState<number>(1);
     const [isLastPage, setIsLastPage] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const [totalPages, setTotalPages] = useState<number>(1);
 
     const _fetchUserMovies = async () => {
         try {
-          const response = await fetchFavouriteList(profileData.idToken ?? '', page, 10);
-          setUserMovies(response);
+          const response = await fetchFavouriteList(profileData.idToken ?? '', page);
           if (response && response.results) {
-            const newMovies: UserMovie[] = response.results.map((userMovie: UserMovie) => {
-                userMovie.movie.posterPath = 'https://image.tmdb.org/t/p/w780' +  userMovie.movie.posterPath;
-                return userMovie;
-            });
-            setMovies((prevMovies) => [...prevMovies ?? [], ...newMovies ?? []]);
-      
+            setMovies(response.results);
+            setTotalPages(response.totalPages);
+            setHasMore(1 < response.totalPages);
           }
         } catch (error: any) {
           setError(error.message);
         }
-      }
+    }
+
 
     const removeMovieById =  (movieId: number): void => {
         setMovies((prevMovies) => prevMovies!.filter((movie) => movie.movie.id !== movieId));
@@ -79,14 +69,35 @@ const FavouriteListPageContent = () => {
         _getProfileData();
     }, []);
 
-    // increase page number
-    const increasePage = () => {
-        setPage(page + 1);
-    }
-
-    const isHasMore = () => {
-        return userMovies?.totalPages ? userMovies?.totalPages > page : false;
-    }
+    const loadMoreMovies = async () => {
+        try {
+            console.log(page)
+            const nextPage = page + 1;
+    
+            if (nextPage > totalPages) {
+                setHasMore(false);
+                return;
+            }
+    
+            const newResponse = await fetchFavouriteList(profileData.idToken ?? '', nextPage);
+    
+            if(newResponse && newResponse.results){
+                const newMovies: UserMovie[] = newResponse.results.map((userMovie: UserMovie) => {
+                    userMovie.movie.posterPath = 'https://image.tmdb.org/t/p/w780' +  userMovie.movie.posterPath;
+                    return userMovie;
+                });
+                setMovies((prevMovies) => [...prevMovies ?? [], ...newMovies ?? []]);
+            }
+            setPage(nextPage);
+            console.log(page)
+            // Kiểm tra nếu trang hiện tại đã là trang cuối
+            if (nextPage >= totalPages) {
+                setHasMore(false);
+            }
+        } catch (error: any) {
+            setError(error.message);
+        }
+    };
 
     if (!isClient) {
         return null; // Render nothing on the server
@@ -95,29 +106,27 @@ const FavouriteListPageContent = () => {
     return (<>
         <CustomHeader />
         <div className="wrapper ">
-            <main className=""> 
+            <main className="">
+            {userData != null && 
+                <ProfileCard profile={userData} />
+            } 
                 <div><ToastContainer /></div>
                 
                 <div className="profilePage w-full bg-whiet pt-1 mb-12 md:mb-0 md:pt-2 md:min-h-[700px] relative">
                     <ContentWrapper className2="max-w-screen-3xl mx-5">
                         <BreadCrumbMovieList title={"Favourite List"}/>
 
-                        <div className="content flex flex-col relative gap-6 md:gap-12 md:flex-row">
-                            <div className="left flex-shrink-2 text-lg">
-                                <ProfileCard profile={userData} />
-                            </div>
+                        <div className="right text-white bg-darkBlue flex-shrink-4 w-full">
+                            <div className="bg-darkBlue w-full">
 
-                            <div className="right text-white bg-darkBlue flex-shrink-4 w-full">
-                                <Card className="bg-darkBlue w-full">
-
-                                    <CardContent className="w-full p-4">
+                                <div className="w-full p-4">
+                                    { movies && 
                                         <div className="container mx-auto px-4 w-full">
                                             <InfiniteScroll
-                                                next={increasePage} 
-                                                hasMore={isHasMore()} 
+                                                next={loadMoreMovies} 
+                                                hasMore={hasMore} 
                                                 loader={<SmallSpinner />} 
-                                                dataLength={0}
-                                                endMessage={<p className="text-center text-white">No more movies</p>}
+                                                dataLength={movies.length}
                                             >
                                                 <ul className="flex flex-col space-y-4 w-full">
                                                     {movies?.map((userMovie: UserMovie) => (
@@ -130,11 +139,10 @@ const FavouriteListPageContent = () => {
                                                             removeFromList={removeMovieById} />
                                                     ))}
                                                 </ul>
-                                            </InfiniteScroll>
-                                            
+                                            </InfiniteScroll> 
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </ContentWrapper>

@@ -19,6 +19,7 @@ import { AuthState } from "@/lib/redux/initialStates/authInitialState";
 import { RootState } from "@/lib/redux/store";
 import { useSelector } from "react-redux";
 import { UserMovie } from "@/types/profile/UserMovie.response";
+import { useRouter } from 'next/navigation';
 
 const DetailsBanner = ({ detailsMovie, video } : { 
   detailsMovie: MovieDetails | null, 
@@ -28,20 +29,23 @@ const DetailsBanner = ({ detailsMovie, video } : {
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const [rating, setRating] = useState<number | null>(null);
   const [isShowRatingModal, setIsShowRatingModal] = useState<boolean>(false);
   const profileData: AuthState = useSelector((state: RootState) => state.auth);
-  
+
   const director = detailsMovie!=null ? detailsMovie!.crew!.filter((crew) => crew.job === "Director") : [];  
   const writer = detailsMovie!=null ? detailsMovie!.crew!.filter(
     (cr) => cr.job === "Screenplay" || cr.job === "Story" || cr.job === "Writer"
   ) : [];
 
   const [userMovieDetails, setUserMovieDetails] = useState<UserMovie | null>(null); 
-    
+  const router = useRouter();
 
   const _fetchMyMovieDetails = async (movieId: number, idToken: string) => {
     try {
+      console.log(idToken)
      const response = await fetchMyMovieDetails(movieId, idToken);
+     console.log(response)
      setUserMovieDetails(response);
      
      if (response) { 
@@ -50,6 +54,9 @@ const DetailsBanner = ({ detailsMovie, video } : {
       }
       if (response.inWatchList === true) {
         setIsBookmarked(true);
+      }
+      if (response.rating) {
+        setRating(response.rating);
       }
     }
 
@@ -66,6 +73,10 @@ const DetailsBanner = ({ detailsMovie, video } : {
   }, []);
   
   const toggleFavorite = async () => {
+    if (!profileData.isAuthenticated) {
+      router.push('/login?notificationCode=403');
+      return;
+    }
     if (isFavorite === false) {
       try {
         await addMovieToFavouriteList(detailsMovie!.id, profileData.idToken ?? '');
@@ -82,11 +93,13 @@ const DetailsBanner = ({ detailsMovie, video } : {
         console.error("Error remove movie from favorites list:", error);
       }
     }
-    
-    
   }
 
   const toggleBookmark = async () => {
+    if (!profileData.isAuthenticated) {
+      router.push('/login?notificationCode=403');
+      return;
+    }
     if (isBookmarked === false) {
       try {
         console.log('add movie to watchlist');
@@ -108,6 +121,10 @@ const DetailsBanner = ({ detailsMovie, video } : {
   }
 
   const openRatingModal = () => {
+    if (!profileData.isAuthenticated) {
+      router.push('/login?notificationCode=403');
+      return;
+    }
     setIsShowRatingModal(true);
   }
   const closeRatingModal = () => {
@@ -191,10 +208,11 @@ const DetailsBanner = ({ detailsMovie, video } : {
                   </button>
 
                   <div  
-                    className="w-10 h-10 bg-gray-600 text-white rounded-full flex items-center justify-center"
+                    className="w-12 h-12 bg-gray-600 text-white rounded-full flex items-center justify-center"
                     onClick={openRatingModal}>
-                    <span className="text text-lg">
-                      <FontAwesomeIcon icon={faStar} className={`text-white`}/>
+                    <span className="text text-lg flex items-center">
+                      <div className="rating text-base">{rating}</div>
+                      <FontAwesomeIcon icon={faStar} className={`${rating ? 'text-blue-500 text-sm' : 'text-white text-sm'}`}/>
                     </span>
 
                     {

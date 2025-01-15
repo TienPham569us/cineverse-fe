@@ -253,9 +253,9 @@ return (
             )}
 
             {errorSearchMovies && (
-                <div className="flex flex-row">
+              <div className="flex flex-row">
                 <h1 className="text-[#dc2626]">Error: {errorSearchMovies}</h1>
-                </div>
+              </div>
             )}
 
             {/* Pagination */}

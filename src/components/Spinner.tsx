@@ -1,8 +1,8 @@
-export default function Spinner()  {
+export default function Spinner({isLarge = true})  {
     return (
     <div
       className={`${
-        true ? "h-[700px]" : "h-[150px]"
+        isLarge ? "h-[700px]" : "h-[150px]"
       } w-full flex items-center justify-center relative`}
     >
       <svg

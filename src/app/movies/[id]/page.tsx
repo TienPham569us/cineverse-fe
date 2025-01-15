@@ -67,12 +67,12 @@ interface MovieDetailsPageProps {
 
     return (<>
       <CustomHeader />
-      <nav className="flex justify-center space-x-4 my-4">
+      {/* <nav className="flex justify-center space-x-4 my-4">
         <a href="#cast" className="text-blue-500 hover:underline">Cast</a>
         <a href="#video" className="text-blue-500 hover:underline">Videos</a>
         <a href="#recommendation" className="text-blue-500 hover:underline">Recommendation</a>
         <a href="#review" className="text-blue-500 hover:underline">Reviews</a>
-      </nav>
+      </nav> */}
       {
         loading ? (
           <Spinner />
