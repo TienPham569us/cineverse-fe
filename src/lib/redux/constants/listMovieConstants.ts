@@ -1,0 +1,3 @@
+export const WATCHLIST = 'WATCHLIST';
+export const FAVOURITE_LIST = 'FAVOURITE_LIST';
+export const RATING_LIST = 'RATING_LIST';

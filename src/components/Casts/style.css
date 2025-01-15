@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.listItems {
+    @apply w-full flex flex-row justify-start;
+}

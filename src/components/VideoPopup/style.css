@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.videoPopup {
+  @apply fixed inset-0 flex justify-center items-center w-full h-full backdrop-blur-[3.5px] bg-black bg-opacity-25 z-50 transition-opacity;
+}
+
+.videoPopup.hidden {
+  @apply opacity-0 invisible;
+}
+
+.videoPopup.visible {
+  @apply opacity-100;
+}
+
+.opacityLayer {
+  @apply absolute inset-0 w-full h-full bg-black bg-opacity-25 backdrop-blur-[3.5px] transition-opacity;
+}
+
+.videoPlayer {
+  @apply relative w-[800px] aspect-[16/9] bg-white transform transition-transform;
+}
+
+.videoPlayer.hidden {
+  
+}
+
+.videoPlayer.visible {
+}
+
+.closeBtn {
+  @apply absolute top-[-20px] right-0 text-white cursor-pointer;
+}

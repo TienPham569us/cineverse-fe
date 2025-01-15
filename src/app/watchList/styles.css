@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logoutButton {
+    @apply w-full hover:bg-[#dc2626] hover:text-white;
+  }
+  
+  .profileImgWrapper {
+    @apply  w-[125px] h-[125px] rounded-full overflow-hidden mb-4 
+    md:w-[175px] md:h-[175px] md:mb-6;
+  }
+  .profileImg {
+    @apply w-full h-full object-cover object-top block;
+  }
+  .wrapper {
+    @apply min-h-screen pt-8 px-8 pb-20 gap-16 sm:pt-20 px-8 bg-darkBlue;
+  }

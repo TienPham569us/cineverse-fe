@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.selectWrapper {
+  @apply w-min text-white bg-darkBlue border border-solid border-white rounded-md p-2 mt-4;
+}

@@ -1,3 +1,5 @@
+import { RATING_LIST } from "@/lib/redux/constants/listMovieConstants";
+
 export const ENDPOINTS = {
     REGISTER: 'user/register',
     VERIFY_TOKEN: 'user/verify',
@@ -6,4 +8,18 @@ export const ENDPOINTS = {
     TRENDING_MOVIES: 'movie/trending',
     MOVIE_DETAILS: 'movie',
     SEARCH_MOVIES: 'movie/search',
+    POPULAR_CASTS: 'cast/popular',
+    CAST_DETAILS: 'cast',
+    LLM_SEARCH_MOVIES: 'movie/llm-movie-search',
+    AI_NAVIGATION: 'movie/ai-navigation',
+    ALL_GENRES: 'movie/genres',
+    LATEST_TRAILER: 'movie/latest-trailer',
+    POPULAR_MOVIES: 'movie/popular',
+    USER_INFO: 'user/user-info',
+    WATCHLIST: 'profile/watchlist',
+    FAVOURITE_LIST: 'profile/favorite',
+    RATING_LIST: 'profile/rating',
+    REVIEW: 'movie/review',
+    RATING: 'movie/rating-point',
+    MY_MOVIE_DETAILS: 'profile/movie-details/me',
 }

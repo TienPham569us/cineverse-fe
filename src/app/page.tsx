@@ -2,7 +2,7 @@
 
 import CustomHeader from "@/components/header";
 import CustomFooter from "@/components/footer";
-import { fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
+import { fetchLatestTrailer, fetchTrendingMovies, fetchPoplarMovies } from "@/lib/redux/actions/movieActions";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { Movie } from "@/types/movie/movie.response";
 import Link from "next/link";
@@ -29,6 +29,11 @@ import { formatDate } from "@/utils/dateUtils";
 import MovieCard from "@/components/MovieCard";
 import { backdrop_base_url } from "@/constants/app_api";
 import Image from "next/image";
+import Spinner from "@/components/Spinner";
+import TrendingMoviesCarousel from "@/components/TrendingMoviesCarousel/TrendingMoviesCarousel";
+import { LatestTrailerResponse } from "@/types/movie/video.response";
+import LatestTrailersSection from "@/components/LatestTrailersSection/LatestTrailersSection";
+import SmallSpinner from "@/components/SmallSpinner";
 
 interface HomePageProps {
   loadingTrendingMovies: boolean;
@@ -44,6 +49,40 @@ const HomeContent: React.FC<HomePageProps> = props => {
   const [timeWindow, setTimeWindow] = useState("day");
   const [query, setQuery] = useState("");
   const { loadingTrendingMovies, errorTrendingMovies, trendingMovies, fetchTrendingMovies } = props;
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [listLastestTrailer, setListLastestTrailer] = useState<LatestTrailerResponse[] | null>(null);
+  const [listPopularMovies, setListPopularMovies] = useState<Movie[] | null>(null);
+
+  const _fetchLatestTrailer = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const result: LatestTrailerResponse[] | null = await fetchLatestTrailer();
+      setIsLoading(false);
+      setListLastestTrailer(result);
+    } catch (error : any)
+    {
+      setIsLoading(false);
+      setError(error.message);
+      console.error("Error fetching video:", error);
+    }
+  }
+
+  const _fetchPopularMovies = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const result: Movie[] | null = await fetchPoplarMovies();
+      setIsLoading(false);
+      setListPopularMovies(result);
+    } catch (error : any)
+    {
+      setIsLoading(false);
+      setError(error.message);
+      console.error("Error fetching video:", error);
+    }
+  }
 
   useEffect(() => {
     setIsClient(true);
@@ -53,6 +92,11 @@ const HomeContent: React.FC<HomePageProps> = props => {
     //   dispatch({ type: 'auth/loadState', payload: savedAuthState });
     // }
   }, [dispatch, timeWindow]);
+
+  useEffect(() => {
+    _fetchLatestTrailer();
+    _fetchPopularMovies();
+  }, []);
   
   if (!isClient) {
     return null; // Render nothing on the server
@@ -67,14 +111,17 @@ const HomeContent: React.FC<HomePageProps> = props => {
   //     router.push(`/search-movies?query=${encodeURIComponent(query)}&page=1`);
   //   }
   // };
-
   return (
   <div className="bg-darkBlue"> 
     <CustomHeader />
     <div className="relative flex items-center justify-center w-full h-[450px] md:h-[700px]">
       {
-        (!loadingTrendingMovies && randomBackdropPath)
+        (loadingTrendingMovies && !randomBackdropPath)
         ? (
+          <div className="flex items-center justify-center text-white">
+            Loading...
+          </div>
+        ) : errorTrendingMovies == null ? (
           <div className="absolute top-0 left-0 w-full h-full opacity-50">
             <img
               src="https://image.tmdb.org/t/p/original/9iw4a6AQkxUO3EuRn59Vgrqf0zO.jpg"
@@ -84,8 +131,8 @@ const HomeContent: React.FC<HomePageProps> = props => {
             />
           </div>
         ) : (
-          <div className="flex items-center justify-center text-white">
-            Loading...
+          <div className="flex flex-row">
+            <h1 className="text-[#dc2626]">Error: {errorTrendingMovies}</h1>
           </div>
         )
       }
@@ -114,36 +161,30 @@ const HomeContent: React.FC<HomePageProps> = props => {
         </div>
       </div>
     </div>
-    <div className="w-full max-w-[1200px] mx-auto py-8 px-4" aria-readonly>
-      <div className="flex flex-row flex-wrap justify-between">
-        <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Trending</h1>
-        <Tabs defaultValue="day" className="w-[400px]" 
-          onValueChange={(value) => setTimeWindow(value)}>
+    <div className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
+      <div className="w-full container mx-auto py-4 px-8" aria-readonly>
+        <div className="flex flex-row flex-wrap justify-between">
+          <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Trending</h1>
+          <Tabs defaultValue="day" className="w-[400px]" 
+            onValueChange={(value) => setTimeWindow(value)}>
 
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="day" aria-readonly>Today</TabsTrigger>
-            <TabsTrigger value="week" aria-readonly>This Week</TabsTrigger>
-          </TabsList>
-        </Tabs>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="day" aria-readonly>Today</TabsTrigger>
+              <TabsTrigger value="week" aria-readonly>This Week</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </div>
-    </div>
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
       
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
+      <main className="container mx-auto p-4">
         {
           (loadingTrendingMovies) 
           ? (
-            <div className="flex flex-row text-black">
-              <h1>Loading...</h1>
-            </div>
+            <Spinner />
           ) : (
-            <div className="flex flex-row text-black">
+            trendingMovies && <div className="flex flex-row text-black">
               <div className="container mx-auto p-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
-                  {trendingMovies.map((movie: Movie, index: number) => (
-                    <MovieCard key={index} movie={movie} index={index} />
-                  ))}
-                  </div>
+                  <TrendingMoviesCarousel trendingMovies={trendingMovies}/>
                 </div>
             </div>
           )
@@ -158,6 +199,49 @@ const HomeContent: React.FC<HomePageProps> = props => {
            )
         }
       
+      </main>
+
+      <div className="w-full container mx-auto py-4 px-8" aria-readonly>
+        <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Latest Trailers</h1>
+      </div>
+
+      { 
+      (isLoading) ? (
+        <Spinner/>
+      ) : error === null ?  (
+        <div className="container mx-auto p-4">
+          <div id="video">
+            <LatestTrailersSection data={listLastestTrailer} loading={loadingTrendingMovies} />
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-row">
+          <h1 className="text-[#dc2626]">Error: {error}</h1>
+        </div>
+      )
+      }
+
+      <div className="w-full container mx-auto py-4 px-8" aria-readonly>
+        <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Popular Movies</h1>
+      </div>
+
+      <main className="container mx-auto p-4">
+        {
+          (isLoading && listPopularMovies === null) ? (
+            <Spinner/>
+          ) : error === null ? (
+            <div className="flex flex-row text-black">
+              <div className="container mx-auto p-4">
+                  <TrendingMoviesCarousel trendingMovies={listPopularMovies!}/>
+                </div>
+            </div>
+          ) : (
+            <div className="flex flex-row">
+              <h1 className="text-[#dc2626]">Error: {error}</h1>
+            </div>
+          )
+        
+        }
       </main>
     </div>
     <CustomFooter />

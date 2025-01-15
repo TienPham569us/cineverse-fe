@@ -1,4 +1,5 @@
-import { FETCH_MOVIE_DETAILS_FAILURE, FETCH_MOVIE_DETAILS_START, FETCH_MOVIE_DETAILS_SUCCESS, FETCH_SEARCH_MOVIES_FAILURE, FETCH_SEARCH_MOVIES_START, FETCH_SEARCH_MOVIES_SUCCESS, FETCH_TRENDING_MOVIES_FAILURE, FETCH_TRENDING_MOVIES_START, FETCH_TRENDING_MOVIES_SUCCESS, MovieActionTypes } from "../constants/movieConstants";
+import { FETCH_GENRES_FAILURE, FETCH_GENRES_START, FETCH_GENRES_SUCCESS, FETCH_MOVIE_DETAILS_FAILURE, FETCH_MOVIE_DETAILS_START, FETCH_MOVIE_DETAILS_SUCCESS, FETCH_SEARCH_MOVIES_FAILURE, FETCH_SEARCH_MOVIES_START, FETCH_SEARCH_MOVIES_SUCCESS, FETCH_TRENDING_MOVIES_FAILURE, FETCH_TRENDING_MOVIES_START, FETCH_TRENDING_MOVIES_SUCCESS, MovieActionTypes } from "../constants/movieConstants";
+import { GenresState, genresInitialState } from "../initialStates/genresInitalState";
 import { movieDetailsInitialState, MovieDetailsState } from "../initialStates/movieDetailsInitialState";
 import { SearchMoviesState, searchMovieInitialState } from "../initialStates/searchMovieInitialState";
 import { trendingMovieInitialState, TrendingMovieState } from "../initialStates/trendingMovieInitialState";
@@ -57,6 +58,26 @@ export const searchMoviesReducer =
             };
 
         case FETCH_SEARCH_MOVIES_FAILURE:
+            return { ...state, loading: false, error: action.payload };
+        default:
+            return state;
+
+    };
+} 
+
+export const genresReducer = 
+    (state: GenresState = genresInitialState, 
+        action: MovieActionTypes | any) : GenresState => {
+    switch (action.type) {
+        case FETCH_GENRES_START:
+            return { ...state, loading: true, error: null };
+        case FETCH_GENRES_SUCCESS:
+            return { ...state, 
+                genres: action.payload.genres,
+                loading: false
+            };
+
+        case FETCH_GENRES_FAILURE:
             return { ...state, loading: false, error: action.payload };
         default:
             return state;

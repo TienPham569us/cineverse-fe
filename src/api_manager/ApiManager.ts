@@ -1,6 +1,8 @@
 import RegisterParams from "@/types/register.params";
 import { ENDPOINTS } from "./EndPoints";
 import * as dotenv from 'dotenv';
+import { AuthState } from "@/lib/redux/initialStates/authInitialState";
+import { getAuthState } from "@/lib/redux/localStorageUtil/local_storage_utils";
 
 dotenv.config();
 const BACKEND_BASE_URL: string = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || 'https://exclusive-neile-tthuytruc-6a5d7e3f.koyeb.app'; //'http://localhost:8080'; //
@@ -18,7 +20,7 @@ export class ApiManager {
   }
 
   private static async refreshToken(refreshToken: string): Promise<string> {
-    const response = await fetch(`${BACKEND_BASE_URL}/user/refreshToken`, {
+    const response = await fetch(`${BACKEND_BASE_URL}/user/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,46 +71,66 @@ export class ApiManager {
     return new Headers({ ...defaultHeaders, ...customHeaders });
   }
 
-  static async get(endpoint: string, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
+  static async get(endpoint: string, headers?: any, refreshToken?: string, base_url?: string, getStatusCode?: boolean): Promise<any> {
     try {
       if (!base_url) {
         base_url = BACKEND_BASE_URL;
       }
       let response;
+
+      const options: RequestInit = {
+        method: 'GET',
+        headers: headers,
+      };
+
       if (refreshToken) {
-        const options: RequestInit = {
-          method: 'GET',
-          headers: headers,
-        };
+        
         response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, refreshToken);
       } else {
         response = await fetch(`${base_url}/${endpoint}`,{
           headers: headers,
         });
+        // const auth: AuthState = getAuthState();
+
+        // response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, auth.refreshToken ?? '');
+
       }
       
-      if (!response.ok) {
-        console.log("Response: ", response);
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData));
+      // if (!response.ok) {
+      //   console.log("Response: ", response);
+      //   const errorData = await response.json();
+      //   throw new Error(JSON.stringify(errorData));
+      // }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(`Error ${response.status}: ${errorData.message || response.statusText}`);
+      // }
+
+      if (getStatusCode && getStatusCode === true) {
+        const data = await response.json();
+        return { status: response.status, ...data };
       }
-      return response.json();
+
+      return await response.json();
+      
     } catch (error) {
       console.log("Error: ", error);
       throw error;
     } 
   }
-  static async post(endpoint: string, data: any, headers?: any, refreshToken?: string, base_url?: string): Promise<any> {
+  static async post(endpoint: string, data: any, headers?: any, refreshToken?: string, base_url?: string, getStatusCode?: boolean): Promise<any> {
     try {
       if (!base_url) {
         base_url = BACKEND_BASE_URL;
       }
       let response;
+      const options: RequestInit = {
+        method: 'POST',
+        headers: headers,
+      };
+
       if (refreshToken) {
-        const options: RequestInit = {
-          method: 'POST',
-          headers: headers,
-        };
+        
         response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, refreshToken);
       } else {
         console.log("Endpoint: ", `${base_url}/${endpoint}`);
@@ -120,13 +142,26 @@ export class ApiManager {
           headers: (headers),
           body: JSON.stringify(data),
         });
+
+        // const auth: AuthState = getAuthState();
+
+        // response = await this.fetchWithRefresh(`${base_url}/${endpoint}`, options, auth.refreshToken ?? '');
       }
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData));
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(JSON.stringify(errorData));
+      // }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(`Error ${response.status}: ${errorData.message || response.statusText}`);
+      // }
       
-      return response.json();
+      if (getStatusCode && getStatusCode === true) {
+        const data = await response.json();
+        return { status: response.status, ...data };
+      }
+
+      return await response.json();
     } catch (error) {
       throw error;
     } 
@@ -150,10 +185,10 @@ export class ApiManager {
           body: JSON.stringify(data),
         });
       }
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData));
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(JSON.stringify(errorData));
+      // }
       return response.json();
     } catch (error) {
       throw error;
@@ -177,10 +212,10 @@ export class ApiManager {
           headers: headers,
         });
       }
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(JSON.stringify(errorData));
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(JSON.stringify(errorData));
+      // }
       return response.json();
     } catch (error) {
       throw error;

@@ -4,8 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/redux/store";
 import { logout } from "@/lib/redux/actions/authActions";
 import { useState } from "react";
-import { HiOutlineSearch, HiOutlineX, HiOutlineViewList } from "react-icons/hi";
-//import { logout } from "@/lib/redux/features/authSlice";
+import { HiOutlineSearch, HiOutlineX, HiOutlineViewList, HiOutlineMenu, HiDocumentSearch} from "react-icons/hi";
+import NavbarProfile from "./NavbarProfile/NavbarProfile";
+import { Button } from "./ui/button";
+import { fetchAINavigation, handleAINavigation } from "@/lib/redux/actions/navigationActions";
+import { NavigationResponse } from "@/types/navigation/navigation.response";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import SmallSpinner from "@/components/SmallSpinner";
 
 const CustomHeader = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -15,17 +21,51 @@ const CustomHeader = () => {
   const [searchMenu, setSearchMenu] = useState(false);
   const [query, setQuery] = useState("");
   const [show, setShow] = useState("top");
+  const [navigateMenu, setNavigateMenu] = useState(false);  
+  const [promptNavigate, setPromptNavigate] = useState<string>("");
+  const [loadingNavigate, setLoadingNavigate] = useState(false);
 
   const handleLogout = () => {
-    window.location.href = "/login";
-    //router.push('/');
+    
     dispatch(logout());
+    window.location.href = "/login";
   };
+
+  const handleNavigate = async (promptNavigate: string) => {
+    setLoadingNavigate(true);
+
+    const response: NavigationResponse | null = await fetchAINavigation(promptNavigate);
+
+    if (response && response.route) {
+
+      console.log("navigation response: ", response);
+      handleAINavigation(response);
+
+    } else {
+
+      toast.error('Server return an error: empty response', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+
+  
+    setNavigateMenu(false);
+    setLoadingNavigate(false);
+
+  }
 
   return (
     <header>
+      
       <div className={`fixed w-full z-10 transition-transform bg-[#020c1b] bg-opacity-30 backdrop-blur-md`}>
-        <div className="max-w-6xl mx-auto px-4 flex justify-between items-center py-3">
+        <div className="container mx-auto px-16 flex justify-between items-center py-3">
+          {/* <ToastContainer /> */}
           <Link href={"/"} className="cursor-pointer">
             <img
               src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
@@ -37,19 +77,27 @@ const CustomHeader = () => {
           <div className="hidden md:flex items-center space-x-6 text-white">
             {auth.idToken ? (
               <div className="flex items-center">
-                <span className="mr-4">Welcome, {auth.email}!</span>
+                <span className="mr-4">Welcome!, {auth.email}</span>
+                
+                <NavbarProfile username={auth.email || ''} handleLogout={handleLogout} />
+
                 <Link
-                  href={"/profile"}
-                  className="text-center flex flex-row justify-center mx-3"
+                  href={"/casts"}
+                  className="text-center flex flex-row justify-center px-2"
                 >
-                  <button className="cursor-pointer hover:pink">Profile</button>
+                  <button className="cursor-pointer hover:text-pink-500">Cast</button>
                 </Link>
-                <button className="cursor-pointer hover:text-pink-500" onClick={() => handleLogout()}>
-                  Logout
-                </button>
-                <button className="cursor-pointer hover:text-pink-500" onClick={() => handleLogout()}>
+
+                <button className="cursor-pointer hover:text-pink-500 px-2" onClick={() => setSearchMenu(true)}>
                   <HiOutlineSearch className="text-xl" />
                 </button>
+                
+                <button className="ms-1 cursor-pointer hover:text-pink-500" onClick={() => setNavigateMenu(true)}>
+                  <HiDocumentSearch className="text-xl" />
+                </button>
+                
+                
+
               </div>
             ) : (
               <>
@@ -65,8 +113,18 @@ const CustomHeader = () => {
                 >
                   <button className="cursor-pointer hover:text-pink-500">Register</button>
                 </Link>
+                <Link
+                  href={"/casts"}
+                  className="text-center flex flex-row justify-center"
+                >
+                  <button className="cursor-pointer hover:text-pink-500">Cast</button>
+                </Link>
                 <button className="cursor-pointer hover:text-pink-500" onClick={() => setSearchMenu(true)}>
                   <HiOutlineSearch className="text-xl" />
+                </button>
+
+                <button className="ms-1 cursor-pointer hover:text-pink-500" onClick={() => setNavigateMenu(true)}>
+                  <HiDocumentSearch className="text-xl" />
                 </button>
               </>
             )}
@@ -103,10 +161,19 @@ const CustomHeader = () => {
           >
             <button className="cursor-pointer hover:text-pink-500">Register</button>
           </Link>
+          <Link
+            href={"/casts"}
+            className="text-center flex flex-row justify-center"
+          >
+            <button className="cursor-pointer hover:text-pink-500">Cast</button>
+          </Link>
+          <button className="ms-1 cursor-pointer hover:text-pink-500 flex items-center justify-center" onClick={() => setNavigateMenu(true)}>
+                  <HiDocumentSearch className="text-xl" />
+          </button>
         </ul>
       )}
       {searchMenu && (
-        <div className="bg-white w-full py-4">
+        <div className="bg-white w-full py-4 px-2 border rounded">
           <div className="max-w-6xl mx-auto px-4 flex items-center space-x-4">
             <input
               type="search"
@@ -116,11 +183,47 @@ const CustomHeader = () => {
               onKeyUp={() => {}}
             />
             <HiOutlineX className="text-black text-xl cursor-pointer" onClick={() => setSearchMenu(false)} />
+            <Link 
+            href={{
+              pathname: "/search",
+              query: { query: query, page: 1 },
+            }}
+            className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center">
+            Search
+          </Link >
           </div>
         </div>
       )}
+      {navigateMenu && (
+        <div className="bg-white w-full py-4 px-2 border rounded">
+          <div className="max-w-6xl mx-auto px-4 flex items-center space-x-4">
+            <input
+              type="search"
+              placeholder="Type something to navigate to that page..."
+              className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none"
+              onChange={(e) => setPromptNavigate(e.target.value)}
+              onKeyUp={() => {}}
+            />
+           
+            <HiOutlineX className="text-black text-xl cursor-pointer" onClick={() => setNavigateMenu(false)} />
+            <Button 
+              onClick={() => handleNavigate(promptNavigate)}
+              className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center">
+                Navigate
+            </Button >
+            {
+              loadingNavigate && (
+                <SmallSpinner />
+              )
+            }
+          </div>
+        </div>
+      )}
+      
       </div>
+      <ToastContainer />
     </header>
+    
   );
 };
 

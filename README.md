@@ -41,5 +41,7 @@ npx tailwindcss init -p
 npx shadcn@latest init -d --legacy-peer-deps
 npx shadcn@latest add `Component name`  
 then choose: --legacy-peer-deps
-npx shadcn@latest add  button tabs card input label 
+
+# example: 
+npx shadcn@latest add button tabs card input label navigation-menu breadcrumb dropdown-menu select
 then choose: --legacy-peer-deps

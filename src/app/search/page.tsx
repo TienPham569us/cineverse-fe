@@ -1,38 +1,29 @@
 'use client';
 
 import CustomHeader from "@/components/header";
-import { fetchSearchMovies, fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
+import { fetchGenres, fetchLlmSearchMovies, fetchSearchMovies, fetchTrendingMovies } from "@/lib/redux/actions/movieActions";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { Movie } from "@/types/movie/movie.response";
 import React, {Suspense, useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { formatDate } from "@/utils/dateUtils";
 import { useSearchParams } from 'next/navigation'
 import MovieCard from "@/components/MovieCard";
+import CustomFooter from "@/components/footer";
+import "./styles.css";
+import Spinner from "@/components/Spinner";
+import { Genres } from "@/types/movie/genres.response";
 
 interface SearchPageProps {
     loadingSearchMovies: boolean;
     errorSearchMovies: string | null;
     searchResults: Movie[];
     totalPages: number;
-    fetchSearchMovies: (query: string, page: number) => void;
+    fetchSearchMovies: (query: string, page: number, selectedGenres: number[], fromDate ?: string, toDate ?: string) => void;
+    fetchLlmSearchMovies: (query: string, collectionName: string, amount: number, threshold: number, page: number) => void;
+    fetchGenres: () => void;
+    genresResult: Genres[];
 }
 
 const SearchContent: React.FC<SearchPageProps> = props => {
@@ -43,15 +34,18 @@ const SearchContent: React.FC<SearchPageProps> = props => {
   const [query, setQuery] = useState<string>(searchParams.get("query") || "");
   const [page, setPage] = useState<number>(parseInt(searchParams.get("page") || "1"));
   const [arrCurNumOfPages, setArrCurNumOfPages] = useState<(number | string)[]>([]);
-  const { loadingSearchMovies, errorSearchMovies, searchResults, totalPages, fetchSearchMovies } = props;
+  const { loadingSearchMovies, errorSearchMovies, searchResults, totalPages, fetchSearchMovies, fetchLlmSearchMovies, genresResult, fetchGenres } = props;
+  const [searchType, setSearchType] = useState<string>("normal");
+  const llmCollectionSearch = "movies";
+  const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
+  const [errorDate, setErrorDate] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
-    if (query.trim()) {
-      console.log("call")
-      fetchSearchMovies(query, page);
-      console.log(totalPages)
-    }
+    fetchSearchMovies(query, page, selectedGenres, fromDate, toDate);
+    fetchGenres();
   }, [dispatch, page]);
 
   useEffect(() => {
@@ -71,14 +65,63 @@ const SearchContent: React.FC<SearchPageProps> = props => {
       }
 
       setArrCurNumOfPages(tempArray);
+    } else {
+      setArrCurNumOfPages([1]);
     }
   }, [dispatch, page, totalPages]);
 
   const handleSearch = () => {
-    if (query.trim()) {
-      fetchSearchMovies(query, 1); // Reset to first page when performing a new search
+    if (searchType === "llm-search") {
+      if (query.trim()){
+        fetchLlmSearchMovies(query, llmCollectionSearch, 24, 0.5, 1); // Reset to first page when performing a new search
+        setPage(1);
+      }
+    } else {
+      if (!validateDates()) {
+        return;
+      }
+      fetchSearchMovies(query, 1, selectedGenres, fromDate, toDate); // Reset to first page when performing a new search
       setPage(1);
     }
+  };
+
+  const toggleGenre = (genreId: number) => {
+    setSelectedGenres((prev) =>
+      prev.includes(genreId) ? prev.filter((id) => id !== genreId) : [...prev, genreId]
+    );
+  };
+
+  const validateDates = (): boolean => {
+    const today = new Date();
+
+    if (fromDate) {
+      const from = new Date(fromDate);
+      if (from > today) {
+        setErrorDate("From Date cannot be in the future.");
+        return false;
+      }
+    }
+
+    if (toDate) {
+      const to = new Date(toDate);
+      if (to > today) {
+        setErrorDate("To Date cannot be in the future.");
+        return false;
+      }
+    }
+
+    if (fromDate && toDate) {
+      const from = new Date(fromDate);
+      const to = new Date(toDate);
+
+      if (from > to) {
+        setErrorDate("From Date must be earlier than or equal to To Date.");
+        return false;
+      }
+    }
+
+    setErrorDate(null);
+    return true;
   };
 
   if (!isClient) {
@@ -86,13 +129,14 @@ const SearchContent: React.FC<SearchPageProps> = props => {
   }
 
 return (
-    <div className="bg-white">
+    <div className="bg-darkBlue">
       <CustomHeader />
-      <div className="p-3 m-2 bg-white">
+      <div className="w-full container mx-auto h-[150px] pt-16 px-12">
+        <div className="flex flex-col"> 
         <div className="flex items-center">
           <Input
             placeholder="Search for movies..."
-            className="flex-1 text-black border border-solid border-black"
+            className="flex-1 text-white border border-solid border-white"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -103,32 +147,115 @@ return (
             Search
           </button>
         </div>
+          <div>
+            <label className="text-white me-3" htmlFor="searchType">Search type:</label>
+            <select className="selectWrapper"
+              id='searchType'
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+            >
+              <option value="normal">Normal search</option>
+              <option value="llm-search">LLM Search</option>
+            </select>
+          </div>
+          
+        </div>
+       
       </div>
 
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)] bg-white">
+      <div className="grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
-            {loadingSearchMovies ? (
-                <div className="flex flex-row text-black">
-                <h1>Loading...</h1>
-                </div>
+            {genresResult == null || loadingSearchMovies ? (
+                <Spinner />
             ) : searchResults.length > 0 ? (
-                <div className="container mx-auto p-4">
-                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
-                    {searchResults.map((movie: Movie, index: number) => (
-                    <MovieCard key={index} movie={movie} index={index} />
-                    ))}
-                </div>
+                <div className={searchType !== "normal" ? "container mx-auto p-8" : "flex container mx-auto p-8"}>
+                  {/* Side bar */}
+                  {searchType === "normal" && 
+                  <div className="w-1/4 bg-darkBlue text-white border border-white rounded-md">
+                    {/* Release Dates */}
+                    <div className="flex justify-between">
+                      <h2 className="text-lg font-bold p-4">Filters</h2>
+                      <button
+                        onClick={handleSearch}
+                        className="m-2 button-auth"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    <div className="p-4 border-y border-white">
+                      <label className="block text-base font-bold mb-2">Release Dates</label>
+                      <div className="flex flex-col gap-2">
+                        From<input
+                          type="date"
+                          value={fromDate}
+                          onChange={(e) => setFromDate(e.target.value)}
+                          className="p-2 bg-gray-800 text-white rounded border border-white focus:outline-none"
+                          placeholder="From"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setFromDate("")}
+                          className="text-white bg-gray-700 px-2 py-1 rounded hover:bg-gray-600"
+                        >
+                          x
+                        </button>
+                        To<input
+                          type="date"
+                          value={toDate}
+                          onChange={(e) => setToDate(e.target.value)}
+                          className="p-2 bg-gray-800 text-white rounded border border-white focus:outline-none"
+                          placeholder="To"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setToDate("")}
+                          className="text-white bg-gray-700 px-2 py-1 rounded hover:bg-gray-600"
+                        >
+                          x
+                        </button>
+                        {errorDate && <p className="text-red-500">{errorDate}</p>}
+                      </div>
+                    </div>
+
+                    {/* Genres */}
+                    <div className="mb-4 p-4 border-white">
+                      <label className="block text-base font-bold mb-4">Genres</label>
+                      <div className="flex flex-wrap gap-2">
+                        {genresResult.map((genre) => (
+                          <button
+                            key={genre.id}
+                            onClick={() => toggleGenre(genre.id)}
+                            className={`px-3 py-1 rounded-full ${
+                              selectedGenres.includes(genre.id)
+                                ? "bg-pink-500 border-pink-500"
+                                : "bg-gray-800 border-white"
+                            } text-white border hover:bg-pink-500 hover:border-pink-500`}
+                          >
+                            {genre.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  }
+                  <div className={searchType !== "normal" ? "w-full" : "w-3/4"}>
+                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
+                        {searchResults.map((movie: Movie, index: number) => (
+                        <MovieCard key={index} movie={movie} index={index} />
+                        ))}
+                    </div>
+                  </div>
                 </div>
             ) : (
                 <div className="flex flex-row">
-                <h1 className="text-black">No results found.</h1>
+                <h1 className="text-white">No results found.</h1>
                 </div>
             )}
 
             {errorSearchMovies && (
-                <div className="flex flex-row">
+              <div className="flex flex-row">
                 <h1 className="text-[#dc2626]">Error: {errorSearchMovies}</h1>
-                </div>
+              </div>
             )}
 
             {/* Pagination */}
@@ -164,14 +291,14 @@ return (
               </button>
             ))}
             <button
-              disabled={page === totalPages || loadingSearchMovies}
+              disabled={page === totalPages || loadingSearchMovies || totalPages === 0}
               onClick={() => setPage(page + 1)}
               className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
             >
               {">"}
             </button>
             <button
-              disabled={page === totalPages || loadingSearchMovies}
+              disabled={page === totalPages || loadingSearchMovies || totalPages === 0}
               onClick={() => setPage(totalPages)}
               className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
             >
@@ -196,6 +323,7 @@ return (
             </div> */}
         </main>
       </div>
+      <CustomFooter />
     </div>
   );
 };
@@ -205,14 +333,23 @@ const mapStateToProps = (state: RootState) => {
       loadingSearchMovies: state.searchMovies.loading,
       errorSearchMovies: state.searchMovies.error,
       searchResults: state.searchMovies.searchResults,
-      totalPages: state.searchMovies.totalPages
+      totalPages: state.searchMovies.totalPages,
+      genresResult: state.genres.genres || []
     };
 };
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
     return {
-      fetchSearchMovies: (query: string, page: number) =>
-        dispatch(fetchSearchMovies(query, page)),
+      fetchSearchMovies: (query: string, page: number, selectedGenres: number[], fromDate ?: string, toDate ?: string) =>
+        dispatch(fetchSearchMovies(query, page, selectedGenres, fromDate, toDate)),
+
+      fetchLlmSearchMovies: (query: string, collectionName: string, 
+        amount: number, threshold: number, page: number) =>
+          
+          dispatch(fetchLlmSearchMovies(query, collectionName, amount, 
+            threshold, page)),
+
+      fetchGenres: () => dispatch(fetchGenres())
     };
 };
 

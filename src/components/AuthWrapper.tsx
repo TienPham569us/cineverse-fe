@@ -64,8 +64,7 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
 
         const response = await ApiManager.get(ENDPOINTS.VERIFY_TOKEN, headers);
         console.log("Response: ", response);  
-        //const data = await response.json();
-        //console.log("Data: ", data);
+        
         if (response.authenticated===true) {
           return true;
         } else {
@@ -89,14 +88,6 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
         return false;
       }
     }
-    // if (isLoading) {
-    //     return <div>Loading...</div>;
-    // }
-    // if (typeof window !== 'undefined' && !token) {
-    //   return (<>
-    //     <UnauthorizedAccessPage/>
-    //   </>);
-    // }
 
     return <>{children}</>;
 };
