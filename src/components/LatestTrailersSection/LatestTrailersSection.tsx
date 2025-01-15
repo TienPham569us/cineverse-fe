@@ -45,7 +45,7 @@ const LatestTrailersSection = ({ data, loading } : { data: LatestTrailerResponse
                         <FontAwesomeIcon icon={faAngleLeft} className="text-bold text-6xl max-h-[50px]"/>
                     </button>
                 </div>
-                <div className="videos flex gap-2.5 overflow-y-hidden overflow-x-auto -mx-5 px-5 md:gap-5 md:mx-0 md:px-0 w-full"
+                <div className="videos flex gap-2.5 overflow-y-hidden overflow-x-hidden -mx-5 px-5 md:gap-5 md:mx-0 md:px-0 w-full"
                     ref={listRef}>
 
                     {data?.map((item) => (
