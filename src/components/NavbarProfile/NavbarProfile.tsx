@@ -17,6 +17,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
+import '@/app/globals.css';
 
 const components: { title: string; href: string; description: string, handleClick?: () => void }[] = [
   {
@@ -61,10 +62,10 @@ export function NavbarProfile({username, handleLogout} : {username: string, hand
     components[0].title = username;
     components[components.length - 1].handleClick = handleLogout;
     return (
-        <NavigationMenu className="bg-transparent bg-opacity-30 backdrop-blur-md rounded-md text-white">
-        <NavigationMenuList>
+        <NavigationMenu className="headerNav bg-opacity-30 backdrop-blur-md rounded-md text-white">
+        <NavigationMenuList className="bg-darkBlue">
             <NavigationMenuItem>
-            <NavigationMenuTrigger>
+            <NavigationMenuTrigger className="text-white">
                 <FontAwesomeIcon icon={faUser} className="text-xl" />
             </NavigationMenuTrigger>
             <NavigationMenuContent>
