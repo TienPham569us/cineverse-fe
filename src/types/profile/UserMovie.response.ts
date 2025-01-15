@@ -8,8 +8,27 @@ export interface UserMovie {
     inWatchList: boolean,
 }
 
+export interface Review {
+    createdAt: string,
+    updatedAt: string,
+    review: string,
+    userId: string,
+}
+
 export interface UserMoviePagination {
     results: UserMovie[],
+    page: number,
+    totalResults: number,
+    totalPages: number
+}
+
+export interface UserMovieRating {
+    info: UserMovie,
+    reviews: Review[]
+}
+
+export interface UserMovieRatingPagination {
+    results: UserMovieRating[],
     page: number,
     totalResults: number,
     totalPages: number
