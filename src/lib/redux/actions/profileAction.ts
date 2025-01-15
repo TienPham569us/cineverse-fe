@@ -2,7 +2,7 @@ import { ApiManager } from "@/api_manager/ApiManager";
 import { Dispatch } from "redux";
 import { ENDPOINTS } from "@/api_manager/EndPoints";
 import * as dotenv from 'dotenv';
-import { UserMovie, UserMoviePagination } from "@/types/profile/UserMovie.response";
+import { UserMovie, UserMoviePagination, UserMovieRatingPagination } from "@/types/profile/UserMovie.response";
 
 dotenv.config();
 const headers = {
@@ -220,7 +220,7 @@ export const fetchFavouriteList = async (idToken: string, page: number): Promise
 }
 
 
-export const fetchRatingList = async (idToken: string, page: number): Promise<UserMoviePagination | null> => {
+export const fetchRatingList = async (idToken: string, page: number): Promise<UserMovieRatingPagination | null> => {
     try {
         
         const newHeaders = {

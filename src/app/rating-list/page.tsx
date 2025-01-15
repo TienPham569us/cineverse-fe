@@ -14,7 +14,7 @@ import ProfileCard from "@/components/ProfileCard/ProfileCard";
 import BreadCrumbMovieList from "@/components/BreadCrumbMovieList/BreadCrumbMovieList";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { fetchRatingList } from "@/lib/redux/actions/profileAction";
-import { UserMovie, UserMoviePagination } from "@/types/profile/UserMovie.response";
+import { UserMovie, UserMoviePagination, UserMovieRating, UserMovieRatingPagination } from "@/types/profile/UserMovie.response";
 import SmallSpinner from "@/components/SmallSpinner";
 import { FAVOURITE_LIST, RATING_LIST } from "@/lib/redux/constants/listMovieConstants";
 import { getUserInfo } from "@/lib/redux/actions/authActions";
@@ -24,7 +24,7 @@ const RatingListPageContent = () => {
     const [error, setError] = useState("");
     const [isClient, setIsClient] = useState(false);
     const [movies, setMovies] = useState<UserMovie[] | null>([]);
-    const [userMovies, setUserMovies] = useState<UserMoviePagination | null>(null);
+    const [userMovies, setUserMovies] = useState<UserMovieRatingPagination | null>(null);
     const dispatch = useDispatch<AppDispatch>();
     const profileData = useSelector((state: RootState) => state.auth);
         
@@ -37,7 +37,7 @@ const RatingListPageContent = () => {
         try {
           const response = await fetchRatingList(profileData.idToken ?? '', page);
           if (response && response.results) {
-            setMovies(response.results);
+            setMovies(response.results.map((userMovieRating: UserMovieRating) => userMovieRating.info));
             setTotalPages(response.totalPages);
             setHasMore(1 < response.totalPages);
           }
@@ -81,9 +81,9 @@ const RatingListPageContent = () => {
             const newResponse = await fetchRatingList(profileData.idToken ?? '', nextPage);
     
             if(newResponse && newResponse.results){
-                const newMovies: UserMovie[] = newResponse.results.map((userMovie: UserMovie) => {
-                    userMovie.movie.posterPath = 'https://image.tmdb.org/t/p/w780' +  userMovie.movie.posterPath;
-                    return userMovie;
+                const newMovies: UserMovie[] = newResponse.results.map((userMovieRating: UserMovieRating) => {
+                    userMovieRating.info.movie.posterPath = 'https://image.tmdb.org/t/p/w780' +  userMovieRating.info.movie.posterPath;
+                    return userMovieRating.info;
                 });
                 setMovies((prevMovies) => [...prevMovies ?? [], ...newMovies ?? []]);
             }
