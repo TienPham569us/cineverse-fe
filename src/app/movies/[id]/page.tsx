@@ -102,7 +102,7 @@ interface MovieDetailsPageProps {
           </div>
 
           <div id="recommendation">
-            {/* <Recommendation movie={movie} title="Recommendations"/> */}
+            <Recommendation movie={movie} title="Recommendations"/>
           </div>
 
           <div id="review">
