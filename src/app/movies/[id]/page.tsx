@@ -17,10 +17,7 @@ import Reviews from "@/components/Reviews/Reviews";
 import Similar from "@/components/Similar/Similar";
 import Recommendation from "@/components/Recommendation/Recommendation";
 import Spinner from "@/components/Spinner";
-import { fetchMyMovieDetails } from "@/lib/redux/actions/profileAction";
-import { UserMovie } from "@/types/profile/UserMovie.response";
 import { AuthState } from "@/lib/redux/initialStates/authInitialState";
-import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 
 interface MovieDetailsPageProps {
     loading: boolean;

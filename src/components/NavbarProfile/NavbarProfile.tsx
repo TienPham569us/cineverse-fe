@@ -33,7 +33,7 @@ const components: { title: string; href: string; description: string, handleClic
   // },
   {
     title: "Rating List",
-    href: "/rating-movies",
+    href: "/rating-list",
     description:
       "",
   },

@@ -5,8 +5,6 @@ import { AppDispatch, RootState } from "@/lib/redux/store";
 import { logout } from "@/lib/redux/actions/authActions";
 import { useState } from "react";
 import { HiOutlineSearch, HiOutlineX, HiOutlineViewList, HiOutlineMenu, HiDocumentSearch} from "react-icons/hi";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
 import NavbarProfile from "./NavbarProfile/NavbarProfile";
 import { Button } from "./ui/button";
 import { fetchAINavigation, handleAINavigation } from "@/lib/redux/actions/navigationActions";
