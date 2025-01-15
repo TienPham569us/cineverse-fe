@@ -1,3 +1,5 @@
+import { RATING_LIST } from "@/lib/redux/constants/listMovieConstants";
+
 export const ENDPOINTS = {
     REGISTER: 'user/register',
     VERIFY_TOKEN: 'user/verify',
@@ -18,4 +20,6 @@ export const ENDPOINTS = {
     FAVOURITE_LIST: 'profile/favorite',
     REVIEW: 'movie/review',
     RATING: 'movie/rating-point',
+    MY_MOVIE_DETAILS: 'profile/movie-details/me',
+    RATING_LIST: 'profile/rating',
 }

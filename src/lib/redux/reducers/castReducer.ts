@@ -34,7 +34,7 @@ export const castDetailsReducer =
         case FETCH_CAST_DETAILS_SUCCESS:
             return {
                 ...state,
-                castDetails: action.payload ? { 
+                castDetails: action.payload && action.payload.movieCredits ? { 
                     ...action.payload, 
                     movieCredits: [...action.payload.movieCredits]
                 } : null,

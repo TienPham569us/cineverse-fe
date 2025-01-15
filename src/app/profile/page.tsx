@@ -94,11 +94,11 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="favouriteList">
-                    <UserMovieList movies={favouriteMovies} title={"Favourite List"} seeMoreHref={"userFavouriteList"} />
+                    <UserMovieList movies={favouriteMovies} title={"Favourite List"} seeMoreHref={"favourite-list"} />
                   </div>
 
                   <div className="ratingList">
-                    <UserMovieList movies={favouriteMovies} title={"Rating List"} seeMoreHref={"userRatingList"} />
+                    <UserMovieList movies={favouriteMovies} title={"Rating List"} seeMoreHref={"rating-list"} />
                   </div>
                 </CardContent>
               </Card>

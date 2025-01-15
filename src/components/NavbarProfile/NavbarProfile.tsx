@@ -25,15 +25,15 @@ const components: { title: string; href: string; description: string, handleClic
     description:
       "View profile",
   },
+  // {
+  //   title: "List",
+  //   href: "/list",
+  //   description:
+  //     "",
+  // },
   {
-    title: "List",
-    href: "/list",
-    description:
-      "",
-  },
-  {
-    title: "Rating",
-    href: "/rating-movie",
+    title: "Rating List",
+    href: "/rating-list",
     description:
       "",
   },

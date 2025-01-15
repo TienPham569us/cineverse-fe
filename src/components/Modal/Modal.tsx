@@ -2,12 +2,20 @@ import { cn } from "@/utils/utils";
 import { useState } from "react";
 import { Slider } from "../ui/slider";
 import RatingStar from "../RatingStar/RatingStar";
+import { addReviewToMovie } from "@/lib/redux/actions/profileAction";
 
-const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating } 
-    : { isOpen: boolean, onSubmit: () => void, onCancel: () => void, title: string, avarageRating: number }) => {
+const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idToken } 
+    : { isOpen: boolean, 
+      onSubmit: () => void, 
+      onCancel: () => void, 
+      title: string, 
+      avarageRating: number,
+      movieId: number,
+      idToken: string
+    }) => {
 
     const [rating, setRating] = useState<number>(7); // Default rating is 7
-
+    const [review, setReview] = useState<string>("");
     const handleRatingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setRating(Number(event.target.value));
     };
@@ -44,6 +52,15 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating }
     const _handleCancel = () => {
       console.log('Cancel');
       onCancel();
+    }
+
+    const _handleSubmit = async () => {
+      try {
+        console.log('Submit');
+        await addReviewToMovie(movieId, idToken, review, rating);
+      } catch (error: any) {
+        console.error("Error submit review:", error);
+      }
     }
 
     return (<>
@@ -83,6 +100,7 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating }
               <form className="p-4 md:p-5"
                 onSubmit={(event) => {
                   event.preventDefault();
+                  _handleSubmit();
                   onSubmit();
                 }
                 }>
@@ -150,6 +168,8 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating }
                       rows={8}
                       className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Write your review about this movie here"
+                      value={review}
+                      onChange={(event) => setReview(event.target.value)}
                       required
                     ></textarea>
                   </div>

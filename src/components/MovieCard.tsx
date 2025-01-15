@@ -19,7 +19,7 @@ export default function MovieCard({ movie, index, detailSize }: { movie: Movie, 
               alt={`${media_base_url}/${movie.posterPath}`} 
               className="object-cover w-full rounded-lg" />
 
-          <div className={`circleRating absolute ${detailSize && detailSize===true ? 'top-4 left-0' : 'top-[4px] left-2 '} w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg`}>
+          <div className={`circleRating absolute ${detailSize && detailSize===true ? 'top-1 left-0' : 'top-[4px] left-2 '} w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg`}>
             <CircularProgressbar
               value={movie.voteAverage}
               maxValue={10}

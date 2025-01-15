@@ -2,6 +2,7 @@ import { ApiManager } from "@/api_manager/ApiManager";
 import { Dispatch } from "redux";
 import { ENDPOINTS } from "@/api_manager/EndPoints";
 import * as dotenv from 'dotenv';
+import { UserMovie, UserMoviePagination } from "@/types/profile/UserMovie.response";
 
 dotenv.config();
 const headers = {
@@ -137,5 +138,109 @@ export const addReviewToMovie = async (movieId: number, idToken: string, review:
 
     } catch (error: any) {
         console.error("Error add review to movie:", error);
+    }
+}
+
+export const fetchMyMovieDetails = async (movieId: number, idToken: string): Promise<UserMovie | null>=> {
+    try {
+        
+        const newHeaders = {
+            ...headers, 
+            'Authorization': `Bearer ${idToken}`,
+        }
+        const response = await ApiManager.get(
+            `${ENDPOINTS.MY_MOVIE_DETAILS}?movieId=${movieId}`,
+            newHeaders,
+            undefined,
+            API_BASE_URL, 
+            true
+        );
+        console.log("response fetch my movie details", response);
+
+        if (response.status === 404) {
+            return null;
+        }
+        
+        return response.result;
+    } catch (error: any) {
+        console.error("Error fetching my movie details:", error);
+    }
+    return null;
+}
+
+
+export const fetchWatchList = async (idToken: string, page: number, limit: number = 5): Promise<UserMoviePagination | null> => {
+    try {
+        
+        const newHeaders = {
+            ...headers, 
+            'Authorization': `Bearer ${idToken}`,
+        }
+
+        const response = await ApiManager.get(
+            `${ENDPOINTS.WATCHLIST}?limit=${limit}&page=${page}`,
+            newHeaders,
+            undefined,
+            API_BASE_URL,
+            true
+        );
+
+        console.log("response", response);
+
+        return response;
+    } catch (error: any) {
+        console.error("Error fetching recommendation movies:", error);
+        return null;
+    }
+}
+
+export const fetchFavouriteList = async (idToken: string, page: number, limit: number = 5): Promise<UserMoviePagination | null> => {
+    try {
+        
+        const newHeaders = {
+            ...headers, 
+            'Authorization': `Bearer ${idToken}`,
+        }
+
+        const response = await ApiManager.get(
+            `${ENDPOINTS.FAVOURITE_LIST}?limit=${limit}&page=${page}`,
+            newHeaders,
+            undefined,
+            API_BASE_URL,
+            true
+        );
+
+        console.log("response", response);
+
+        return response;
+    } catch (error: any) {
+        console.error("Error fetching favour movies:", error);
+        return null;
+    }
+}
+
+
+export const fetchRatingList = async (idToken: string, page: number, limit: number = 5): Promise<UserMoviePagination | null> => {
+    try {
+        
+        const newHeaders = {
+            ...headers, 
+            'Authorization': `Bearer ${idToken}`,
+        }
+
+        const response = await ApiManager.get(
+            `${ENDPOINTS.RATING_LIST}?limit=${limit}&page=${page}`,
+            newHeaders,
+            undefined,
+            API_BASE_URL,
+            true
+        );
+
+        console.log("response", response);
+
+        return response;
+    } catch (error: any) {
+        console.error("Error fetching favour movies:", error);
+        return null;
     }
 }
