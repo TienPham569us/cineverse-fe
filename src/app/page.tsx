@@ -49,26 +49,37 @@ const HomeContent: React.FC<HomePageProps> = props => {
   const [timeWindow, setTimeWindow] = useState("day");
   const [query, setQuery] = useState("");
   const { loadingTrendingMovies, errorTrendingMovies, trendingMovies, fetchTrendingMovies } = props;
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [listLastestTrailer, setListLastestTrailer] = useState<LatestTrailerResponse[] | null>(null);
   const [listPopularMovies, setListPopularMovies] = useState<Movie[] | null>(null);
 
   const _fetchLatestTrailer = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
       const result: LatestTrailerResponse[] | null = await fetchLatestTrailer();
+      setIsLoading(false);
       setListLastestTrailer(result);
-    } catch (error)
+    } catch (error : any)
     {
+      setIsLoading(false);
+      setError(error.message);
       console.error("Error fetching video:", error);
     }
   }
 
   const _fetchPopularMovies = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
       const result: Movie[] | null = await fetchPoplarMovies();
-      console.log(result);
+      setIsLoading(false);
       setListPopularMovies(result);
-    } catch (error)
+    } catch (error : any)
     {
+      setIsLoading(false);
+      setError(error.message);
       console.error("Error fetching video:", error);
     }
   }
@@ -100,14 +111,17 @@ const HomeContent: React.FC<HomePageProps> = props => {
   //     router.push(`/search-movies?query=${encodeURIComponent(query)}&page=1`);
   //   }
   // };
-
   return (
   <div className="bg-darkBlue"> 
     <CustomHeader />
     <div className="relative flex items-center justify-center w-full h-[450px] md:h-[700px]">
       {
-        (!loadingTrendingMovies && randomBackdropPath)
+        (loadingTrendingMovies && !randomBackdropPath)
         ? (
+          <div className="flex items-center justify-center text-white">
+            Loading...
+          </div>
+        ) : errorTrendingMovies == null ? (
           <div className="absolute top-0 left-0 w-full h-full opacity-50">
             <img
               src="https://image.tmdb.org/t/p/original/9iw4a6AQkxUO3EuRn59Vgrqf0zO.jpg"
@@ -117,8 +131,8 @@ const HomeContent: React.FC<HomePageProps> = props => {
             />
           </div>
         ) : (
-          <div className="flex items-center justify-center text-white w-full">
-            <SmallSpinner />
+          <div className="flex flex-row">
+            <h1 className="text-[#dc2626]">Error: {errorTrendingMovies}</h1>
           </div>
         )
       }
@@ -192,11 +206,19 @@ const HomeContent: React.FC<HomePageProps> = props => {
       </div>
 
       { 
-      <div className="container mx-auto p-4">
-        <div id="video">
-          <LatestTrailersSection data={listLastestTrailer} loading={loadingTrendingMovies} />
+      (isLoading) ? (
+        <Spinner/>
+      ) : error === null ?  (
+        <div className="container mx-auto p-4">
+          <div id="video">
+            <LatestTrailersSection data={listLastestTrailer} loading={loadingTrendingMovies} />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-row">
+          <h1 className="text-[#dc2626]">Error: {error}</h1>
+        </div>
+      )
       }
 
       <div className="w-full container mx-auto py-4 px-8" aria-readonly>
@@ -205,11 +227,17 @@ const HomeContent: React.FC<HomePageProps> = props => {
 
       <main className="container mx-auto p-4">
         {
-          (listPopularMovies !== null) && (
+          (isLoading && listPopularMovies === null) ? (
+            <Spinner/>
+          ) : error === null ? (
             <div className="flex flex-row text-black">
               <div className="container mx-auto p-4">
                   <TrendingMoviesCarousel trendingMovies={listPopularMovies!}/>
                 </div>
+            </div>
+          ) : (
+            <div className="flex flex-row">
+              <h1 className="text-[#dc2626]">Error: {error}</h1>
             </div>
           )
         

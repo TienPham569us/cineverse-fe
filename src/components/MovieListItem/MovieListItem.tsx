@@ -7,6 +7,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Modal from "../Modal/Modal";
 import { useState } from "react";
+import { media_base_url } from "@/constants/app_api";
 import { UserMovie } from "@/types/profile/UserMovie.response";
 import { useDispatch, useSelector } from "react-redux";
 import { AuthState } from "@/lib/redux/initialStates/authInitialState";
@@ -107,7 +108,7 @@ const MovieListItem = ({ movie, handleClick, userMovie, listType, removeFromList
       <div className="w-full flex flex-row ">
       <a className="flex flex-row " href={`/movies/${movie.id}`}>
         <div className="rounded-lg">
-          <img alt={movie.title} src={movie.posterPath} className="object-cover w-full h-64 rounded-lg" />
+          <img alt={movie.title} src={`${media_base_url}/${movie.posterPath}`}  className="object-cover w-full h-64 rounded-lg" />
         </div>
       </a>
 

@@ -36,10 +36,12 @@ const WatchListPageContent = () => {
     const [movies, setMovies] = useState<UserMovie[] | null>([]);
     const [userMovies, setUserMovies] = useState<UserMoviePagination | null>(null);
     const dispatch = useDispatch<AppDispatch>();
+    const [userData, setUserData] = useState<Profile | null>(null);
     const profileData = useSelector((state: RootState) => state.auth);
+    const [totalPages, setTotalPages] = useState<number>(1);
         
     const [page, setPage] = useState<number>(1);
-    const [isLastPage, setIsLastPage] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
 
     const _fetchUserMovies = async () => {
         try {
@@ -80,6 +82,7 @@ const WatchListPageContent = () => {
         _getProfileData();
     }, []);
 
+
     // increase page number
     const increasePage = () => {
         setPage(page + 1);
@@ -97,10 +100,13 @@ const WatchListPageContent = () => {
         <CustomHeader />
         <div className="wrapper ">
             <main className=""> 
+            {userData != null && 
+                <ProfileCard profile={userData} />
+            }
                 <div><ToastContainer /></div>
-                
+            
                 <div className="profilePage w-full bg-whiet pt-1 mb-12 md:mb-0 md:pt-2 md:min-h-[700px] relative">
-                    <ContentWrapper className2="max-w-screen-3xl mx-5">
+                    <ContentWrapper className2="max-w-screen-3xl">
                         <BreadCrumbMovieList title={"Watch List"}/>
 
                         <div className="content flex flex-col relative gap-6 md:gap-12 md:flex-row">

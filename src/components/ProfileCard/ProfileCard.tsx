@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "@/lib/redux/actions/authActions";
 import { AppDispatch } from "@/lib/redux/store";
 
-const ProfileCard = ({ profile }: { profile: Profile}) => {
+const ProfileCard = ({ profile }: { profile: Profile | null}) => {
     const dispatch = useDispatch<AppDispatch>();
     const handleLogout = () => {
         window.location.href = '/login';
@@ -16,66 +16,70 @@ const ProfileCard = ({ profile }: { profile: Profile}) => {
         
       };
 
-    return (<>
-        <Card>
-            <CardHeader className="flex flex-row justify-center items-center">
-                <CardTitle>
-                <div className="profileImgWrapper">
-                    {profile.profilePath ? (
-                    <Img
-                        className="profileImg"
-                        src={profile.profilePath}
-                    />
-                    ) : (
-                    <Img className="profileImg" src={PosterFallback.src} />
-                    )}
-                </div>
-                </CardTitle>
-            </CardHeader>
+    return (
+        profile != null &&
+        <div className="relative bg-gradient-to-r from-blue-900 to-blue-800 text-white p-6 rounded-lg shadow-md">
+          {/* Background decoration */}
+          <div className="absolute inset-0 z-0 flex justify-between items-center overflow-hidden">
+            <div className="h-24 w-2 bg-pink-500 transform rotate-45"></div>
+            <div className="h-24 w-2 bg-pink-500 transform -rotate-45"></div>
+            <div className="h-24 w-2 bg-purple-700 transform rotate-45"></div>
+            <div className="h-24 w-2 bg-purple-700 transform -rotate-45"></div>
+          </div>
 
-            <CardContent>
+          {/* Profile Content */}
+          <div className="relative flex items-center justify-between space-x-6">
+            <div className="flex items-center space-x-6">
+                {/* Avatar */}
+                <div className="h-16 w-16">
+                <img
+                    src="https://as1.ftcdn.net/jpg/02/59/39/46/1000_F_259394679_GGA8JJAEkukYJL9XXFH2JoC3nMguBPNH.jpg"
+                    alt="Avatar"
+                    className="h-full w-full rounded-full object-cover"
+                />
+                </div>
+
+                {/* Info */}
                 <div>
-                <div>
-                    <span className="font-bold me-2">
-                    Username: 
-                    </span>
-                    <span className="">
-                        {profile.name}
-                    </span>
+                <h1 className="text-2xl font-bold">{profile.username}</h1>
+                <p className="text-sm py-1">Email: {profile.email}</p>
+                <p className="text-sm py-1">Member since {dayjs(profile.createdAt).format("MMM D, YYYY")}</p>
                 </div>
+            </div>
 
-                <div>
-                    <span className="font-bold me-2">
-                    Email: 
-                    </span>
-                    <span className="">
-                        {profile.email}
-                    </span>
+            {/* Stats Section */}
+            <div className="grid grid-cols-2 gap-4 mt-6 text-center">
+                <div className="bg-gray-800 p-4 rounded-lg">
+                  <a
+                  className=""
+                  href="watchList"
+                  >
+                    <p className="text-base font-normal">Watchlist</p>
+                  </a>
                 </div>
-
-                <div>
-                    <p >
-                    Member since:
-                        <span className="italic text-slate-700">
-                        {dayjs(profile.createdAt).format("MMM D, YYYY")}
-                        </span>
-                    </p>
+                <div className="bg-gray-800 p-4 rounded-lg">
+                  <a
+                  className=""
+                  href="userFavouriteList"
+                  >
+                    <p className="text-base font-normal">Favourite List</p>
+                  </a>
                 </div>
+                <div className="bg-gray-800 p-4 rounded-lg">
+                  <a
+                  className=""
+                  href="userRatingList"
+                  >
+                    <p className="text-base font-normal">Rating List</p>
+                  </a>
                 </div>
-                
-            </CardContent>
-
-            <CardFooter>
-                <Button
-                onClick={handleLogout}
-                variant="outline"
-                className="logoutButton">
-                Logout
-                </Button>
-            </CardFooter>
-
-        </Card>
-    </>)
+                <div className="bg-gray-800 p-4 rounded-lg cursor-pointer" onClick={handleLogout}>
+                  <p className="text-base font-normal">Logout</p>
+                </div>
+            </div>
+          </div>
+        </div>
+        )
 };
 
 
