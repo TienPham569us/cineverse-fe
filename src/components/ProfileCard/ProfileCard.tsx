@@ -60,7 +60,7 @@ const ProfileCard = ({ profile }: { profile: Profile | null}) => {
                 <div className="bg-gray-800 p-4 rounded-lg">
                   <a
                   className=""
-                  href="userFavouriteList"
+                  href="favourite-list"
                   >
                     <p className="text-base font-normal">Favourite List</p>
                   </a>
@@ -68,7 +68,7 @@ const ProfileCard = ({ profile }: { profile: Profile | null}) => {
                 <div className="bg-gray-800 p-4 rounded-lg">
                   <a
                   className=""
-                  href="userRatingList"
+                  href="rating-list"
                   >
                     <p className="text-base font-normal">Rating List</p>
                   </a>

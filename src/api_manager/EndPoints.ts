@@ -22,5 +22,4 @@ export const ENDPOINTS = {
     REVIEW: 'movie/review',
     RATING: 'movie/rating-point',
     MY_MOVIE_DETAILS: 'profile/movie-details/me',
-    RATING_LIST: 'profile/rating',
 }
