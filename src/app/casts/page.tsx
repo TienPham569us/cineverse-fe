@@ -18,7 +18,7 @@ interface PopularCastsPageProps {
   errorPopularCasts: string | null;
   popularCasts: Cast[];
   totalPages: number;
-  fetchPopularCasts: (query: string, page: number) => void;
+  fetchPopularCasts: (query: string, page: number) => Promise<void>;
 }
 
 const PopularCastsContent: React.FC<PopularCastsPageProps> = props => {
@@ -167,21 +167,21 @@ const PopularCastsContent: React.FC<PopularCastsPageProps> = props => {
   );
 };
 
-const mapStateToProps = (state: RootState) => {
-    return {
+const mapStateToProps = (state: RootState) => ({
+    
       loadingPopularCasts: state.popularCasts.loading,
       errorPopularCasts: state.popularCasts.error,
       popularCasts: state.popularCasts.popularCasts,
       totalPages: state.popularCasts.totalPages
-    };
-};
+    
+});
 
-const mapDispatchToProps = (dispatch: AppDispatch) => {
-    return {
-      fetchPopularCasts: (query: string, page: number) =>
-        dispatch(fetchPopularCasts(query, page)),
-    };
-};
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+    
+  fetchPopularCasts: (query: string, page: number) =>
+    dispatch(fetchPopularCasts(query, page)),
+    
+});
 
 const ConnectedPopularCastPageContent = connect(mapStateToProps, mapDispatchToProps)(PopularCastsContent);
 
