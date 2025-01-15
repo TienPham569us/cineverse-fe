@@ -145,17 +145,96 @@ export const fetchSimilarMovie = async (movieId: number): Promise<Movie[] | null
 
 }
 
-export const fetchFavouriteMovies = async (): Promise<Movie[] | null> => {
+export const fetchFavouriteMovies = async (page: number = 1, idToken: string | null): Promise<{ movies: Movie[]; totalPages: number } | null> => {
     try {
+        const newHeader = {
+            ...headers,
+            'Authorization': `Bearer ${idToken}`,
+        }
+
         const response = await ApiManager.get(
-           `${ENDPOINTS.TRENDING_MOVIES}?period=day&page=1`,
-            headers,
+           `${ENDPOINTS.FAVOURITE_LIST}?page=${page}`,
+            newHeader,
             undefined,
             API_BASE_URL
         );
         console.log("response", response);
 
-        return response.results.slice(0, 5);
+        if (response && response.results) {
+            // Lọc và ánh xạ dữ liệu từ response để chỉ lấy các Movie
+            const movies: Movie[] = response.results
+                .filter((item: any) => item.movie)
+                .map((item: any) => item.movie);
+
+            const totalPages = response.totalPages ?? 1;
+        
+            return { movies, totalPages };
+        }
+        return null;
+    } catch (error: any) {
+        console.error("Error fetching favourite movies:", error);
+        throw error;
+    }
+
+}
+
+export const fetchWatchListdMovies = async (page: number = 1, idToken: string | null): Promise<{ movies: Movie[]; totalPages: number } | null> => {
+    try {
+        const newHeader = {
+            ...headers,
+            'Authorization': `Bearer ${idToken}`,
+        }
+
+        const response = await ApiManager.get(
+           `${ENDPOINTS.WATCHLIST}?page=${page}`,
+            newHeader,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+
+        if (response && response.results) {
+            // Lọc và ánh xạ dữ liệu từ response để chỉ lấy các Movie
+            const movies: Movie[] = response.results
+                .filter((item: any) => item.movie)
+                .map((item: any) => item.movie);
+            
+            const totalPages = response.totalPages ?? 1;
+            return { movies, totalPages };
+        }
+        return null;
+    } catch (error: any) {
+        console.error("Error fetching favourite movies:", error);
+        throw error;
+    }
+
+}
+
+export const fetchRatingListdMovies = async (page: number = 1, idToken: string | null): Promise<{ movies: Movie[]; totalPages: number } | null> => {
+    try {
+        const newHeader = {
+            ...headers,
+            'Authorization': `Bearer ${idToken}`,
+        }
+
+        const response = await ApiManager.get(
+           `${ENDPOINTS.RATING_LIST}?page=${page}`,
+            newHeader,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response", response);
+
+        if (response && response.results) {
+            // Lọc và ánh xạ dữ liệu từ response để chỉ lấy các Movie
+            const movies: Movie[] = response.results
+                .filter((item: any) => item.info && item.info.movie)
+                .map((item: any) => item.info.movie);
+            
+            const totalPages = response.totalPages ?? 1;
+            return { movies, totalPages };
+        }
+        return null;
     } catch (error: any) {
         console.error("Error fetching favourite movies:", error);
         return null;
@@ -229,7 +308,7 @@ export const fetchGenres = () => {
     return async (dispatch: Dispatch) => {
         try {
         dispatch(fetchGenresStart());
-    
+            
         const response = await ApiManager.get(
             `${ENDPOINTS.ALL_GENRES}`,
             headers,
@@ -262,7 +341,7 @@ export const fetchLatestTrailer = async (): Promise<LatestTrailerResponse[] | nu
         return listLatestTrailerResponse;
     } catch (error: any) {
         console.error("Error fetching movie videos:", error);
-        return null;
+        throw new Error(String(error || "Unknown error occurred"));;
     }
 
 }

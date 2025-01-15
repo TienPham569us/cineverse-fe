@@ -16,6 +16,7 @@ export const ENDPOINTS = {
     USER_INFO: 'user/user-info',
     WATCHLIST: 'profile/watchlist',
     FAVOURITE_LIST: 'profile/favorite',
+    RATING_LIST: 'profile/rating',
     REVIEW: 'movie/review',
     RATING: 'movie/rating-point',
 }

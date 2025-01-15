@@ -1,6 +1,6 @@
 export interface Profile {
     uid: string;
-    name: string;
+    username: string;
     email: string;
     createdAt: string;
     updatedAt?: string;

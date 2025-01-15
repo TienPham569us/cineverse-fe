@@ -7,6 +7,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Modal from "../Modal/Modal";
 import { useState } from "react";
+import { media_base_url } from "@/constants/app_api";
 
 const MovieListItem = ({ movie, handleClick } : 
     { 
@@ -21,7 +22,7 @@ const MovieListItem = ({ movie, handleClick } :
     return (<li className="overflow-hidden rounded-lg shadow-lg cursor-pointer w-full border border-solid border-2 " onClick={handleClick}>
       <a className="w-full flex flex-row " href={`/movies/${movie.id}`}>
         <div className="rounded-lg">
-          <img alt={movie.title} src={movie.posterPath} className="object-cover w-full h-64 rounded-lg" />
+          <img alt={movie.title} src={`${media_base_url}/${movie.posterPath}`}  className="object-cover w-full h-64 rounded-lg" />
         </div>
 
         <div className="flex flex-col rounded-full shadow-lg justify-around w-full py-5">
@@ -57,7 +58,7 @@ const MovieListItem = ({ movie, handleClick } :
           </div>
 
           <div className="flex flex-row justify-between px-5 py-4 text-white">
-            Overview
+            {movie.overview}
           </div>
 
 
