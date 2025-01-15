@@ -33,6 +33,7 @@ import Spinner from "@/components/Spinner";
 import TrendingMoviesCarousel from "@/components/TrendingMoviesCarousel/TrendingMoviesCarousel";
 import { LatestTrailerResponse } from "@/types/movie/video.response";
 import LatestTrailersSection from "@/components/LatestTrailersSection/LatestTrailersSection";
+import SmallSpinner from "@/components/SmallSpinner";
 
 interface HomePageProps {
   loadingTrendingMovies: boolean;
@@ -181,7 +182,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
           ? (
             <Spinner />
           ) : (
-            <div className="flex flex-row text-black">
+            trendingMovies && <div className="flex flex-row text-black">
               <div className="container mx-auto p-4">
                   <TrendingMoviesCarousel trendingMovies={trendingMovies}/>
                 </div>

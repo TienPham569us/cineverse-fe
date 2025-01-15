@@ -50,9 +50,15 @@ export const fetchMovieDetails = (movieId: number) => {
             `${ENDPOINTS.MOVIE_DETAILS}/${movieId}`,
             headers,
             undefined,
-            API_BASE_URL
+            API_BASE_URL,
+            true
         );
-        console.log("response", response);
+        console.log("response movie details", response);
+
+        if (response.status === 404) {
+            dispatch(fetchMovieDetailsFailure("Movie not found"));
+            return;
+        }
 
         dispatch(fetchMovieDetailsSuccess(response));
         } catch (error: any) {

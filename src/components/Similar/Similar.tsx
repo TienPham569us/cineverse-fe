@@ -67,7 +67,7 @@ const Similar = ({ movieId, title } : { movieId: number, title: string }) => {
          <div className="carousel">
          <ContentWrapper className2="max-w-screen-2xl">
             {title && movies!.length > 0 && (
-              <div className="carouselTitle text-2xl text-white pt-6 mb-6 ms-6 ps-6">
+              <div className="carouselTitle text-2xl text-white pt-20 mb-2 ms-6 ps-6">
               <span className="ms-4">
                   {title}
               </span>
@@ -98,7 +98,7 @@ const Similar = ({ movieId, title } : { movieId: number, title: string }) => {
                       return (
                        
                         <div key={item.id} className="relative flex-shrink-0 cursor-pointer w-[250px] h-[500px]"> 
-                           <MovieCard movie={item} index={item.id}detailSize={true}/>
+                           <MovieCard movie={item} index={item.id} detailSize={true}/>
                         </div>
                         
                       );

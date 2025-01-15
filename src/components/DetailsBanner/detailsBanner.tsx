@@ -1,5 +1,5 @@
 import { MovieDetails } from "@/types/movie/movieDetails.response";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import './style.css';
 import Img from "@/components/Img";
 import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
@@ -14,12 +14,16 @@ import { VideoResponse } from "@/types/movie/video.response";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark, faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Modal/Modal";
-import { addMovieToFavouriteList, addMovieToWatchlist, removeMovieFromFavouriteList, removeMovieFromWatchlist } from "@/lib/redux/actions/profileAction";
+import { addMovieToFavouriteList, addMovieToWatchlist, fetchMyMovieDetails, removeMovieFromFavouriteList, removeMovieFromWatchlist } from "@/lib/redux/actions/profileAction";
 import { AuthState } from "@/lib/redux/initialStates/authInitialState";
 import { RootState } from "@/lib/redux/store";
 import { useSelector } from "react-redux";
+import { UserMovie } from "@/types/profile/UserMovie.response";
 
-const DetailsBanner = ({ detailsMovie, video } : { detailsMovie: MovieDetails, video: VideoResponse | null}) => {
+const DetailsBanner = ({ detailsMovie, video } : { 
+  detailsMovie: MovieDetails | null, 
+  video: VideoResponse | null
+}) => {
   const [show, setShow] = useState<boolean>(false);
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
@@ -27,15 +31,44 @@ const DetailsBanner = ({ detailsMovie, video } : { detailsMovie: MovieDetails, v
   const [isShowRatingModal, setIsShowRatingModal] = useState<boolean>(false);
   const profileData: AuthState = useSelector((state: RootState) => state.auth);
   
-  const director = detailsMovie.crew.filter((crew) => crew.job === "Director");  
-  const writer = detailsMovie.crew.filter(
+  const director = detailsMovie!=null ? detailsMovie!.crew!.filter((crew) => crew.job === "Director") : [];  
+  const writer = detailsMovie!=null ? detailsMovie!.crew!.filter(
     (cr) => cr.job === "Screenplay" || cr.job === "Story" || cr.job === "Writer"
-  );
+  ) : [];
+
+  const [userMovieDetails, setUserMovieDetails] = useState<UserMovie | null>(null); 
+    
+
+  const _fetchMyMovieDetails = async (movieId: number, idToken: string) => {
+    try {
+     const response = await fetchMyMovieDetails(movieId, idToken);
+     setUserMovieDetails(response);
+     
+     if (response) { 
+      if (response.favorite === true) {
+        setIsFavorite(true);
+      }
+      if (response.inWatchList === true) {
+        setIsBookmarked(true);
+      }
+    }
+
+    } catch (error: any) {
+       console.error("Error fetching my movie details:", error);
+    }  
+   }
+
+  useEffect(() => {
+    if (detailsMovie && profileData.idToken) {
+      _fetchMyMovieDetails((detailsMovie.id), profileData.idToken ?? '');
+    }
+
+  }, []);
   
   const toggleFavorite = async () => {
     if (isFavorite === false) {
       try {
-        await addMovieToFavouriteList(detailsMovie.id, profileData.idToken ?? '');
+        await addMovieToFavouriteList(detailsMovie!.id, profileData.idToken ?? '');
         setIsFavorite(true);
       } catch (error) {
         console.error("Error adding movie to favorites list:", error);
@@ -43,7 +76,7 @@ const DetailsBanner = ({ detailsMovie, video } : { detailsMovie: MovieDetails, v
     } else {
       try {
         console.log('remove movie from favorites list');
-        await removeMovieFromFavouriteList(detailsMovie.id, profileData.idToken ?? '');
+        await removeMovieFromFavouriteList(detailsMovie!.id, profileData.idToken ?? '');
         setIsFavorite(false);
       } catch (error) {
         console.error("Error remove movie from favorites list:", error);
@@ -57,7 +90,7 @@ const DetailsBanner = ({ detailsMovie, video } : { detailsMovie: MovieDetails, v
     if (isBookmarked === false) {
       try {
         console.log('add movie to watchlist');
-        await addMovieToWatchlist(detailsMovie.id, profileData.idToken ?? '');
+        await addMovieToWatchlist(detailsMovie!.id, profileData.idToken ?? '');
         setIsBookmarked(true);
       } catch (error) {
         console.error("Error adding movie to watchlist:", error);
@@ -65,7 +98,7 @@ const DetailsBanner = ({ detailsMovie, video } : { detailsMovie: MovieDetails, v
     } else {
       try {
         console.log('remove movie from watchlist');
-        await removeMovieFromWatchlist(detailsMovie.id, profileData.idToken ?? '');
+        await removeMovieFromWatchlist(detailsMovie!.id, profileData.idToken ?? '');
         setIsBookmarked(false);
       } catch (error) {
         console.error("Error remove movie from watchlist:", error);
@@ -167,11 +200,14 @@ const DetailsBanner = ({ detailsMovie, video } : { detailsMovie: MovieDetails, v
                     {
                      isShowRatingModal && (
                       <Modal 
-                        isOpen={isShowRatingModal} 
-                        onSubmit={closeRatingModal} 
-                        onCancel={closeRatingModal} 
-                        title={detailsMovie.title}
-                        avarageRating={detailsMovie.voteAverage} />
+                            isOpen={isShowRatingModal}
+                            onSubmit={closeRatingModal}
+                            onCancel={closeRatingModal}
+                            title={detailsMovie.title}
+                            avarageRating={detailsMovie.voteAverage}
+                            movieId={detailsMovie.id} 
+                            idToken={profileData.idToken ?? ""}                        
+                        />
                       )
                     }
                     

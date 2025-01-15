@@ -58,13 +58,15 @@ const Casts = ({ data, loading } : { data: Cast[], loading: boolean}) => {
                         ? profile_base_url + item.profilePath
                         : avatar.src;
                         return (
-                        <div key={item.id} className="listItem text-center text-white">
-                            <div className="profileImg w-[125px] h-[125px] rounded-full overflow-hidden mb-4 md:w-[175px] md:h-[175px] md:mb-6">
-                                <Img src={imgUrl} className="w-full h-full object-cover object-top block" />
+                          <a key={item.id} href={`/casts/${item.id}`} className="listItem text-center text-white">
+                            <div className="listItem text-center text-white">
+                                <div className="profileImg w-[125px] h-[125px] rounded-full overflow-hidden mb-4 md:w-[175px] md:h-[175px] md:mb-6">
+                                    <Img src={imgUrl} className="w-full h-full object-cover object-top block" />
+                                </div>
+                                <div className="name text-sm leading-5 font-semibold md:text-lg md:leading-6">{item.name}</div>
+                                <div className="character text-sm leading-5 opacity-50 md:text-base md:leading-6">{item.character}</div>
                             </div>
-                            <div className="name text-sm leading-5 font-semibold md:text-lg md:leading-6">{item.name}</div>
-                            <div className="character text-sm leading-5 opacity-50 md:text-base md:leading-6">{item.character}</div>
-                        </div>
+                        </a>
                         );
                     })}
                 </div>

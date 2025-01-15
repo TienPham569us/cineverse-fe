@@ -120,15 +120,14 @@ export default function ProfilePage() {
                 <div className="watchList">
                   <UserMovieList movies={watchListMovies} title={"Watch List"} seeMoreHref={"watchList"} />
                 </div>
+                  <div className="favouriteList">
+                    <UserMovieList movies={favouriteMovies} title={"Favourite List"} seeMoreHref={"favourite-list"} />
+                  </div>
 
-                <div className="favouriteList">
-                  <UserMovieList movies={favouriteMovies} title={"Favourite List"} seeMoreHref={"userFavouriteList"} />
+                  <div className="ratingList">
+                    <UserMovieList movies={favouriteMovies} title={"Rating List"} seeMoreHref={"rating-list"} />
+                  </div>
                 </div>
-
-                <div className="ratingList">
-                  <UserMovieList movies={ratingListMovies} title={"Rating List"} seeMoreHref={"userRatingList"} />
-                </div>
-              </div>
             </div>
           </div>
         </ContentWrapper>
