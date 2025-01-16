@@ -28,7 +28,7 @@ const  RegisterPageContent: React.FC<RegisterPageProps> = props => {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-
+  const [isClient, setIsClient] = useState(false);
   const idToken = useAppSelector((state: RootState) => state.auth.idToken);
   // const [error, setError] = useState("");
   // const [message, setMessage] = useState("");
@@ -37,6 +37,7 @@ const  RegisterPageContent: React.FC<RegisterPageProps> = props => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
+    setIsClient(true);
     if (error===null && !loading && message?.length!=0) {
       console.log('success');
       //setEmail("");
@@ -45,6 +46,7 @@ const  RegisterPageContent: React.FC<RegisterPageProps> = props => {
     }
   }, []);
   useEffect(() => {
+    setIsClient(true);
     if (idToken!=null) {
       setPassword("");
       window.location.href = "/profile";
@@ -161,8 +163,11 @@ const  RegisterPageContent: React.FC<RegisterPageProps> = props => {
       //setLoading(false);
     }
 
-    
-  } 
+  }
+  
+  if (!isClient) {
+    return null; // Render nothing on the server
+  }
 
   return (<div>
       <CustomHeader/>
