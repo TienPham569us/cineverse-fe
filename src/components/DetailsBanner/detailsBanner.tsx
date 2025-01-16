@@ -31,6 +31,7 @@ const DetailsBanner = ({ detailsMovie, video } : {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [rating, setRating] = useState<number | null>(null);
   const [isShowRatingModal, setIsShowRatingModal] = useState<boolean>(false);
+  const [avarageRating, setAvarageRating] = useState<number >(detailsMovie && detailsMovie.voteAverage ? detailsMovie.voteAverage : 0);
   const profileData: AuthState = useSelector((state: RootState) => state.auth);
 
   const director = detailsMovie!=null ? detailsMovie!.crew!.filter((crew) => crew.job === "Director") : [];  
@@ -176,7 +177,7 @@ const DetailsBanner = ({ detailsMovie, video } : {
 
               <div className=" flex flex-col items-start gap-6 mb-6">
                 <div className="flex flex-row align-start items-center gap-6">
-                  <CircleRating rating={detailsMovie.voteAverage} />
+                  <CircleRating rating={avarageRating} />
                   <div
                       className="playbtn flex items-center gap-5 cursor-pointer"
                       onClick={() => {
@@ -310,16 +311,17 @@ const DetailsBanner = ({ detailsMovie, video } : {
         {
           isShowRatingModal && isShowRatingModal ===true && (
           <Modal 
-              isOpen={isShowRatingModal}
-              onSubmit={closeRatingModal}
-              onCancel={closeRatingModal}
-              title={detailsMovie.title}
-              avarageRating={detailsMovie.voteAverage}
-              movieId={detailsMovie.id}
-              idToken={profileData.idToken ?? ""} 
-              setShow={setIsShowRatingModal}      
-              onRatingUpdate={(newRating: number) => setRating(newRating)}                  
-            />
+                isOpen={isShowRatingModal}
+                onSubmit={closeRatingModal}
+                onCancel={closeRatingModal}
+                title={detailsMovie.title}
+                avarageRating={detailsMovie.voteAverage}
+                movieId={detailsMovie.id}
+                idToken={profileData.idToken ?? ""}
+                setShow={setIsShowRatingModal}
+                onRatingUpdate={(newRating: number) => setRating(newRating)} 
+                onAverateRatingUpdate={setAvarageRating}            
+                />
           )
         }
       </Fragment>

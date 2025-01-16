@@ -49,5 +49,5 @@
   }
   
   .closeBtn {
-    @apply absolute top-[-20px] right-0 text-white cursor-pointer;
+    @apply absolute top-[10px] right-[25px] text-white cursor-pointer;
   }

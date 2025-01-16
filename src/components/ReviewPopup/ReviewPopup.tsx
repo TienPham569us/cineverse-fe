@@ -6,7 +6,7 @@ import PosterFallback from "@/assets/no-poster.png";
 import dayjs from "dayjs";
 import Img from "../Img";
 import { Button } from "../ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../ui/card";
 
 const ReviewPopup = ({ show, setShow, review, setReview } : 
     {   show: boolean,
@@ -48,9 +48,14 @@ const ReviewPopup = ({ show, setShow, review, setReview } :
                                             <CardTitle>A review by {review.authorDetails.username}</CardTitle>
                                             <CardDescription>
                                                 Written by 
-                                                <strong className="italic">{review.authorDetails.username}</strong> 
+                                                <strong className="italic mx-1">{review.authorDetails.username}</strong> 
                                                 on {dayjs(review.updatedAt).format("MMM D, YYYY")}
                                             </CardDescription>
+                                            <CardFooter className="ps-0 ">
+                                                <div className="flex flex-row items-start justify-start bg-darkBlue text-white p-2 rounded-lg">
+                                                    <span className="text-sm">Rating: {review.authorDetails.rating}</span>
+                                                </div>
+                                            </CardFooter>
                                         </div>
 
                                         <div className="closeBtn text-black" onClick={hidePopup}>

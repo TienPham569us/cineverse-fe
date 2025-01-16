@@ -27,9 +27,14 @@ const PartialCardReview = ({ review, onClick } :
                         <CardTitle>A review by {review.authorDetails.username}</CardTitle>
                         <CardDescription>
                             Written by 
-                            <strong className="italic">{review.authorDetails.username}</strong> 
+                            <strong className="italic mx-1">{review.authorDetails.username}</strong> 
                             on {dayjs(review.updatedAt).format("MMM D, YYYY")}
                         </CardDescription>
+                        <CardFooter className="ps-0 ">
+                            <div className="flex flex-row items-start justify-start bg-darkBlue text-white p-2 rounded-lg">
+                                <span className="text-sm">Rating: {review.authorDetails.rating}</span>
+                            </div>
+                        </CardFooter>
                     </div>
 
                 </div>

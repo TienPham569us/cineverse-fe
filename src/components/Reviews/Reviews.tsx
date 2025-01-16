@@ -1,14 +1,26 @@
 import { Review } from "@/types/review/review.response";
 import ContentWrapper from "../ContentWrapper/ContentWrapper";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './style.css';
 import PartialCardReview from "../PartialCardReview/PartialCardReview";
 import ReviewPopup from "../ReviewPopup/ReviewPopup";
+import { connect, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/redux/store";
+import { fetchReviewByMovieId } from "@/lib/redux/actions/reviewActions";
 
-const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
+interface ReviewsPageProps {
+  reviews: Review[];
+  title: string;
+  movieId: number;
+  loading: boolean; 
+  error: string | null;
+  fetchReviewByMovieId: (movieId: number) => void;
+}
+
+const ReviewsPageContent: React.FC<ReviewsPageProps> = props => {// = ({ reviews, title }: { reviews: Review[], title: string}) => {
     const carouselContainer = useRef<HTMLDivElement>(null);
     
-    const [loading, setLoading] = useState<boolean>(false);
+    //const [loading, setLoading] = useState<boolean>(false);
     const [showReviewPopup, setShowReviewPopup] = useState<boolean>(false);
     const [review, setReview] = useState<Review | null>(null);
 
@@ -17,13 +29,20 @@ const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
       setReview(review);
     }
 
+    const dispatch = useDispatch<AppDispatch>();
+    const { reviews, title, loading, error, fetchReviewByMovieId, movieId } = props;
+
+    useEffect(() => { 
+      fetchReviewByMovieId(movieId);
+    },[dispatch]);
+
     return (<>
       {
         reviews && reviews.length > 0 && (
           <div className="carousel relative bg-[#04152d]">
           <ContentWrapper className2="max-w-screen-2xl">
             {title && reviews!.length > 0 && (
-              <div className="sectionHeading text-2xl text-white pt-6 mb-6 ms-6 ps-6">
+              <div className="sectionHeading text-2xl text-white pt-16 mb-6 ms-6 ps-6">
                 <span className="ms-4">
                     {title}
                 </span>
@@ -31,11 +50,11 @@ const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
             )}
           </ContentWrapper>
 
-          <ContentWrapper className2="max-w-screen-2xl grid grid-cols-2 gap-4 pb-4">           
+          <ContentWrapper className2="max-w-screen-2xl grid grid-cols-2 gap-4 pb-16">           
             {!loading ? (
-                reviews?.map((item) => {
+                reviews?.map((item, index) => {
                   return (
-                    <div key={item.id} className="carouselItem">
+                    <div key={index} className="carouselItem">
                       <PartialCardReview review={item} onClick={handleClickReview}/>
                     </div>
                   );
@@ -64,8 +83,25 @@ const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
    </>);
 }
 
+const mapStateToProps = (state: RootState) => {
+  return {
+    reviews: state.review.reviews,
+    loading: state.review.loading,
+    error: state.review.error
+  }
+}
 
-export default Reviews;
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    fetchReviewByMovieId: (movieId: number) => 
+      dispatch(fetchReviewByMovieId(movieId))
+  }
+}
+
+const ConnectedReviewsPageContent = connect(mapStateToProps, mapDispatchToProps)(ReviewsPageContent);
+
+export default ConnectedReviewsPageContent;
+//export default Reviews;
 
 const skItem = () => {
     return (
