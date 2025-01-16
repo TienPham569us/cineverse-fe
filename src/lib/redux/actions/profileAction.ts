@@ -110,17 +110,6 @@ export const addReviewToMovie = async (movieId: number, idToken: string, review:
             ...headers,
             'Authorization': `Bearer ${idToken}`,
         }
-        const response = await ApiManager.post(
-            `${ENDPOINTS.REVIEW}`,
-            {   
-                movieId: movieId,
-                review: review,
-            },
-            newHeaders,
-            undefined,
-            API_BASE_URL
-        );
-        console.log("response add review to movie", response);
 
         const responseRating = await ApiManager.post(
             `${ENDPOINTS.RATING}`,
@@ -133,6 +122,20 @@ export const addReviewToMovie = async (movieId: number, idToken: string, review:
             API_BASE_URL
         );
         console.log("response add rating to movie", responseRating);
+        
+        const response = await ApiManager.post(
+            `${ENDPOINTS.REVIEW}`,
+            {   
+                movieId: movieId,
+                review: review,
+            },
+            newHeaders,
+            undefined,
+            API_BASE_URL
+        );
+        console.log("response add review to movie", response);
+
+        
 
         return responseRating;
 
