@@ -4,7 +4,7 @@ import { Slider } from "../ui/slider";
 import RatingStar from "../RatingStar/RatingStar";
 import { addReviewToMovie } from "@/lib/redux/actions/profileAction";
 
-const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movieId, idToken } 
+const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movieId, idToken, onRatingUpdate } 
     : { isOpen: boolean, 
       setShow: (value: boolean) => void,
       onSubmit: () => void, 
@@ -12,7 +12,8 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
       title: string, 
       avarageRating: number,
       movieId: number,
-      idToken: string
+      idToken: string,
+      onRatingUpdate: (newRating: number) => void;
     }) => {
 
     const [rating, setRating] = useState<number>(7); // Default rating is 7
@@ -61,6 +62,7 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
       try {
         console.log('Submit');
         await addReviewToMovie(movieId, idToken, review, rating);
+        onRatingUpdate(rating);
         setShow(false);
       } catch (error: any) {
         console.error("Error submit review:", error);
@@ -182,7 +184,7 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
                 <div className="flex flex-row justify-center">
                   <button
                     type="submit"
-                    className="text-white inline-flex text-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="button-auth text-white hover:text-yellow-500"
                   >
                     Submit
                   </button>

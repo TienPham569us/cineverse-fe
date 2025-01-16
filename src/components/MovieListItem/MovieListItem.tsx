@@ -146,6 +146,10 @@ const MovieListItem = ({ movie, handleClick, userMovie, listType, removeFromList
               </div>
             </a>
           </div>
+          
+          <div className="flex flex-row justify-between px-5 py-4 text-white">
+            {movie.overview}
+          </div>
 
           <div className="flex flex-row justify-between px-5 py-4 text-white">
             {movie.voteCount} votes

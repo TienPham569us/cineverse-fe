@@ -171,7 +171,7 @@ return (
                 <div className={searchType !== "normal" ? "container mx-auto p-8" : "flex container mx-auto p-8"}>
                   {/* Side bar */}
                   {searchType === "normal" && 
-                  <div className="w-1/4 bg-darkBlue text-white border border-white rounded-md">
+                  <div className="w-1/4 bg-darkBlue text-white border border-white border-opacity-50 rounded-md">
                     {/* Release Dates */}
                     <div className="flex justify-between">
                       <h2 className="text-lg font-bold p-4">Filters</h2>
