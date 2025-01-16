@@ -214,24 +214,7 @@ const DetailsBanner = ({ detailsMovie, video } : {
                       <div className="rating text-base">{rating}</div>
                       <FontAwesomeIcon icon={faStar} className={`${rating ? 'text-blue-500 text-sm' : 'text-white text-sm'}`}/>
                     </span>
-
-                    {
-                     isShowRatingModal && (
-                      <Modal 
-                            isOpen={isShowRatingModal}
-                            onSubmit={closeRatingModal}
-                            onCancel={closeRatingModal}
-                            title={detailsMovie.title}
-                            avarageRating={detailsMovie.voteAverage}
-                            movieId={detailsMovie.id} 
-                            idToken={profileData.idToken ?? ""}                        
-                        />
-                      )
-                    }
-                    
                   </div>
-
-                  
                 </div>
                 
               </div>
@@ -323,6 +306,20 @@ const DetailsBanner = ({ detailsMovie, video } : {
           videoId={videoId}
           setVideoId={setVideoId}
         />
+        {
+          isShowRatingModal && isShowRatingModal ===true && (
+          <Modal 
+              isOpen={isShowRatingModal}
+              onSubmit={closeRatingModal}
+              onCancel={closeRatingModal}
+              title={detailsMovie.title}
+              avarageRating={detailsMovie.voteAverage}
+              movieId={detailsMovie.id}
+              idToken={profileData.idToken ?? ""} 
+              setShow={setIsShowRatingModal}                        
+            />
+          )
+        }
       </Fragment>
           
     </div>

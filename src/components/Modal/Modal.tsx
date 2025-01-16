@@ -4,8 +4,9 @@ import { Slider } from "../ui/slider";
 import RatingStar from "../RatingStar/RatingStar";
 import { addReviewToMovie } from "@/lib/redux/actions/profileAction";
 
-const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idToken } 
+const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movieId, idToken } 
     : { isOpen: boolean, 
+      setShow: (value: boolean) => void,
       onSubmit: () => void, 
       onCancel: () => void, 
       title: string, 
@@ -49,8 +50,10 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
       }
     };
 
-    const _handleCancel = () => {
+    const _handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
       console.log('Cancel');
+      setShow(false);
       onCancel();
     }
 
@@ -58,6 +61,7 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
       try {
         console.log('Submit');
         await addReviewToMovie(movieId, idToken, review, rating);
+        setShow(false);
       } catch (error: any) {
         console.error("Error submit review:", error);
       }
@@ -77,7 +81,7 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
                 <button
                   type="button"
                   className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                  onClick={_handleCancel}
+                  onClick={(e) => _handleCancel(e)}
                 >
                   <svg
                     className="w-3 h-3"
@@ -110,7 +114,7 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
                     <label
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                     <strong className="italic">{avarageRating*10}%</strong> User Rating Score
+                     <strong className="italic">{(avarageRating*10).toFixed(1)}%</strong> User Rating Score
                     </label>
                    
                 </div>

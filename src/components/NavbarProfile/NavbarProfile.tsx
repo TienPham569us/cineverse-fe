@@ -65,7 +65,7 @@ export function NavbarProfile({username, handleLogout} : {username: string, hand
         <NavigationMenu className="headerNav bg-opacity-30 backdrop-blur-md rounded-md text-white">
         <NavigationMenuList className="bg-darkBlue">
             <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-white">
+            <NavigationMenuTrigger className="text-white bg-darkBlue">
                 <FontAwesomeIcon icon={faUser} className="text-xl" />
             </NavigationMenuTrigger>
             <NavigationMenuContent>

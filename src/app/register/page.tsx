@@ -127,7 +127,12 @@ const  RegisterPageContent: React.FC<RegisterPageProps> = props => {
       //console.log(response.status);
 
       await dispatch(signup({ email, password, username }));
-      
+      if (error===null && !loading && message?.length!=0) {
+        console.log('success');
+        //setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+      }
       //setLoading(false);
 
     } catch (error) {

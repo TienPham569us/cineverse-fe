@@ -27,6 +27,7 @@ const MovieListItem = ({ movie, handleClick, userMovie, listType, removeFromList
     const [isFavorite, setIsFavorite] = useState<boolean>(userMovie.favorite || false);
     const [isBookmarked, setIsBookmarked] = useState<boolean>(userMovie.inWatchList || false);
     const [isShowRatingModal, setIsShowRatingModal] = useState<boolean>(false);
+    const [rating, setRating] = useState<number | null>(userMovie.rating || null);
 
     const [userMovieDetails, setUserMovieDetails] = useState<UserMovie | null>(userMovie); 
     
@@ -171,8 +172,11 @@ const MovieListItem = ({ movie, handleClick, userMovie, listType, removeFromList
             <div  
               className="w-10 h-10 bg-gray-600 text-white rounded-full flex items-center justify-center"
               onClick={()=>{}}>
-              <span className="text text-lg">
-                <FontAwesomeIcon icon={faStar} className={`text-white`}/>
+              <span className="text text-lg flex items-center">
+                {
+                  rating && <div className="rating text-base">{rating}</div>
+                }
+                <FontAwesomeIcon icon={faStar} className={`${rating? 'text-blue-500 text-sm' : 'text-white text-sm'}`}/>
               </span>
             </div>
           </div>
