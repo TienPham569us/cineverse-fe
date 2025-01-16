@@ -134,7 +134,7 @@ export const addReviewToMovie = async (movieId: number, idToken: string, review:
         );
         console.log("response add rating to movie", responseRating);
 
-        return response.message;
+        return responseRating;
 
     } catch (error: any) {
         console.error("Error add review to movie:", error);

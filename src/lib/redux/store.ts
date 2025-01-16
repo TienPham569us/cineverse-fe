@@ -9,12 +9,16 @@ import { trendingMovieInitialState } from './initialStates/trendingMovieInitialS
 import { movieDetailsInitialState } from './initialStates/movieDetailsInitialState';
 import { genresReducer, movieDetailsReducer, searchMoviesReducer, trendingMoviesReducer } from './reducers/movieReducer';
 import { castDetailsReducer, popularCastsReducer } from './reducers/castReducer';
+import { init } from 'next/dist/compiled/webpack/webpack';
+import { reviewInitialState } from './initialStates/reviewInitialState';
+import { reviewsReducer } from './reducers/reviewReducer';
 
 const preloadedState = {
     auth: getAuthState(),
     userSignup: getUserSignupState(),
     trendingMovies: trendingMovieInitialState,
-    movieDetails: movieDetailsInitialState
+    movieDetails: movieDetailsInitialState,
+    review: reviewInitialState,
 };
 
 export const store = configureStore({
@@ -27,6 +31,7 @@ export const store = configureStore({
         popularCasts: popularCastsReducer,
         castDetails: castDetailsReducer,
         genres: genresReducer,
+        review: reviewsReducer,
         //[authApi.reducerPath]: authApi.reducer,
     },
     //middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk as any as ThunkMiddleware),

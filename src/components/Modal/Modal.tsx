@@ -3,8 +3,11 @@ import { useState } from "react";
 import { Slider } from "../ui/slider";
 import RatingStar from "../RatingStar/RatingStar";
 import { addReviewToMovie } from "@/lib/redux/actions/profileAction";
+import { AppDispatch } from "@/lib/redux/store";
+import { useDispatch } from "react-redux";
+import { fetchReviewByMovieId } from "@/lib/redux/actions/reviewActions";
 
-const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movieId, idToken, onRatingUpdate } 
+const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movieId, idToken, onRatingUpdate, onAverateRatingUpdate } 
     : { isOpen: boolean, 
       setShow: (value: boolean) => void,
       onSubmit: () => void, 
@@ -13,9 +16,11 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
       avarageRating: number,
       movieId: number,
       idToken: string,
-      onRatingUpdate: (newRating: number) => void;
+      onRatingUpdate: (newRating: number) => void,
+      onAverateRatingUpdate: (newRating: number) => void
     }) => {
 
+    const dispatch = useDispatch<AppDispatch>();
     const [rating, setRating] = useState<number>(7); // Default rating is 7
     const [review, setReview] = useState<string>("");
     const handleRatingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +66,15 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
     const _handleSubmit = async () => {
       try {
         console.log('Submit');
-        await addReviewToMovie(movieId, idToken, review, rating);
+        const response = await addReviewToMovie(movieId, idToken, review, rating);
         onRatingUpdate(rating);
+
+        if (response && response.result && response.result.movie && response.result.movie.voteAverage) {
+          onAverateRatingUpdate(response.result.movie.voteAverage);
+        }
+
+        dispatch(fetchReviewByMovieId(movieId));
+        
         setShow(false);
       } catch (error: any) {
         console.error("Error submit review:", error);

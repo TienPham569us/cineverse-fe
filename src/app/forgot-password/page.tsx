@@ -1,12 +1,11 @@
 'use client';
-import './styles.css';
+
 import CustomHeader from "@/components/header";
 import { sendResetPasswordLink } from "@/lib/redux/actions/authActions";
-import { validatePassword } from "firebase/auth";
-import { Link } from "lucide-react";
-import { FormEvent, useState, FocusEvent } from "react";
+import { FormEvent, useState, FocusEvent, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import validator from "validator";
+import './styles.css';
 
 const ForgotPasswordPageContent = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +13,7 @@ const ForgotPasswordPageContent = () => {
   const [error, setError] = useState('');
   const [invalidEmail, setInvalidEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
   const validateEmail = (e: FocusEvent<HTMLInputElement>) => {
       const tempEmail = email;
@@ -51,6 +51,14 @@ const ForgotPasswordPageContent = () => {
 
     setLoading(false);
   };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null; // Render nothing on the server
+  }
 
   return (<>
     <CustomHeader />
