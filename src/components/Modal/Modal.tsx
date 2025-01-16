@@ -4,14 +4,15 @@ import { Slider } from "../ui/slider";
 import RatingStar from "../RatingStar/RatingStar";
 import { addReviewToMovie } from "@/lib/redux/actions/profileAction";
 
-const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idToken } 
+const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idToken, onRatingUpdate } 
     : { isOpen: boolean, 
       onSubmit: () => void, 
       onCancel: () => void, 
       title: string, 
       avarageRating: number,
       movieId: number,
-      idToken: string
+      idToken: string,
+      onRatingUpdate: (newRating: number) => void;
     }) => {
 
     const [rating, setRating] = useState<number>(7); // Default rating is 7
@@ -58,6 +59,7 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
       try {
         console.log('Submit');
         await addReviewToMovie(movieId, idToken, review, rating);
+        onRatingUpdate(rating);
       } catch (error: any) {
         console.error("Error submit review:", error);
       }

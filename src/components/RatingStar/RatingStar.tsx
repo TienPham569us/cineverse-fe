@@ -17,7 +17,7 @@ const RatingStar = ({ ratingValue, onChangeRatingValue } :
             <FontAwesomeIcon
                 key={value}
                 icon={faStar}
-                className={`text-xs cursor-pointer text-5xl ${ratingValue >= value ? 'text-yellow-400' : 'text-gray-300'}`}
+                className={`cursor-pointer text-3xl ${ratingValue >= value ? 'text-yellow-400' : 'text-gray-300'}`}
                 onClick={() => handleRatingChange(value)}
             />
         ))}

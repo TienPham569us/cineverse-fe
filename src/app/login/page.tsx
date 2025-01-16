@@ -149,12 +149,17 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
 
   return ( <>
   <CustomHeader />
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white">
+    <div className="bg-darkBlue grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         
-      <main className="min-w-[calc(100vw/3)] flex flex-col gap-8 row-start-2 items-center sm:items-center p-5 border border-black border-solid rounded">
+      <main className="bg-white min-w-[calc(100vw/3)] flex flex-col gap-8 row-start-2 items-center sm:items-center p-5 border border-black border-solid rounded">
       <div><ToastContainer /></div>
         <div className="flex flex-row text-black">
-          <h1 className="text-black text-3xl font-bold">Login</h1>
+          <h1 className="text-black text-2xl font-bold pr-2">Login to</h1>
+          <img
+            src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
+            alt="Logo"
+            className="w-20 bg-darkBlue"
+          />
         </div>
         <form method="POST" //action={"/api/register"}
           onSubmit={(e) => handleSubmit(e)}
