@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/redux/store";
 import { logout } from "@/lib/redux/actions/authActions";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { HiOutlineSearch, HiOutlineX, HiOutlineViewList, HiOutlineMenu, HiDocumentSearch} from "react-icons/hi";
 import NavbarProfile from "./NavbarProfile/NavbarProfile";
 import { Button } from "./ui/button";
@@ -60,8 +60,32 @@ const CustomHeader = () => {
 
   }
 
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const controlNavbar = useCallback(() => {
+    if (window.scrollY > 200) {
+      if (window.scrollY > lastScrollY && !mobileMenu) {
+        setShow("hide");
+      } else {
+        setShow("show");
+      }
+    } else {
+      setShow("top");
+    }
+    setLastScrollY(window.scrollY);
+  }, [lastScrollY, mobileMenu]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", controlNavbar);
+
+    return () => window.removeEventListener("scroll", controlNavbar);
+  }, [controlNavbar]);
+
   return (
-    <header>
+    <header  className={`fixed w-full h-[60px] z-10 flex items-center transition-transform duration-500 ${show!=='hide' ? 'translate-y-0 bg-[#020c1b] bg-opacity-30 backdrop-blur-md' : '-translate-y-[60px]'}`}>
       
       <div className={`fixed w-full z-10 transition-transform bg-[#020c1b] bg-opacity-30 backdrop-blur-md`}>
         <div className="container mx-auto px-16 flex justify-between items-center py-3">
@@ -188,7 +212,7 @@ const CustomHeader = () => {
             <input
               type="search"
               placeholder="Search for a movie or TV show..."
-              className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none"
+              className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none text-black"
               onChange={(e) => setQuery(e.target.value)}
               onKeyUp={() => {}}
             />
@@ -210,7 +234,7 @@ const CustomHeader = () => {
             <input
               type="search"
               placeholder="Type something to navigate to that page..."
-              className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none"
+              className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none text-black"
               onChange={(e) => setPromptNavigate(e.target.value)}
               onKeyUp={() => {}}
             />
