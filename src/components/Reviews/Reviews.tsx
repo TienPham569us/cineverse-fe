@@ -31,7 +31,7 @@ const Reviews = ({ reviews, title }: { reviews: Review[], title: string}) => {
             )}
           </ContentWrapper>
 
-          <ContentWrapper className2="max-w-screen-2xl grid grid-cols-2 gap-4">           
+          <ContentWrapper className2="max-w-screen-2xl grid grid-cols-2 gap-4 pb-4">           
             {!loading ? (
                 reviews?.map((item) => {
                   return (
