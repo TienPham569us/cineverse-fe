@@ -73,7 +73,7 @@ const ProfileCard = ({ profile }: { profile: Profile | null}) => {
                     <p className="text-base font-normal">Rating List</p>
                   </a>
                 </div>
-                <div className="bg-gray-800 p-4 rounded-lg cursor-pointer" onClick={handleLogout}>
+                <div className="bg-red-800 p-4 rounded-lg cursor-pointer" onClick={handleLogout}>
                   <p className="text-base font-normal">Logout</p>
                 </div>
             </div>

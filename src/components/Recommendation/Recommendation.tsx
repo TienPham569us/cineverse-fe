@@ -58,7 +58,7 @@ const Recommendation = ({ movie, title } : { movie: Movie, title: string}) => {
     return (<div className="carousel relative bg-[#04152d] ">
           <ContentWrapper className2="max-w-screen-2xl">
             {title && movies &&  movies!.length > 0 && (
-              <div className="carouselTitle text-2xl text-white pt-20 mb-6 ms-6 ps-6">
+              <div className="carouselTitle text-2xl text-white pt-16 mb-6 ms-6 ps-6">
               <span className="ms-4">
                   {title}
               </span>
@@ -81,14 +81,14 @@ const Recommendation = ({ movie, title } : { movie: Movie, title: string}) => {
                 <div className="videos relative flex flex-row justify-start w-full gap-5 overflow-y-hidden overflow-x-hidden -mx-5 px-5 md:gap-5 md:mx-0 md:px-0"
                     ref={listRef}>
 
-                    {movies && movies?.map((item) => {
+                    {movies && movies?.map((item, index) => {
                       const posterUrl = item.posterPath
                         ? media_base_url + item.posterPath
                         : PosterFallback.src;
 
                       return (
                        
-                        <div key={item.id} className="relative flex-shrink-0 cursor-pointer w-[250px] h-[500px]"> 
+                        <div key={index} className="relative flex-shrink-0 cursor-pointer w-[250px] h-[500px]"> 
                            <MovieCard movie={item} index={item.id} detailSize={true}/>
                         </div>
                         

@@ -1,5 +1,5 @@
 'use client';
-import { useState, use, useEffect } from "react";
+import { useState, use, useEffect, Suspense } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/redux/store";
 import CustomHeader from "@/components/header";
@@ -18,6 +18,7 @@ import Similar from "@/components/Similar/Similar";
 import Recommendation from "@/components/Recommendation/Recommendation";
 import Spinner from "@/components/Spinner";
 import { AuthState } from "@/lib/redux/initialStates/authInitialState";
+import ConnectedReviewsPageContent from "@/components/Reviews/Reviews";
 
 interface MovieDetailsPageProps {
     loading: boolean;
@@ -106,7 +107,10 @@ interface MovieDetailsPageProps {
           </div>
 
           <div id="review">
-            <Reviews reviews={movie.reviews} title="Reviews" />
+            
+              <ConnectedReviewsPageContent movieId={movie.id} title="Reviews" />
+            
+            {/* <Reviews reviews={movie.reviews} title="Reviews" /> */}
           </div>
 
           
