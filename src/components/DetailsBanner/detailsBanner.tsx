@@ -74,7 +74,7 @@ const DetailsBanner = ({ detailsMovie, video } : {
   
   const toggleFavorite = async () => {
     if (!profileData.isAuthenticated) {
-      router.push('/login?notificationCode=403');
+      router.push('/login');
       return;
     }
     if (isFavorite === false) {
@@ -97,7 +97,7 @@ const DetailsBanner = ({ detailsMovie, video } : {
 
   const toggleBookmark = async () => {
     if (!profileData.isAuthenticated) {
-      router.push('/login?notificationCode=403');
+      router.push('/login');
       return;
     }
     if (isBookmarked === false) {
@@ -122,7 +122,7 @@ const DetailsBanner = ({ detailsMovie, video } : {
 
   const openRatingModal = () => {
     if (!profileData.isAuthenticated) {
-      router.push('/login?notificationCode=403');
+      router.push('/login');
       return;
     }
     setIsShowRatingModal(true);

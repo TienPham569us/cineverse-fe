@@ -11,7 +11,7 @@ const CustomFooter = () => {
         <li className="info mx-2 cursor-pointer hover:text-pink-500">Blog</li>
       </ul>
       <div className="description px-8 text-center text-[14px] leading-[20px]">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dignissim mauris nec facilisis sagittis. Aliquam et nulla efficitur, porta elit nec, hendrerit erat. Nulla egestas neque vestibulum nisl fringilla, at iaculis elit posuere. Nunc iaculis nisl non ipsum tincidunt, eu sagittis metus rutrum. In orci lacus, facilisis consequat mi sit amet, finibus aliquam purus. Sed vulputate maximus nulla, at pretium nibh tempor et. Sed pretium viverra libero, ut pretium enim congue auctor.
+      Discover a world of movies tailored to your preferences. Our advanced recommendation system helps you find the perfect film for any mood, genre, or keyword. Explore detailed information, including summaries, reviews, ratings, and similar suggestions. Save your favorites, track your search history, and enjoy a personalized movie-watching experience. Dive into endless entertainment, curated just for you!
       </div>
       <ul className="social-media flex items-center justify-center pt-9">
         <li className="item mx-8 text-[18px] cursor-pointer hover:text-pink-500 hover:shadow-pink-500 hover:shadow-lg">
