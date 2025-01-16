@@ -37,7 +37,7 @@ const UserMovieList = ({movies, title, seeMoreHref} :
             
             <div className="container mx-auto">
                 <div className="justify-center grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
-                    {movies && movies.map((movie: Movie, index: number) => {
+                    {movies && movies.slice(0, 8).map((movie: Movie, index: number) => {
                         return (
                             <MovieCard key={index} movie={movie} index={index} />
                         )

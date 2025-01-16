@@ -4,14 +4,16 @@ import { Slider } from "../ui/slider";
 import RatingStar from "../RatingStar/RatingStar";
 import { addReviewToMovie } from "@/lib/redux/actions/profileAction";
 
-const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idToken } 
+const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movieId, idToken, onRatingUpdate } 
     : { isOpen: boolean, 
+      setShow: (value: boolean) => void,
       onSubmit: () => void, 
       onCancel: () => void, 
       title: string, 
       avarageRating: number,
       movieId: number,
-      idToken: string
+      idToken: string,
+      onRatingUpdate: (newRating: number) => void;
     }) => {
 
     const [rating, setRating] = useState<number>(7); // Default rating is 7
@@ -49,8 +51,10 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
       }
     };
 
-    const _handleCancel = () => {
+    const _handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
       console.log('Cancel');
+      setShow(false);
       onCancel();
     }
 
@@ -58,6 +62,8 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
       try {
         console.log('Submit');
         await addReviewToMovie(movieId, idToken, review, rating);
+        onRatingUpdate(rating);
+        setShow(false);
       } catch (error: any) {
         console.error("Error submit review:", error);
       }
@@ -77,7 +83,7 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
                 <button
                   type="button"
                   className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                  onClick={_handleCancel}
+                  onClick={(e) => _handleCancel(e)}
                 >
                   <svg
                     className="w-3 h-3"
@@ -110,7 +116,7 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
                     <label
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                     <strong className="italic">{avarageRating*10}%</strong> User Rating Score
+                     <strong className="italic">{(avarageRating*10).toFixed(1)}%</strong> User Rating Score
                     </label>
                    
                 </div>
@@ -178,7 +184,7 @@ const Modal = ({ isOpen, onSubmit, onCancel, title, avarageRating, movieId, idTo
                 <div className="flex flex-row justify-center">
                   <button
                     type="submit"
-                    className="text-white inline-flex text-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="button-auth text-white hover:text-yellow-500"
                   >
                     Submit
                   </button>
