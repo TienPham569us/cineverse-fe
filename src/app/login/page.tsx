@@ -24,7 +24,7 @@ interface LoginPageProps {
 //const LoginPageContent = () => {
 const LoginPageContent: React.FC<LoginPageProps> = props => {
   const { idToken, error, isAuthenticated, loginInProgress } = props;
-
+  const [isClient, setIsClient] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   //const [error, //setError] = useState("");
@@ -49,6 +49,7 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
   // }
 
   useEffect(() => {
+    setIsClient(true);
     const notificationCode = searchParams.get('notificationCode');
     
     if (notificationCode && notificationCode === '403') {
@@ -63,9 +64,10 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
       });
     }
     
-  }, [searchParams] );
+  }, [searchParams, dispatch] );
 
   useEffect(() => {
+    setIsClient(true);
     if (idToken!=null) {
       setPassword("");
       window.location.href = "/profile";
@@ -146,7 +148,10 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
     }
   }
 
-
+  if (!isClient) {
+    return null; // Render nothing on the server
+  }
+  
   return ( <>
   <CustomHeader />
     <div className="bg-darkBlue grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">

@@ -66,13 +66,30 @@ const CustomHeader = () => {
       <div className={`fixed w-full z-10 transition-transform bg-[#020c1b] bg-opacity-30 backdrop-blur-md`}>
         <div className="container mx-auto px-16 flex justify-between items-center py-3">
           {/* <ToastContainer /> */}
-          <Link href={"/"} className="cursor-pointer">
-            <img
-              src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
-              alt="Logo"
-              className="w-20"
-            />
-          </Link>
+          <div className="flex flex-row">
+            <Link href={"/"} className="cursor-pointer">
+              <img
+                src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
+                alt="Logo"
+                className="w-20"
+              />
+            </Link>
+            
+            <Link
+              href={"/"}
+              className="text-center flex flex-row justify-center px-2 cursor-pointer text-white"
+            >
+              <button className="cursor-pointer hover:text-pink-500">Movie</button>
+            </Link>
+
+            <Link
+              href={"/casts"}
+              className="text-center flex flex-row justify-center px-2 cursor-pointer text-white"
+            >
+              <button className="cursor-pointer hover:text-pink-500">Cast</button>
+            </Link>
+          </div>
+          
 
           <div className="hidden md:flex items-center space-x-6 text-white">
             {auth.idToken ? (
@@ -80,13 +97,6 @@ const CustomHeader = () => {
                 <span className="mr-4">Welcome!, {auth.email}</span>
                 
                 <NavbarProfile username={auth.email || ''} handleLogout={handleLogout} />
-
-                <Link
-                  href={"/casts"}
-                  className="text-center flex flex-row justify-center px-2"
-                >
-                  <button className="cursor-pointer hover:text-pink-500">Cast</button>
-                </Link>
 
                 <button className="cursor-pointer hover:text-pink-500 px-2" onClick={() => setSearchMenu(true)}>
                   <HiOutlineSearch className="text-xl" />
@@ -113,12 +123,12 @@ const CustomHeader = () => {
                 >
                   <button className="cursor-pointer hover:text-pink-500">Register</button>
                 </Link>
-                <Link
+                {/* <Link
                   href={"/casts"}
                   className="text-center flex flex-row justify-center"
                 >
                   <button className="cursor-pointer hover:text-pink-500">Cast</button>
-                </Link>
+                </Link> */}
                 <button className="cursor-pointer hover:text-pink-500" onClick={() => setSearchMenu(true)}>
                   <HiOutlineSearch className="text-xl" />
                 </button>
@@ -161,12 +171,12 @@ const CustomHeader = () => {
           >
             <button className="cursor-pointer hover:text-pink-500">Register</button>
           </Link>
-          <Link
+          {/* <Link
             href={"/casts"}
             className="text-center flex flex-row justify-center"
           >
             <button className="cursor-pointer hover:text-pink-500">Cast</button>
-          </Link>
+          </Link> */}
           <button className="ms-1 cursor-pointer hover:text-pink-500 flex items-center justify-center" onClick={() => setNavigateMenu(true)}>
                   <HiDocumentSearch className="text-xl" />
           </button>
