@@ -66,6 +66,7 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
     const _handleSubmit = async () => {
       try {
         console.log('Submit');
+        console.log('Rating:', rating);
         const response = await addReviewToMovie(movieId, idToken, review, rating);
         onRatingUpdate(rating);
 

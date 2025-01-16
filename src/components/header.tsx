@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/redux/store";
 import { logout } from "@/lib/redux/actions/authActions";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { HiOutlineSearch, HiOutlineX, HiOutlineViewList, HiOutlineMenu, HiDocumentSearch} from "react-icons/hi";
 import NavbarProfile from "./NavbarProfile/NavbarProfile";
 import { Button } from "./ui/button";
@@ -60,32 +60,8 @@ const CustomHeader = () => {
 
   }
 
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const controlNavbar = useCallback(() => {
-    if (window.scrollY > 200) {
-      if (window.scrollY > lastScrollY && !mobileMenu) {
-        setShow("hide");
-      } else {
-        setShow("show");
-      }
-    } else {
-      setShow("top");
-    }
-    setLastScrollY(window.scrollY);
-  }, [lastScrollY, mobileMenu]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", controlNavbar);
-
-    return () => window.removeEventListener("scroll", controlNavbar);
-  }, [controlNavbar]);
-
   return (
-    <header  className={`fixed w-full h-[60px] z-10 flex items-center transition-transform duration-500 ${show!=='hide' ? 'translate-y-0 bg-[#020c1b] bg-opacity-30 backdrop-blur-md' : '-translate-y-[60px]'}`}>
+    <header>
       
       <div className={`fixed w-full z-10 transition-transform bg-[#020c1b] bg-opacity-30 backdrop-blur-md`}>
         <div className="container mx-auto px-16 flex justify-between items-center py-3">
@@ -183,18 +159,31 @@ const CustomHeader = () => {
         </div>
         {mobileMenu && (
         <ul className="md:hidden bg-black text-white flex flex-col space-y-4 py-4 px-6">
-          <Link
-            href={"/login"}
-            className="text-center flex flex-row justify-center mx-3"
-          >
-            <button className="cursor-pointer hover:text-pink-500">Login</button>
-          </Link>
-          <Link
-            href={"/register"}
-            className="text-center flex flex-row justify-center"
-          >
-            <button className="cursor-pointer hover:text-pink-500">Register</button>
-          </Link>
+          {
+            auth.idToken ? (
+              <div className="flex items-center justify-around">
+              <span className="mr-4">Welcome!, {auth.email}</span>
+              
+              <NavbarProfile username={auth.email || ''} handleLogout={handleLogout} />
+
+              </div>
+            ) : (
+            <>
+              <Link
+                href={"/login"}
+                className="text-center flex flex-row justify-center mx-3"
+              >
+                <button className="cursor-pointer hover:text-pink-500">Login</button>
+              </Link>
+              <Link
+                href={"/register"}
+                className="text-center flex flex-row justify-center"
+              >
+                <button className="cursor-pointer hover:text-pink-500">Register</button>
+              </Link>
+            </>
+            )
+          }
           {/* <Link
             href={"/casts"}
             className="text-center flex flex-row justify-center"
