@@ -144,7 +144,7 @@ const DetailsBanner = ({ detailsMovie, video } : {
     if (!detailsMovie) {
         return null;
     }
-
+    
     return ( <>
     <div className="detailsBanner w-full bg-black pt-24 mb-12 md:mb-0 md:pt-30 md:min-h-[700px] relative">
       <Fragment>
@@ -210,9 +210,9 @@ const DetailsBanner = ({ detailsMovie, video } : {
                   <div  
                     className="w-12 h-12 bg-gray-600 text-white rounded-full flex items-center justify-center"
                     onClick={openRatingModal}>
-                    <span className="text text-lg flex items-center">
-                      <div className="rating text-base">{rating}</div>
-                      <FontAwesomeIcon icon={faStar} className={`${rating ? 'text-blue-500 text-sm' : 'text-white text-sm'}`}/>
+                    <span className="text text-lg flex items-center cursor-pointer">
+                      <div className="rating text-base pr-1">{rating}</div>
+                      <FontAwesomeIcon icon={faStar} className={`${rating ? 'text-orange-500 text-sm' : 'text-white text-sm'}`}/>
                     </span>
 
                     {
@@ -224,7 +224,8 @@ const DetailsBanner = ({ detailsMovie, video } : {
                             title={detailsMovie.title}
                             avarageRating={detailsMovie.voteAverage}
                             movieId={detailsMovie.id} 
-                            idToken={profileData.idToken ?? ""}                        
+                            idToken={profileData.idToken ?? ""} 
+                            onRatingUpdate={(newRating: number) => setRating(newRating)}                       
                         />
                       )
                     }
