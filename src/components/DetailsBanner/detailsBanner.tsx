@@ -214,20 +214,6 @@ const DetailsBanner = ({ detailsMovie, video } : {
                       <div className="rating text-base pr-1">{rating}</div>
                       <FontAwesomeIcon icon={faStar} className={`${rating ? 'text-orange-500 text-sm' : 'text-white text-sm'}`}/>
                     </span>
-
-                    {
-                     isShowRatingModal && (
-                      <Modal 
-                            isOpen={isShowRatingModal}
-                            onSubmit={closeRatingModal}
-                            onCancel={closeRatingModal}
-                            title={detailsMovie.title}
-                            avarageRating={detailsMovie.voteAverage}
-                            movieId={detailsMovie.id} 
-                            idToken={profileData.idToken ?? ""}                        
-                        />
-                      )
-                    }
                     
                   </div>
                 </div>
