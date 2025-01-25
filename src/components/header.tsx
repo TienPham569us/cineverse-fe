@@ -12,6 +12,7 @@ import { NavigationResponse } from "@/types/navigation/navigation.response";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import SmallSpinner from "@/components/SmallSpinner";
+import Logo from "@/assets/logo.png";
 
 const CustomHeader = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -69,9 +70,9 @@ const CustomHeader = () => {
           <div className="flex flex-row">
             <Link href={"/"} className="cursor-pointer">
               <img
-                src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
+                src={Logo.src}
                 alt="Logo"
-                className="w-20"
+                className="w-20 mr-5"
               />
             </Link>
             

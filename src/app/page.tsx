@@ -221,7 +221,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
       )
       }
 
-      <div className="w-full container mx-auto py-4 px-8" aria-readonly>
+      <div className="w-full container mx-auto mt-20 px-8" aria-readonly>
         <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Popular Movies</h1>
       </div>
 

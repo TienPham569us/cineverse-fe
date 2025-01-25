@@ -11,6 +11,7 @@ import CustomHeader from "@/components/header";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { connect, useDispatch } from "react-redux";
 import { login, loginGoogle } from "@/lib/redux/actions/authActions";
+import Logo from "@/assets/logo-with-background.png";
 
 interface LoginPageProps {
   idToken: string | null;
@@ -161,7 +162,7 @@ const LoginPageContent: React.FC<LoginPageProps> = props => {
         <div className="flex flex-row text-black">
           <h1 className="text-black text-2xl font-bold pr-2">Login to</h1>
           <img
-            src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
+            src={Logo.src}
             alt="Logo"
             className="w-20 bg-darkBlue"
           />
