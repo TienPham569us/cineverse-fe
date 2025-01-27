@@ -8,11 +8,11 @@
 }
 
 .profileImg {
-    @apply w-[50px] h-[50px] rounded-full overflow-hidden mb-4 md:w-[75px] md:h-[75px] md:mb-6;
+    @apply w-[50px] h-[50px] min-w-[50px] min-h-[50px] rounded-full overflow-hidden mb-4 md:w-[75px] md:h-[75px] md:min-h-[75px] md:min-w-[75px] md:mb-6;
 }
 
 .imgInside {
-    @apply w-full h-full object-cover object-top block;
+    @apply w-full h-full object-cover object-top block min-w-[50px] min-h-[50px] md:min-h-[75px] md:min-w-[75px];
 }
 
 .reviewContent {

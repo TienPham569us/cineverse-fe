@@ -27,7 +27,7 @@ const Casts = ({ data, loading } : { data: Cast[], loading: boolean}) => {
       <div className="castSection relative bg-[#04152d] ">
         <ContentWrapper className2="max-w-screen-2xl">
           <div className="sectionHeading text-2xl text-white mb-6 ms-6 ps-6 pt-16">
-            <span className="ms-4">Top Cast</span>
+            <span className="ms-4 font-bold">Top Cast</span>
             
             </div>
         </ContentWrapper>

@@ -12,6 +12,7 @@ import { NavigationResponse } from "@/types/navigation/navigation.response";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import SmallSpinner from "@/components/SmallSpinner";
+import Logo from "@/assets/logo.png";
 
 const CustomHeader = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -69,9 +70,9 @@ const CustomHeader = () => {
           <div className="flex flex-row">
             <Link href={"/"} className="cursor-pointer">
               <img
-                src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
+                src={Logo.src}
                 alt="Logo"
-                className="w-20"
+                className="w-20 mr-5"
               />
             </Link>
             
@@ -200,7 +201,7 @@ const CustomHeader = () => {
           <div className="max-w-6xl mx-auto px-4 flex items-center space-x-4">
             <input
               type="search"
-              placeholder="Search for a movie or TV show..."
+              placeholder="Search for a movie..."
               className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none text-black"
               onChange={(e) => setQuery(e.target.value)}
               onKeyUp={() => {}}
@@ -211,7 +212,7 @@ const CustomHeader = () => {
               pathname: "/search",
               query: { query: query, page: 1 },
             }}
-            className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center">
+            className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center font-semibold hover:brightness-110">
             Search
           </Link >
           </div>
@@ -231,7 +232,7 @@ const CustomHeader = () => {
             <HiOutlineX className="text-black text-xl cursor-pointer" onClick={() => setNavigateMenu(false)} />
             <Button 
               onClick={() => handleNavigate(promptNavigate)}
-              className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center">
+              className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center font-semibold hover:brightness-110">
                 Navigate
             </Button >
             {

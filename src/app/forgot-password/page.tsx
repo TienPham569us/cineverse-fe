@@ -67,12 +67,7 @@ const ForgotPasswordPageContent = () => {
       <main className="bg-white min-w-[calc(100vw/3)] flex flex-col gap-8 row-start-2 items-center sm:items-center p-5 border border-black border-solid rounded">
       <div><ToastContainer /></div>
         <div className="flex flex-row text-black">
-          <h1 className="text-black text-2xl font-bold pr-2">Login to</h1>
-          <img
-            src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
-            alt="Logo"
-            className="w-20 bg-darkBlue"
-          />
+          <h1 className="text-black text-2xl font-bold pr-2">Reset Password</h1>
         </div>
         <form method="POST" //action={"/api/register"}
           onSubmit={(e) => handleForgotPassword(e)}

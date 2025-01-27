@@ -146,7 +146,7 @@ const WatchListPageContent = () => {
                                             hasMore={hasMore} 
                                             loader={<SmallSpinner />} 
                                             dataLength={movies.length}
-                                            endMessage={<p className="text-center text-white py-2">No more movies</p>}
+                                            // endMessage={<p className="text-center text-white py-2">No more movies</p>}
                                         >
                                             <ul className="flex flex-col space-y-4 w-full">
                                                 {movies?.map((userMovie: UserMovie) => (

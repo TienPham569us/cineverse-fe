@@ -141,7 +141,7 @@ export const fetchSimilarMovie = async (movieId: number): Promise<Movie[] | null
             undefined,
             API_BASE_URL
         );
-        console.log("response", response);
+        console.log("response similar", response);
         const similarMovies: Movie[] = response.results;
         return similarMovies;
     } catch (error: any) {

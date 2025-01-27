@@ -70,6 +70,10 @@ const SearchContent: React.FC<SearchPageProps> = props => {
     }
   }, [dispatch, page, totalPages]);
 
+  useEffect(() => {
+    handleSearch();
+  }, [searchType]);
+
   const handleSearch = () => {
     if (searchType === "llm-search") {
       if (query.trim()){
@@ -93,9 +97,12 @@ const SearchContent: React.FC<SearchPageProps> = props => {
 
   const validateDates = (): boolean => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     if (fromDate) {
       const from = new Date(fromDate);
+      from.setHours(0, 0, 0, 0);
+      
       if (from > today) {
         setErrorDate("From Date cannot be in the future.");
         return false;
@@ -104,6 +111,8 @@ const SearchContent: React.FC<SearchPageProps> = props => {
 
     if (toDate) {
       const to = new Date(toDate);
+      to.setHours(0, 0, 0, 0);
+      
       if (to > today) {
         setErrorDate("To Date cannot be in the future.");
         return false;
@@ -112,7 +121,10 @@ const SearchContent: React.FC<SearchPageProps> = props => {
 
     if (fromDate && toDate) {
       const from = new Date(fromDate);
+      from.setHours(0, 0, 0, 0);
+
       const to = new Date(toDate);
+      to.setHours(0, 0, 0, 0);
 
       if (from > to) {
         setErrorDate("From Date must be earlier than or equal to To Date.");
@@ -167,7 +179,7 @@ return (
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-center">
             {genresResult == null || loadingSearchMovies ? (
                 <Spinner />
-            ) : searchResults.length > 0 ? (
+            ) : (
                 <div className={searchType !== "normal" ? "container mx-auto p-8" : "flex container mx-auto p-8"}>
                   {/* Side bar */}
                   {searchType === "normal" && 
@@ -238,17 +250,20 @@ return (
                     </div>
                   </div>
                   }
-                  <div className={searchType !== "normal" ? "w-full" : "w-3/4"}>
-                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
-                        {searchResults.map((movie: Movie, index: number) => (
-                        <MovieCard key={index} movie={movie} index={index} />
-                        ))}
+
+                  {searchResults.length > 0 ? (
+                    <div className={searchType !== "normal" ? "w-full" : "w-3/4"}>
+                      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
+                          {searchResults.map((movie: Movie, index: number) => (
+                          <MovieCard key={index} movie={movie} index={index} />
+                          ))}
+                      </div>
                     </div>
-                  </div>
-                </div>
-            ) : (
-                <div className="flex flex-row">
-                <h1 className="text-white">No results found.</h1>
+                  ) : (
+                    <div className="flex flex-row mx-auto">
+                    <h1 className="text-white">No results found.</h1>
+                    </div>
+                  )}
                 </div>
             )}
 
@@ -259,7 +274,7 @@ return (
             )}
 
             {/* Pagination */}
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-4 font-semibold text-slate-700">
             <button
               disabled={page === 1 || loadingSearchMovies}
               onClick={() => setPage(1)}
