@@ -24,11 +24,10 @@ const PartialCardReview = ({ review, onClick } :
                     </div>
 
                     <div className="flex flex-col items-start gap-2 justify-center">
-                        <CardTitle>A review by {review.authorDetails.username}</CardTitle>
+                        <CardTitle>{review.authorDetails.username || review.authorDetails.name}</CardTitle>
                         <CardDescription>
-                            Written by 
-                            <strong className="italic mx-1">{review.authorDetails.username}</strong> 
-                            on {dayjs(review.updatedAt).format("MMM D, YYYY")}
+                            Written on 
+                            <strong className="mx-1">{dayjs(review.updatedAt).format("MMM D, YYYY")}</strong>
                         </CardDescription>
                         <CardFooter className="ps-0 ">
                             <div className="flex flex-row items-start justify-start bg-darkBlue text-white p-2 rounded-lg">
@@ -62,7 +61,7 @@ const PartialCardReview = ({ review, onClick } :
                     variant="outline"
                     onClick={()=>onClick(review)}
                 >
-                    read more...
+                    Read more...
                 </Button>
             </CardFooter>
         </Card>

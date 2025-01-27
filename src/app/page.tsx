@@ -137,16 +137,16 @@ const HomeContent: React.FC<HomePageProps> = props => {
         )
       }
       <div className="absolute bottom-0 left-0 w-full h-[250px] bg-gradient-to-b from-transparent to-darkBlue"></div>
-      <div className="relative text-center text-white max-w-[800px] mx-auto">
+      <div className="relative text-center text-white max-w-[800px] mx-auto w-full">
         <h1 className="text-4xl md:text-7xl font-bold mb-4">Welcome</h1>
         <p className="text-sm md:text-lg font-medium tracking-wide mb-10">
-          Millions of movies, TV shows, and people to discover. Explore now.
+          Millions of movies and people to discover. Explore now.
         </p>
-        <div className="flex items-center justify-center">
+        <div className="w-3/4 flex items-center justify-center mx-auto">
           <input
             type="search"
             className="w-[calc(100%-100px)] md:w-[calc(100%-150px)] h-[50px] md:h-[60px] rounded-l-full px-4 text-black text-sm md:text-lg outline-none"
-            placeholder="Search for a movie or TV show..."
+            placeholder="Search for a movie..."
             onChange={(e) => setQuery(e.target.value)}
             onKeyUp={() => {}}
           />
@@ -155,7 +155,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
               pathname: "/search",
               query: { query: query, page: 1 },
             }}
-            className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center">
+            className="flex items-center justify-center w-[100px] md:w-[150px] h-[50px] md:h-[60px] bg-gradient-to-r from-customOrange to-customPink text-white rounded-r-full text-base md:text-lg text-center font-semibold hover:brightness-110">
             Search
           </Link >
         </div>
@@ -169,8 +169,8 @@ const HomeContent: React.FC<HomePageProps> = props => {
             onValueChange={(value) => setTimeWindow(value)}>
 
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="day" aria-readonly>Today</TabsTrigger>
-              <TabsTrigger value="week" aria-readonly>This Week</TabsTrigger>
+              <TabsTrigger value="day" aria-readonly className="font-semibold">Today</TabsTrigger>
+              <TabsTrigger value="week" aria-readonly className="font-semibold">This Week</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -221,7 +221,7 @@ const HomeContent: React.FC<HomePageProps> = props => {
       )
       }
 
-      <div className="w-full container mx-auto py-4 px-8" aria-readonly>
+      <div className="w-full container mx-auto mt-20 px-8" aria-readonly>
         <h1 className="text-2xl font-bold text-white me-2 " aria-readonly>Popular Movies</h1>
       </div>
 

@@ -54,7 +54,7 @@ const ProfileCard = ({ profile }: { profile: Profile | null}) => {
                   className=""
                   href="watchList"
                   >
-                    <p className="text-base font-normal">Watchlist</p>
+                    <p className="text-base font-semibold">Watchlist</p>
                   </a>
                 </div>
                 <div className="bg-gray-800 p-4 rounded-lg">
@@ -62,7 +62,7 @@ const ProfileCard = ({ profile }: { profile: Profile | null}) => {
                   className=""
                   href="favourite-list"
                   >
-                    <p className="text-base font-normal">Favourite List</p>
+                    <p className="text-base font-semibold">Favourite List</p>
                   </a>
                 </div>
                 <div className="bg-gray-800 p-4 rounded-lg">
@@ -70,11 +70,11 @@ const ProfileCard = ({ profile }: { profile: Profile | null}) => {
                   className=""
                   href="rating-list"
                   >
-                    <p className="text-base font-normal">Rating List</p>
+                    <p className="text-base font-semibold">Rating List</p>
                   </a>
                 </div>
                 <div className="bg-red-800 p-4 rounded-lg cursor-pointer" onClick={handleLogout}>
-                  <p className="text-base font-normal">Logout</p>
+                  <p className="text-base font-semibold">Logout</p>
                 </div>
             </div>
           </div>

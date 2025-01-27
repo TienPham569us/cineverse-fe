@@ -5,7 +5,7 @@ import "./style.css";
 const BreadCrumbMovieList = ({title} : {title: string}) => {
     
     return (<>
-    <div className="pb-5 text-7xl font-bold">
+    <div className="pb-5 text-7xl font-bold mt-4">
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>

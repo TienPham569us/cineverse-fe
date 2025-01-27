@@ -9,6 +9,7 @@ import CustomHeader from "@/components/header";
 import { AppDispatch, RootState, useAppSelector } from "@/lib/redux/store";
 import { connect, useDispatch } from "react-redux";
 import { signup } from "@/lib/redux/actions/authActions";
+import Logo from "@/assets/logo-with-background.png";
 
 interface RegisterPageProps {
   loading: boolean;
@@ -173,10 +174,10 @@ const  RegisterPageContent: React.FC<RegisterPageProps> = props => {
       <CustomHeader/>
       <div className="bg-darkBlue grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <main className="bg-white min-w-[calc(100vw/3)] flex flex-col gap-8 row-start-2 items-center sm:items-center p-5 border border-black border-solid rounded">
-          <div className="flex flex-row text-black items-center">
+          <div className="flex flex-row text-black items-center mt-8">
             <h1 className="text-black text-2xl font-bold pr-2">Register </h1>
             <img
-              src="https://support.cineverse.com/hc/theming_assets/01HZPNGWTKGXJYMVYQDT6GAQYB"
+              src={Logo.src}
               alt="Logo"
               className="w-20 h-8 bg-darkBlue"
             />

@@ -3,7 +3,7 @@ import { FaFacebook, FaInstagram , FaTwitter, FaLinkedin } from "react-icons/fa"
 
 const CustomFooter = () => {
   return (
-    <div className="footer bg-black/25 text-white py-6">
+    <div className="footer bg-[#050e18] text-white py-6">
       <ul className="more-info flex items-center justify-center pb-4 text-[16px] font-semibold">
         <li className="info mx-2 cursor-pointer hover:text-pink-500">Terms of Use</li>
         <li className="info mx-2 cursor-pointer hover:text-pink-500">Privacy Policy</li>

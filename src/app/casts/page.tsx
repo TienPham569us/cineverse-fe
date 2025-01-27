@@ -114,7 +114,7 @@ const PopularCastsContent: React.FC<PopularCastsPageProps> = props => {
             )}
 
             {/* Pagination */}
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-4 font-semibold text-slate-700">
             <button
               disabled={page === 1 || loadingPopularCasts}
               onClick={() => setPage(1)}
