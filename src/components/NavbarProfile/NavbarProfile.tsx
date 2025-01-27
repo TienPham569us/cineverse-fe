@@ -63,9 +63,9 @@ export function NavbarProfile({username, handleLogout} : {username: string, hand
     components[components.length - 1].handleClick = handleLogout;
     return (
         <NavigationMenu className="headerNav bg-opacity-30 backdrop-blur-md rounded-md text-white">
-        <NavigationMenuList className="bg-darkBlue">
+        <NavigationMenuList className="bg-transparent">
             <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-white bg-darkBlue">
+            <NavigationMenuTrigger className="text-white bg-transparent">
                 <FontAwesomeIcon icon={faUser} className="text-xl" />
             </NavigationMenuTrigger>
             <NavigationMenuContent>

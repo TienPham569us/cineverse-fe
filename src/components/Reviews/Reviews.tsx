@@ -43,7 +43,7 @@ const ReviewsPageContent: React.FC<ReviewsPageProps> = props => {// = ({ reviews
           <ContentWrapper className2="max-w-screen-2xl">
             {title && reviews!.length > 0 && (
               <div className="sectionHeading text-2xl text-white pt-16 mb-6 ms-6 ps-6">
-                <span className="ms-4">
+                <span className="ms-4 font-bold">
                     {title}
                 </span>
               </div>

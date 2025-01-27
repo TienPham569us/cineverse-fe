@@ -137,7 +137,7 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
                   <div className="col-span-2">
                     <label
                       htmlFor="rating"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="block mb-2 text-base font-semibold text-gray-900 dark:text-white"
                     >
                       Rating Point
                     </label>
@@ -178,7 +178,7 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
                   <div className="col-span-2">
                     <label
                       htmlFor="review"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="block mb-2 text-base font-semibold text-gray-900 dark:text-white"
                     >
                       Reviews
                     </label>
@@ -197,7 +197,7 @@ const Modal = ({ isOpen, setShow, onSubmit, onCancel, title, avarageRating, movi
                 <div className="flex flex-row justify-center">
                   <button
                     type="submit"
-                    className="button-auth text-white hover:text-yellow-500"
+                    className="button-auth text-white"
                   >
                     Submit
                   </button>

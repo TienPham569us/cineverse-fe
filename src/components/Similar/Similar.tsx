@@ -68,7 +68,7 @@ const Similar = ({ movieId, title } : { movieId: number, title: string }) => {
          <ContentWrapper className2="max-w-screen-2xl">
             {title && movies!.length > 0 && (
               <div className="carouselTitle text-2xl text-white pt-20 mb-2 ms-6 ps-6">
-              <span className="ms-4">
+              <span className="ms-4 font-bold">
                   {title}
               </span>
             </div>

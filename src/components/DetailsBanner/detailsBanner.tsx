@@ -212,7 +212,7 @@ const DetailsBanner = ({ detailsMovie, video } : {
                     className="w-12 h-12 bg-gray-600 text-white rounded-full flex items-center justify-center"
                     onClick={openRatingModal}>
                     <span className="text text-lg flex items-center cursor-pointer">
-                      <div className="rating text-base pr-1">{rating}</div>
+                      <div className="rating text-base">{rating}</div>
                       <FontAwesomeIcon icon={faStar} className={`${rating ? 'text-orange-500 text-sm' : 'text-white text-sm'}`}/>
                     </span>
                     

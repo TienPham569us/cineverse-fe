@@ -59,7 +59,7 @@ const Recommendation = ({ movie, title } : { movie: Movie, title: string}) => {
           <ContentWrapper className2="max-w-screen-2xl">
             {title && movies &&  movies!.length > 0 && (
               <div className="carouselTitle text-2xl text-white pt-16 mb-6 ms-6 ps-6">
-              <span className="ms-4">
+              <span className="ms-4 font-bold">
                   {title}
               </span>
             </div>
