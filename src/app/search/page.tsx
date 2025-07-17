@@ -251,7 +251,7 @@ return (
                   </div>
                   }
 
-                  {searchResults.length > 0 ? (
+                  {searchResults?.length > 0 ? (
                     <div className={searchType !== "normal" ? "w-full" : "w-3/4"}>
                       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
                           {searchResults.map((movie: Movie, index: number) => (
