@@ -77,7 +77,7 @@ const SearchContent: React.FC<SearchPageProps> = props => {
   const handleSearch = () => {
     if (searchType === "llm-search") {
       if (query.trim()){
-        fetchLlmSearchMovies(query, llmCollectionSearch, 24, 0.5, 1); // Reset to first page when performing a new search
+        fetchLlmSearchMovies(query, llmCollectionSearch, 10, 0.25, 1); // Reset to first page when performing a new search
         setPage(1);
       }
     } else {
